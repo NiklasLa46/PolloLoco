@@ -7,7 +7,7 @@ class MovableObject extends DrawableObject{
     hit() {
         if (!this.isHurt()) { // Only allow hit if not currently hurt
             console.log(this.energy)
-            this.energy -= 5;
+            this.energy -= 10;
             if (this.energy < 0) {
                 this.energy = 0;
             } else {
