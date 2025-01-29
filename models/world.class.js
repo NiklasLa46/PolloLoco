@@ -34,12 +34,17 @@ class World {
     }
 
     throwBottle() {
-        let throwDirection = this.character.otherDirection ? -1 : 1;  // -1 for left, 1 for right
-        let bottle = new ThrowableObject(this.character.x + 30, this.character.y + 90); // Create bottle at character position
-        bottle.speedX = throwDirection * 20; // Set speedX based on direction
-        bottle.throw(); // Start throwing the bottle
-        this.level.bottles.push(bottle); // Add bottle to the level to be rendered
-    }
+        if (this.character.bottles > 0) {
+            let throwDirection = this.character.otherDirection ? -1 : 1; // -1 for left, 1 for right
+            let bottle = new ThrowableObject(this.character.x + 30, this.character.y + 90); // Create bottle at character position
+            bottle.speedX = throwDirection * 20; // Set speedX based on direction
+            bottle.throw(); // Start throwing the bottle
+            this.level.bottles.push(bottle); // Add bottle to the level to be rendered
+
+            // Reduce character's bottle count by 1
+            this.character.bottles -= 11;
+            this.bottleBar.setPercentage(this.character.bottles); // Update the bottle bar
+    }}
 
     checkCollisions() {
         setInterval(() => {
