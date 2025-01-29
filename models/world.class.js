@@ -14,7 +14,7 @@ class World {
     coinBar = new CoinBar();
     throwableObjects = [];
 
-    
+
 
 
     constructor(canvas, keyboard) {
@@ -26,23 +26,21 @@ class World {
         this.checkCollisions()
         this.background_music.volume = 0;
         this.background_music.loop = true;
-        
+
     }
 
     setWorld() {
         this.character.world = this;
     }
-    
-        throwBottle() {
-            let throwDirection = this.character.otherDirection ? -1 : 1;  // -1 for left, 1 for right
-            let bottle = new ThrowableObject(this.character.x + 30, this.character.y + 90); // Create bottle at character position
-            bottle.speedX = throwDirection * 20; // Set speedX based on direction
-            bottle.throw(); // Start throwing the bottle
-            this.level.bottles.push(bottle); // Add bottle to the level to be rendered
-        }
-    
-    
-    
+
+    throwBottle() {
+        let throwDirection = this.character.otherDirection ? -1 : 1;  // -1 for left, 1 for right
+        let bottle = new ThrowableObject(this.character.x + 30, this.character.y + 90); // Create bottle at character position
+        bottle.speedX = throwDirection * 20; // Set speedX based on direction
+        bottle.throw(); // Start throwing the bottle
+        this.level.bottles.push(bottle); // Add bottle to the level to be rendered
+    }
+
     checkCollisions() {
         setInterval(() => {
             // Check collisions with enemies
@@ -54,7 +52,7 @@ class World {
                     this.healthBar.setPercentage(this.character.energy);
                 }
             });
-    
+
             // Check collisions with coins
             this.level.coins.forEach((coin, index) => {
                 if (this.character.isColliding(coin)) {
@@ -65,35 +63,35 @@ class World {
                     this.coinBar.setPercentage(this.character.coins); // Update coin bar
                 }
             });
-    
-// Check collisions with bottles
-this.level.bottles.forEach((bottle, index) => {
-    // Check if the bottle has a pickup method (for collectible bottles)
-    if (this.character.isColliding(bottle) && typeof bottle.pickup === 'function') {
-        bottle.pickup(this.character);
-        this.bottle_sound.currentTime = 0; // Reset sound
-        this.bottle_sound.play();
-        this.level.bottles.splice(index, 1); // Remove picked-up bottle
-        this.bottleBar.setPercentage(this.character.bottles); // Update bottle bar
-    }
-});
 
-// Handle throwable bottles separately
-this.throwableObjects.forEach((bottle) => {
-    this.level.enemies.forEach((enemy) => {
-        if (bottle.isColliding(enemy)) {
-            bottle.playSplashAnimation();
-            bottle.hasCollided = true; // Mark the bottle as collided
-            enemy.hit(); // Damage the enemy
-        }
-    });
-});
+            // Check collisions with bottles
+            this.level.bottles.forEach((bottle, index) => {
+                // Check if the bottle has a pickup method (for collectible bottles)
+                if (this.character.isColliding(bottle) && typeof bottle.pickup === 'function') {
+                    bottle.pickup(this.character);
+                    this.bottle_sound.currentTime = 0; // Reset sound
+                    this.bottle_sound.play();
+                    this.level.bottles.splice(index, 1); // Remove picked-up bottle
+                    this.bottleBar.setPercentage(this.character.bottles); // Update bottle bar
+                }
+            });
 
-            
-        }, 200);
+            // Handle throwable bottles separately
+            this.throwableObjects.forEach((bottle) => {
+                this.level.enemies.forEach((enemy) => {
+                    if (bottle.isColliding(enemy)) {
+                        bottle.playSplashAnimation();
+                        bottle.hasCollided = true; // Mark the bottle as collided
+                        enemy.hit(); // Damage the enemy
+                    }
+                });
+            });
+
+
+        }, 50);
     }
-    
-    
+
+
 
     draw() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
@@ -106,7 +104,7 @@ this.throwableObjects.forEach((bottle) => {
         this.addObjectsToMap(this.level.enemies);
         this.addObjectsToMap(this.level.clouds);
         this.addObjectsToMap(this.throwableObjects);
-        
+
 
 
 
@@ -123,10 +121,10 @@ this.throwableObjects.forEach((bottle) => {
         requestAnimationFrame(() => this.draw());
 
         if (!this.background_music.playing) {
-            this.background_music.play().catch(() => {});
+            this.background_music.play().catch(() => { });
         }
     }
-    
+
 
     addObjectsToMap(objects) {
         objects.forEach(o => {
@@ -146,16 +144,17 @@ this.throwableObjects.forEach((bottle) => {
             if (mo.otherDirection) {
                 this.flipImageBack(mo)
             }
-    }}
+        }
+    }
 
-    flipImage(mo){
+    flipImage(mo) {
         this.ctx.save();
         this.ctx.translate(mo.width, 0);
         this.ctx.scale(-1, 1);
         mo.x = mo.x * -1;
     }
 
-    flipImageBack(mo){
+    flipImageBack(mo) {
         mo.x = mo.x * -1;
         this.ctx.restore();
     }
