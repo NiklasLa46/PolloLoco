@@ -30,8 +30,9 @@ class Bottle extends UnmovableObject {
         }, 800);
     };
 
-    pickup(character) {
-        character.bottles += 11; // Increment bottles in the character
 
+    pickup(character) {
+        // Increment bottles but cap at 100
+        character.bottles = Math.min(character.bottles + 11, 100);
     }
 }
