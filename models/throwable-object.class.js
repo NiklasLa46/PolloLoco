@@ -65,11 +65,15 @@ class ThrowableObject extends DrawableObject {
                 this.img = this.imageCache[this.SPLASH_IMAGES[this.animationIndex]];
             } else {
                 clearInterval(splashInterval);
-                this.isRemoved = true; // Mark the bottle for removal
+                this.isRemoved = true; 
             }
         }, 100); // Adjust the frame duration as needed
     }
     
+    
+    
+   
+   
     stop() {
         clearInterval(this.timer);
     }

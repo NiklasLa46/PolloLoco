@@ -84,7 +84,7 @@ class World {
             // Handle throwable bottles separately
             this.throwableObjects.forEach((bottle) => {
                 this.level.enemies.forEach((enemy) => {
-                    if (bottle.isColliding(enemy)) {
+                    if (bottle.isColliding(enemy) && !bottle.hasCollided) {
                         bottle.playSplashAnimation();
                         bottle.hasCollided = true; // Mark the bottle as collided
                         enemy.hit(); // Damage the enemy
@@ -100,35 +100,36 @@ class World {
 
     draw() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-
+    
         this.ctx.translate(this.camera_x, 0);
-
+    
         this.addObjectsToMap(this.level.backgroundObjects);
         this.addObjectsToMap(this.level.bottles);
         this.addObjectsToMap(this.level.coins);
         this.addObjectsToMap(this.level.enemies);
         this.addObjectsToMap(this.level.clouds);
-        this.addObjectsToMap(this.throwableObjects);
-
-
-
-
-
+    
+        // Filter out removed throwable objects
+        this.throwableObjects = this.throwableObjects.filter(bottle => !bottle.isRemoved);
+        this.addObjectsToMap(this.throwableObjects); // This should now render only active objects
+    
         this.addToMap(this.character);
-
+    
         this.ctx.translate(-this.camera_x, 0);
-
+    
         // Draw fixed UI elements
         this.addToMap(this.healthBar);
         this.addToMap(this.bottleBar);
         this.addToMap(this.coinBar);
-
+    
         requestAnimationFrame(() => this.draw());
-
+    
         if (!this.background_music.playing) {
             this.background_music.play().catch(() => { });
         }
     }
+    
+   
 
 
     addObjectsToMap(objects) {

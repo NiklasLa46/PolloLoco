@@ -14,11 +14,13 @@ class DrawableObject {
         left: 0
     }
 
-
     draw(ctx, cameraX = 0) {
+        if (this.isRemoved) return; // Don't render if removed
+    
         const drawX = this.isFixed ? this.x : this.x - cameraX; // Adjust position based on `isFixed`
         ctx.drawImage(this.img, drawX, this.y, this.width, this.height);
     }
+    
 
     loadImage(path){
         this.img = new Image();
