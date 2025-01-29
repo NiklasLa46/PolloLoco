@@ -66,34 +66,29 @@ class World {
                 }
             });
     
-            // Check collisions with bottles
-            this.level.bottles.forEach((bottle, index) => {
-                if (this.character.isColliding(bottle)) {
-                    bottle.pickup(this.character);
-                    this.bottle_sound.currentTime = 0; // Reset sound
-                    this.bottle_sound.play();
-                    this.level.bottles.splice(index, 1); // Remove picked-up bottle
-                    this.bottleBar.setPercentage(this.character.bottles); // Update bottle bar
-                }
-            });
+// Check collisions with bottles
+this.level.bottles.forEach((bottle, index) => {
+    // Check if the bottle has a pickup method (for collectible bottles)
+    if (this.character.isColliding(bottle) && typeof bottle.pickup === 'function') {
+        bottle.pickup(this.character);
+        this.bottle_sound.currentTime = 0; // Reset sound
+        this.bottle_sound.play();
+        this.level.bottles.splice(index, 1); // Remove picked-up bottle
+        this.bottleBar.setPercentage(this.character.bottles); // Update bottle bar
+    }
+});
 
+// Handle throwable bottles separately
+this.throwableObjects.forEach((bottle) => {
+    this.level.enemies.forEach((enemy) => {
+        if (bottle.isColliding(enemy)) {
+            bottle.playSplashAnimation();
+            bottle.hasCollided = true; // Mark the bottle as collided
+            enemy.hit(); // Damage the enemy
+        }
+    });
+});
 
-
-            this.throwableObjects = this.throwableObjects.filter((bottle) => {
-          
-                // Handle bottle hitting an enemy
-                this.level.enemies.forEach((enemy) => {
-                    if (bottle.isColliding(enemy) ) {
-                        bottle.playSplashAnimation(); 
-                        bottle.hasCollided = true; // Mark the bottle as collided
-            
-                        enemy.hit(); // Damage the enemy
-                    }
-                });
-    
-
-                return !bottle.isRemoved; // Keep the bottle in the array until the animation finishes
-            });
             
         }, 200);
     }
