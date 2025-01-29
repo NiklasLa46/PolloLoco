@@ -47,8 +47,8 @@ class ThrowableObject extends DrawableObject {
             this.img = this.imageCache[this.THROW_IMAGES[this.animationIndex]];
 
             // Stop when it hits the ground
-            if (this.y >= 380)  { // Adjust based on your ground level
-                this.y = 380 ;
+            if (this.y >= 360) { // Adjust based on your ground level
+                this.y = 360 ;
                 this.playSplashAnimation();
             }  
         }, 50);
@@ -59,7 +59,7 @@ class ThrowableObject extends DrawableObject {
         this.speedX = 0;
         this.speedY = 0;
     
-        let splashInterval = setInterval(() => {f
+        let splashInterval = setInterval(() => {
             this.animationIndex++;
             if (this.animationIndex < this.SPLASH_IMAGES.length) {
                 this.img = this.imageCache[this.SPLASH_IMAGES[this.animationIndex]];
