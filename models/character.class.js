@@ -160,8 +160,8 @@ class Character extends MovableObject {
                     this.jump();
                 }
             }
-    
-            if (moving || this.isAboveGround()||this.isHurt()||this.isDead()) {
+
+            if (moving || this.isAboveGround() || this.isHurt() || this.isDead()) {
                 this.resetIdleTimers();
             }
 
@@ -169,9 +169,8 @@ class Character extends MovableObject {
         }, 1000 / 60);
 
         setInterval(() => {
-            
             if (this.isDead()) {
-                this.playAnimation(this.IMAGES_DEATH);
+                this.playDeathAnimation(this.IMAGES_DEATH); // Use the new method for death animation
             } else if (this.isHurt()) {
                 this.playAnimation(this.IMAGES_HURT);
             } else if (this.isAboveGround()) {
@@ -184,13 +183,10 @@ class Character extends MovableObject {
                     this.playAnimation(this.IMAGES_WALKING);
                 }
             }
-
-    
         }, 100);
 
         this.resetIdleTimers(); // Initialize idle timers on character load
     }
-
     applyGravity() {
         setInterval(() => {
             if (this.isAboveGround() || this.speedY > 0) {
