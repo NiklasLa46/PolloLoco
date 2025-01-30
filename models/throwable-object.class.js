@@ -6,7 +6,7 @@ class ThrowableObject extends DrawableObject {
     splashTimer;
     animationIndex = 0;
     hasCollided = false;
-    isRemoved = false; // New property to track removal
+     // New property to track removal
 
     THROW_IMAGES = [
         'img/6_salsa_bottle/bottle_rotation/1_bottle_rotation.png',

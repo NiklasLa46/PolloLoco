@@ -13,6 +13,7 @@ class DrawableObject {
         bottom: 0,
         left: 0
     }
+    isRemoved = false;
 
     draw(ctx, cameraX = 0) {
         if (this.isRemoved) return; // Don't render if removed
