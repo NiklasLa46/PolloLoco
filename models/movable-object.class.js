@@ -53,12 +53,17 @@ class MovableObject extends DrawableObject{
         this.x -= this.speed;
     }
 
-    jump(){
+    jump(weak = false) {
         this.jumping_sound.currentTime = 0;
         this.jumping_sound.play();
-        this.speedY = 30; // Set jump speed
+        if (weak) {
+            this.speedY = 20; // A weaker jump force
+        } else {
+            this.speedY = 30; // Normal jump force
+        }
         this.isJumping = true; // Set jumping flag
     }
+    
 
     playAnimation(images) {
         let i = this.currentImage % images.length; // Use the length of the provided images array

@@ -198,9 +198,12 @@ class Character extends MovableObject {
                 enemy.hit(); // Deal damage to the enemy
                 this.isJumping = false; // Stop the jump after hitting the enemy
                 this.y = enemy.y - this.height; // Place the character on top of the enemy
+                this.jump(true); // Call the jump function with the "weak" argument
             }
         }
     }
+    
+    
     
     // Apply gravity with the jumping condition
     applyGravity() {
