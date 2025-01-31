@@ -78,7 +78,7 @@ class Character extends MovableObject {
         bottom: -15,
         left: -25
     }
-
+    
     constructor() {
         super().loadImage('./img/2_character_pepe/2_walk/W-21.png');
         this.loadImages(this.IMAGES_WALKING);
@@ -91,7 +91,6 @@ class Character extends MovableObject {
         this.jumping_sound.volume = 0.3;
         this.sleeping_sound.volume = 0;
         this.animate();
- 
     }
 
     resetIdleTimers() {
@@ -187,6 +186,23 @@ class Character extends MovableObject {
 
         this.resetIdleTimers(); // Initialize idle timers on character load
     }
+
+    // Your current gravity and movement logic...
+
+    // New method to check if the character jumps on top of an enemy
+    checkJumpOnEnemy(enemy) {
+        // Check if the character is jumping and collides with the enemy from above
+        if (this.isJumping && this.y < enemy.y) {
+            // The character is above the enemy and falling, so it lands on top of it
+            if (this.isColliding(enemy)) {
+                enemy.hit(); // Deal damage to the enemy
+                this.isJumping = false; // Stop the jump after hitting the enemy
+                this.y = enemy.y - this.height; // Place the character on top of the enemy
+            }
+        }
+    }
+    
+    // Apply gravity with the jumping condition
     applyGravity() {
         setInterval(() => {
             if (this.isAboveGround() || this.speedY > 0) {
@@ -197,7 +213,6 @@ class Character extends MovableObject {
             }
         }, 1000 / 25);
     }
-
     isAboveGround(){
         return this.y < 120;
     }

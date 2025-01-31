@@ -47,19 +47,41 @@ class World {
         }
     }
     
-
     checkCollisions() {
         setInterval(() => {
             // Check collisions with enemies
-            this.level.enemies.forEach((enemy) => {
-                if (this.character.isColliding(enemy) && !this.character.isHurt()) {
-                    this.character.hit();
-                    this.dmg_sound.currentTime = 0; // Reset sound
-                    this.dmg_sound.play();
-                    this.healthBar.setPercentage(this.character.energy);
+            for (let index = 0; index < this.level.enemies.length; index++) {
+                const enemy = this.level.enemies[index];
+    
+                // Check for jumping on the enemy (character lands on top of enemy)
+                this.character.checkJumpOnEnemy(enemy);
+    
+                // Only check for a hit if the character is touching the enemy physically
+                if (!this.character.isJumping && !this.character.isHurt() && !this.character.isDead()) {
+                    // Use the collision method to see if the character and enemy are actually colliding
+                    if (this.character.isColliding(enemy)) {
+                        this.character.hit();
+                        this.dmg_sound.currentTime = 0; // Reset sound
+                        this.dmg_sound.play();
+                        this.healthBar.setPercentage(this.character.energy);
+                    }
                 }
-            });
-
+    
+                // Handle enemy death animation logic
+                if (enemy.isDead() && !enemy.deathAnimationPlaying) {
+                    enemy.playDeathAnimation(enemy.IMAGE_DEATH); // Start the death animation
+                    enemy.deathAnimationPlaying = true; // Mark the death animation as playing
+    
+                    // After the animation finishes (1 second in this case), remove the enemy
+                    setTimeout(() => {
+                        const index = this.level.enemies.indexOf(enemy);
+                        if (index !== -1) {
+                            this.level.enemies.splice(index, 1); // Remove the enemy from the array
+                        }
+                    }, 1000); // Adjust this duration to match the length of the death animation
+                }
+            }
+    
             // Check collisions with coins
             this.level.coins.forEach((coin, index) => {
                 if (this.character.isColliding(coin)) {
@@ -70,10 +92,9 @@ class World {
                     this.coinBar.setPercentage(this.character.coins); // Update coin bar
                 }
             });
-
+    
             // Check collisions with bottles
             this.level.bottles.forEach((bottle, index) => {
-                // Check if the bottle has a pickup method (for collectible bottles)
                 if (this.character.isColliding(bottle) && typeof bottle.pickup === 'function') {
                     bottle.pickup(this.character);
                     this.bottle_sound.currentTime = 0; // Reset sound
@@ -82,7 +103,7 @@ class World {
                     this.bottleBar.setPercentage(this.character.bottles); // Update bottle bar
                 }
             });
-
+    
             // Handle throwable bottles separately
             this.throwableObjects.forEach((bottle) => {
                 this.level.enemies.forEach((enemy) => {
@@ -90,14 +111,25 @@ class World {
                         bottle.playSplashAnimation();
                         bottle.hasCollided = true; // Mark the bottle as collided
                         enemy.hit(); // Damage the enemy
+                        if (enemy.isDead() && !enemy.deathAnimationPlaying) {
+                            enemy.playDeathAnimation(enemy.IMAGE_DEATH); // Start the death animation
+                            enemy.deathAnimationPlaying = true; // Mark the death animation as playing
+                            setTimeout(() => {
+                                const index = this.level.enemies.indexOf(enemy);
+                                if (index !== -1) {
+                                    this.level.enemies.splice(index, 1); // Remove the enemy from the array
+                                }
+                            }, 1000); // Adjust this duration to match the length of the death animation
+                        }
                     }
                 });
             });
-
-
+    
         }, 50);
     }
-
+    
+    
+    
 
 
     draw() {

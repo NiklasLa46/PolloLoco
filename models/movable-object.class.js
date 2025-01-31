@@ -5,17 +5,18 @@ class MovableObject extends DrawableObject{
     lastHit = 0;
 
     hit() {
-        if (!this.isHurt()) { // Only allow hit if not currently hurt
-            
+        if (!this.isHurt() && !this.isDead()) {  // Only allow hit if not currently hurt
             this.energy -= 20;
-            console.log(this.energy)
+            console.log(this.energy);
+            
             if (this.energy < 0) {
                 this.energy = 0;
             } else {
-                this.lastHit = new Date().getTime();
+                this.lastHit = new Date().getTime(); // Update last hit time
             }
         }
     }
+    
 
     playDeathAnimation(images) {
         if (this.isDead() && !this.deathAnimationPlaying) {
@@ -39,9 +40,9 @@ class MovableObject extends DrawableObject{
     }
 
     isHurt(){
-        let timepassed = new Date().getTime() - this.lastHit;
-        timepassed = timepassed / 1000;
-        return timepassed < 1;
+        let timePassed = new Date().getTime() - this.lastHit;
+        timePassed = timePassed / 1000;  // Convert to seconds
+        return timePassed < 1;  // Only allow hurt state for 1 second after being hit
     }
 
     moveRight() {
