@@ -36,22 +36,7 @@ class DrawableObject {
         });
     }
 
-    drawFrame(ctx) {
-        if (this instanceof Chicken || this instanceof Character || this instanceof SmallChicken || this instanceof Bottle || this instanceof Coin || this instanceof Endboss) {
-    
-            // Visualize the actual bounding box considering the offset
-            const offsetX = this.x - this.offset.left;
-            const offsetY = this.y - this.offset.top;
-            const offsetWidth = this.width + this.offset.left + this.offset.right;
-            const offsetHeight = this.height + this.offset.top + this.offset.bottom;
-    
-            ctx.beginPath();
-            ctx.lineWidth = '5';
-            ctx.strokeStyle = 'blue';  // Change color for visual clarity
-            ctx.rect(offsetX, offsetY, offsetWidth, offsetHeight);
-            ctx.stroke();
-        }
-    }
+ 
     
 
     
