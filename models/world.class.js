@@ -40,40 +40,40 @@ class World {
             bottle.speedX = throwDirection * 20; // Set speedX based on direction
             bottle.throw(); // Start throwing the bottle
             this.throwableObjects.push(bottle); // Push bottle into throwableObjects array for collision detection
-    
+
             // Reduce character's bottle count by 1
             this.character.bottles -= 11; // Decrease by 1, not 11
             this.bottleBar.setPercentage(this.character.bottles); // Update the bottle bar
         }
     }
-    
+
     checkCollisions() {
         setInterval(() => {
             // Check collisions with enemies
             // Check collisions with enemies
-this.level.enemies.forEach((enemy, index) => {
-    if (enemy.isDying || enemy.isRemoved) return; // Skip if enemy is dying or removed
+            this.level.enemies.forEach((enemy, index) => {
+                if (enemy.isDying || enemy.isRemoved) return; // Skip if enemy is dying or removed
 
-    // Check for jumping on the enemy
-    this.character.checkJumpOnEnemy(enemy);
+                // Check for jumping on the enemy
+                this.character.checkJumpOnEnemy(enemy);
 
-    // Check physical collision
-    if (!this.character.isJumping && !this.character.isHurt() && !this.character.isDead()) {
-        if (this.character.isColliding(enemy)) {
-            this.character.hit();
-            this.dmg_sound.currentTime = 0; // Reset sound
-            this.dmg_sound.play();
-            this.healthBar.setPercentage(this.character.energy);
-        }
-    }
+                // Check physical collision
+                if (!this.character.isJumping && !this.character.isHurt() && !this.character.isDead()) {
+                    if (this.character.isColliding(enemy)) {
+                        this.character.hit();
+                        this.dmg_sound.currentTime = 0; // Reset sound
+                        this.dmg_sound.play();
+                        this.healthBar.setPercentage(this.character.energy);
+                    }
+                }
 
-    // Handle enemy death animation
-    if (enemy.isDead() && !enemy.isDying) {
-        enemy.playDeathImage(); // Trigger the death image
-    }
-});
+                // Handle enemy death animation
+                if (enemy.isDead() && !enemy.isDying) {
+                    enemy.playDeathImage(); // Trigger the death image
+                }
+            });
 
-    
+
             // Check collisions with coins
             this.level.coins.forEach((coin, index) => {
                 if (this.character.isColliding(coin)) {
@@ -84,7 +84,7 @@ this.level.enemies.forEach((enemy, index) => {
                     this.coinBar.setPercentage(this.character.coins); // Update coin bar
                 }
             });
-    
+
             // Check collisions with bottles
             this.level.bottles.forEach((bottle, index) => {
                 if (this.character.isColliding(bottle) && typeof bottle.pickup === 'function') {
@@ -95,7 +95,7 @@ this.level.enemies.forEach((enemy, index) => {
                     this.bottleBar.setPercentage(this.character.bottles); // Update bottle bar
                 }
             });
-    
+
             // Handle throwable bottles separately
             this.throwableObjects.forEach((bottle) => {
                 this.level.enemies.forEach((enemy) => {
@@ -116,46 +116,53 @@ this.level.enemies.forEach((enemy, index) => {
                     }
                 });
             });
-    
+
         }, 50);
     }
-    
-    
-    
+
+
 
 
     draw() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    
+
         this.ctx.translate(this.camera_x, 0);
-    
+
         this.addObjectsToMap(this.level.backgroundObjects);
         this.addObjectsToMap(this.level.bottles);
         this.addObjectsToMap(this.level.coins);
         this.addObjectsToMap(this.level.enemies);
         this.addObjectsToMap(this.level.clouds);
-    
+
+        // Check Endboss visibility
+        this.level.enemies.forEach((enemy) => {
+            if (enemy instanceof Endboss) {
+                enemy.checkVisibility(this.camera_x, this.canvas.width);
+            }
+        });
+
         // Filter out removed throwable objects
         this.throwableObjects = this.throwableObjects.filter(bottle => !bottle.isRemoved);
-        this.addObjectsToMap(this.throwableObjects); // This should now render only active objects
-    
+        this.addObjectsToMap(this.throwableObjects);
+
         this.addToMap(this.character);
-    
+
         this.ctx.translate(-this.camera_x, 0);
-    
+
         // Draw fixed UI elements
         this.addToMap(this.healthBar);
         this.addToMap(this.bottleBar);
         this.addToMap(this.coinBar);
-    
+
         requestAnimationFrame(() => this.draw());
-    
+
         if (!this.background_music.playing) {
             this.background_music.play().catch(() => { });
         }
     }
-    
-   
+
+
+
 
 
     addObjectsToMap(objects) {

@@ -136,7 +136,7 @@ class Character extends MovableObject {
             this.walking_sound.pause();
             let moving = false;
 
-            if (this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x) {
+            if (this.world.keyboard.RIGHT && this.x < 719*5) {
                 this.moveRight();
                 this.otherDirection = false;
                 if (!this.isAboveGround()) {
