@@ -10,6 +10,7 @@ class Chicken extends MovableObject {
         'img/3_enemies_chicken/chicken_normal/2_dead/dead.png'
     ];
     energy = 20;
+    isDying = false; // New flag to track death state
     offset = {
         top: -20,
         right: -5,
@@ -28,30 +29,29 @@ class Chicken extends MovableObject {
 
     animate() {
         setInterval(() => {
-            if (!this.isDead()) {
+            if (!this.isDead() && !this.isDying) {
                 this.moveLeft();
             }
         }, 1000 / 60);
 
         setInterval(() => {
-            if (!this.isDead()) {
+            if (!this.isDead() && !this.isDying) {
                 this.playAnimation(this.IMAGES_WALKING);
             }
         }, 200);
-
-        setInterval(() => {
-            if (this.isDead() && !this.deathAnimationPlaying) {
-                this.playDeathImage();
-            }
-        }, 500);
     }
 
     playDeathImage() {
-        this.deathAnimationPlaying = true; // Prevent further calls while playing the death animation
-        this.img = this.imageCache[this.IMAGE_DEATH[0]]; // Display the death image
+        if (this.isDying) return; // Ensure this runs only once
+
+        this.isDying = true; // Mark as dying
+        this.img = this.imageCache[this.IMAGE_DEATH[0]]; // Set death image
         setTimeout(() => {
-            this.isRemoved = true; // Mark the chicken for removal after 1 second
-            this.deathAnimationPlaying = false; // Reset the flag for potential reuse
-        }, 1000); // 1 second delay
+            this.isRemoved = true; // Mark for removal
+        }, 1000); // Wait for death animation to finish
+    }
+
+    isDead() {
+        return this.energy <= 0 || this.isRemoved; // Include removal check
     }
 }

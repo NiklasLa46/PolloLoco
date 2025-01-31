@@ -50,37 +50,29 @@ class World {
     checkCollisions() {
         setInterval(() => {
             // Check collisions with enemies
-            for (let index = 0; index < this.level.enemies.length; index++) {
-                const enemy = this.level.enemies[index];
-    
-                // Check for jumping on the enemy (character lands on top of enemy)
-                this.character.checkJumpOnEnemy(enemy);
-    
-                // Only check for a hit if the character is touching the enemy physically
-                if (!this.character.isJumping && !this.character.isHurt() && !this.character.isDead()) {
-                    // Use the collision method to see if the character and enemy are actually colliding
-                    if (this.character.isColliding(enemy)) {
-                        this.character.hit();
-                        this.dmg_sound.currentTime = 0; // Reset sound
-                        this.dmg_sound.play();
-                        this.healthBar.setPercentage(this.character.energy);
-                    }
-                }
-    
-                // Handle enemy death animation logic
-                if (enemy.isDead() && !enemy.deathAnimationPlaying) {
-                    enemy.playDeathAnimation(enemy.IMAGE_DEATH); // Start the death animation
-                    enemy.deathAnimationPlaying = true; // Mark the death animation as playing
-    
-                    // After the animation finishes (1 second in this case), remove the enemy
-                    setTimeout(() => {
-                        const index = this.level.enemies.indexOf(enemy);
-                        if (index !== -1) {
-                            this.level.enemies.splice(index, 1); // Remove the enemy from the array
-                        }
-                    }, 1000); // Adjust this duration to match the length of the death animation
-                }
-            }
+            // Check collisions with enemies
+this.level.enemies.forEach((enemy, index) => {
+    if (enemy.isDying || enemy.isRemoved) return; // Skip if enemy is dying or removed
+
+    // Check for jumping on the enemy
+    this.character.checkJumpOnEnemy(enemy);
+
+    // Check physical collision
+    if (!this.character.isJumping && !this.character.isHurt() && !this.character.isDead()) {
+        if (this.character.isColliding(enemy)) {
+            this.character.hit();
+            this.dmg_sound.currentTime = 0; // Reset sound
+            this.dmg_sound.play();
+            this.healthBar.setPercentage(this.character.energy);
+        }
+    }
+
+    // Handle enemy death animation
+    if (enemy.isDead() && !enemy.isDying) {
+        enemy.playDeathImage(); // Trigger the death image
+    }
+});
+
     
             // Check collisions with coins
             this.level.coins.forEach((coin, index) => {
