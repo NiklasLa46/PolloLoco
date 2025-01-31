@@ -197,11 +197,16 @@ class Character extends MovableObject {
             if (this.isColliding(enemy)) {
                 enemy.hit(); // Deal damage to the enemy
                 this.isJumping = false; // Stop the jump after hitting the enemy
-                this.y = enemy.y - this.height; // Place the character on top of the enemy
                 this.jump(true); // Call the jump function with the "weak" argument
+    
+                // Set a timeout to ensure the weak jump is executed before landing
+                setTimeout(() => {
+                    this.y = 120; // Reset to ground level
+                }, 600); // Adjust this delay as needed for smoothness
             }
         }
     }
+    
     
     
     
