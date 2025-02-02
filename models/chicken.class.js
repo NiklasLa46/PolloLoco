@@ -6,7 +6,7 @@ class Chicken extends MovableObject {
         'img/3_enemies_chicken/chicken_normal/1_walk/2_w.png',
         'img/3_enemies_chicken/chicken_normal/1_walk/3_w.png'
     ];
-    IMAGE_DEATH = [
+    IMAGES_DEATH = [
         'img/3_enemies_chicken/chicken_normal/2_dead/dead.png'
     ];
     energy = 20;
@@ -23,7 +23,7 @@ class Chicken extends MovableObject {
         this.x = 200 + Math.random() * 500;
         this.speed = 0.15 + Math.random() * 0.5;
         this.loadImages(this.IMAGES_WALKING);
-        this.loadImages(this.IMAGE_DEATH);
+        this.loadImages(this.IMAGES_DEATH);
         this.animate();
     }
 
@@ -41,11 +41,12 @@ class Chicken extends MovableObject {
         }, 200);
     }
 
+    
     playDeathImage() {
         if (this.isDying) return; // Ensure this runs only once
 
         this.isDying = true; // Mark as dying
-        this.img = this.imageCache[this.IMAGE_DEATH[0]]; // Set death image
+        this.img = this.imageCache[this.IMAGES_DEATH[0]]; // Set death image
         setTimeout(() => {
             this.isRemoved = true; // Mark for removal
         }, 1000); // Wait for death animation to finish

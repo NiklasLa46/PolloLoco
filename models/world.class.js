@@ -11,6 +11,7 @@ class World {
     bottle_sound = new Audio('/audio/bottlepickup.mp3')
     healthBar = new HealthBar();
     bottleBar = new BottleBar();
+    bossBar = new BossBar();
     coinBar = new CoinBar();
     throwableObjects = [];
 
@@ -68,7 +69,7 @@ class World {
                 }
 
                 // Handle enemy death animation
-                if (enemy.isDead() && !enemy.isDying) {
+                if (enemy.isDead() && !enemy.isDying  && !(enemy instanceof Endboss)) {
                     enemy.playDeathImage(); // Trigger the death image
                 }
             });
@@ -103,8 +104,9 @@ class World {
                         bottle.playSplashAnimation();
                         bottle.hasCollided = true; // Mark the bottle as collided
                         enemy.hit(); // Damage the enemy
-                        if (enemy.isDead() && !enemy.deathAnimationPlaying) {
-                            enemy.playDeathAnimation(enemy.IMAGE_DEATH); // Start the death animation
+    
+                        if (enemy.isDead() && !enemy.deathAnimationPlaying && !(enemy instanceof Endboss)) {
+                            enemy.playDeathAnimation(enemy.IMAGES_DEATH); // Start the death animation
                             enemy.deathAnimationPlaying = true; // Mark the death animation as playing
                             setTimeout(() => {
                                 const index = this.level.enemies.indexOf(enemy);
@@ -153,6 +155,7 @@ class World {
         this.addToMap(this.healthBar);
         this.addToMap(this.bottleBar);
         this.addToMap(this.coinBar);
+        this.addToMap(this.bossBar);
 
         requestAnimationFrame(() => this.draw());
 
