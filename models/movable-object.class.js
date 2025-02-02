@@ -20,7 +20,6 @@ class MovableObject extends DrawableObject{
 
     playDeathAnimation(images) {
         if (this.isDead() && !this.deathAnimationPlaying) {
-            console.log("Images passed to playDeathAnimation:", images);
             this.deathAnimationPlaying = true; // Set the flag to indicate the animation is playing
             this.currentImage = 0; // Reset the current image index
 

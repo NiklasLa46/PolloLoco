@@ -10,7 +10,7 @@ class BossBar extends StatusBar {
                 'img/7_statusbars/2_statusbar_endboss/orange/orange100.png'
             ];
         this.loadImages(this.IMAGES);
-        this.x = 500;
+        this.x = 719 * 5 - 200
         this.y = 20;
         this.setPercentage(100); // Start at full health
     }

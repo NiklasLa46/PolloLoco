@@ -124,45 +124,50 @@ class World {
 
 
 
-
     draw() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-
+    
         this.ctx.translate(this.camera_x, 0);
-
+    
         this.addObjectsToMap(this.level.backgroundObjects);
         this.addObjectsToMap(this.level.bottles);
         this.addObjectsToMap(this.level.coins);
         this.addObjectsToMap(this.level.enemies);
         this.addObjectsToMap(this.level.clouds);
-
-        // Check Endboss visibility
+    
+        // Check for the Endboss's visibility and update bossBar position
         this.level.enemies.forEach((enemy) => {
             if (enemy instanceof Endboss) {
                 enemy.checkVisibility(this.camera_x, this.canvas.width);
+                if (enemy.isVisible) {
+                    // Align boss bar with the boss position (you can adjust y as needed)
+                    this.bossBar.x = enemy.x + 40; // Set the x position of the boss bar to match the boss
+                    this.bossBar.y = enemy.y - 20; // Optionally adjust the y position to place it above the boss
+                    this.addToMap(this.bossBar); // Draw the boss's health bar only if the boss is visible
+                }
             }
         });
-
+    
         // Filter out removed throwable objects
         this.throwableObjects = this.throwableObjects.filter(bottle => !bottle.isRemoved);
         this.addObjectsToMap(this.throwableObjects);
-
+    
         this.addToMap(this.character);
-
+    
         this.ctx.translate(-this.camera_x, 0);
-
-        // Draw fixed UI elements
+    
+        // Draw fixed UI elements that are always visible
         this.addToMap(this.healthBar);
         this.addToMap(this.bottleBar);
         this.addToMap(this.coinBar);
-        this.addToMap(this.bossBar);
-
+    
         requestAnimationFrame(() => this.draw());
-
+    
         if (!this.background_music.playing) {
             this.background_music.play().catch(() => { });
         }
     }
+    
 
 
 
