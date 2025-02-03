@@ -9,14 +9,18 @@ class World {
     dmg_sound = new Audio('/audio/pepedmg1.mp3');
     coin_sound = new Audio('/audio/coinpickup.mp3');
     bottle_sound = new Audio('/audio/bottlepickup.mp3')
-       
+    win_sound = new Audio('/audio/winsound.mp3')  
     healthBar = new HealthBar();
     bottleBar = new BottleBar();
     bossBar = new BossBar();
     coinBar = new CoinBar();
+    paused = false; 
     throwableObjects = [];
     IMAGE_GAMEOVER = [
         'img/9_intro_outro_screens/game_over/game over.png'
+    ];
+    IMAGE_GAMEWIN = [
+        'img/9_intro_outro_screens/win/won_2.png'
     ]
 
 
@@ -46,7 +50,7 @@ class World {
             this.throwableObjects.push(bottle); // Push bottle into throwableObjects array for collision detection
     
             // Reduce character's bottle count by 1
-            this.character.bottles -= 1; // Decrease by 1, not 11
+            this.character.bottles -= 11; // Decrease by 1, not 11
             this.bottleBar.setPercentage(this.character.bottles); // Update the bottle bar
     
             // Reset the idle timers on bottle throw
@@ -184,9 +188,27 @@ class World {
     
 
     draw() {
-        if (this.gameOverTriggered) {
-            return; // Stop the game loop
+        if (this.paused) {
+            
+            this.ctx.translate(this.camera_x, 0);
+            this.addObjectsToMap(this.level.backgroundObjects);
+            this.addObjectsToMap(this.level.bottles);
+            this.addObjectsToMap(this.level.coins);
+            this.addObjectsToMap(this.level.enemies);
+            this.addObjectsToMap(this.level.clouds);
+            this.addToMap(this.character); // Character (can be static if paused)
+            this.addToMap(this.healthBar);
+            this.addToMap(this.bottleBar);
+            this.addToMap(this.coinBar);
+
+       
+            this.showWinScreen();
+            
+
+            return; // Stop updating game logic and animations
         }
+
+        // If not paused, proceed with regular game loop
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         
         this.ctx.translate(this.camera_x, 0);
@@ -220,6 +242,61 @@ class World {
         }
     }
 
+
+    togglePause() {
+        this.paused = !this.paused;
+    }
+
+    showWinScreen() {
+        console.log('called');
+        this.background_music.pause();
+    
+      
+    
+        // Reset camera before drawing the win image
+        this.camera_x = 0;
+    
+        const winImage = new Image();
+        winImage.src = this.IMAGE_GAMEWIN[0];
+    
+        winImage.onload = () => {
+            console.log('Win Image Loaded');
+            console.log(winImage.width, winImage.height);
+    
+            const scaleX = this.canvas.width / winImage.width;
+            const scaleY = this.canvas.height / winImage.height;
+    
+            const scale = Math.min(scaleX, scaleY);
+            const width = winImage.width * scale;
+            const height = winImage.height * scale;
+    
+            console.log('Drawing image with width:', width, 'height:', height);
+    
+            // Don't apply camera translation here, draw the image centered on canvas
+            this.ctx.drawImage(
+                winImage,
+                (this.canvas.width - width) / 2, // Center horizontally
+                (this.canvas.height - height) / 2, // Center vertically
+                width, // New width
+                height // New height
+            );
+        };
+        
+        winImage.onerror = () => {
+            console.error('Error loading win image!');
+        };
+    }
+    
+
+    // Pause the game (stopping game logic, but keeping the visuals)
+    pauseGame() {
+        this.paused = true;
+    }
+
+    // Resume the game
+    resumeGame() {
+        this.paused = false;
+    }
 
 
 

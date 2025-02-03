@@ -37,6 +37,7 @@ class Endboss extends MovableObject {
         left: -45
     };
     isWalking = false; // New property to track walking state
+    gameWon = false; 
 
     constructor() {
         super().loadImage(this.IMAGES_ALERT[0]);
@@ -86,14 +87,19 @@ class Endboss extends MovableObject {
 
     playDeathAnimationBoss(images) {
         if (this.isDead() && !this.deathAnimationPlaying) {
-            console.log("Images passed to playDeathAnimation:", images);
             this.deathAnimationPlaying = true; // Set the flag to indicate the animation is playing
             this.currentImage = 0; // Reset the current image index
 
             const deathInterval = setInterval(() => {
                 if (this.currentImage < images.length) {
                     this.playAnimation(images); // Play the next frame of the death animation
-  
+                } else {
+                    clearInterval(deathInterval); // Stop the death animation interval once it's done
+                    if (!this.gameWon) {
+                        this.gameWon = true; // Set the game to "won" after the death animation completes
+                        world.showWinScreen(); // Show the win screen
+                        world.pauseGame(); // Pause the game
+                    }
                 }
             }, 350); // Adjust the interval as needed for animation speed
         }
