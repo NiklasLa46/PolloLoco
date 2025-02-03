@@ -207,22 +207,7 @@ class Character extends MovableObject {
         }
     }
 
-    throwBottle() {
-        if (this.character.bottles > 0) {
-            let throwDirection = this.character.otherDirection ? -1 : 1; // -1 for left, 1 for right
-            let bottle = new ThrowableObject(this.character.x + 30, this.character.y + 90); // Create bottle at character position
-            bottle.speedX = throwDirection * 20; // Set speedX based on direction
-            bottle.throw(); // Start throwing the bottle
-            this.throwableObjects.push(bottle); // Push bottle into throwableObjects array for collision detection
-    
-            // Reduce character's bottle count by 1
-            this.character.bottles -= 1; // Decrease by 1, not 11
-            this.bottleBar.setPercentage(this.character.bottles); // Update the bottle bar
-    
-            // Reset the idle timers on bottle throw
-            this.character.resetIdleTimers();
-        }
-    }
+
     
     
     
