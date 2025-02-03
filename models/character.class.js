@@ -91,7 +91,7 @@ class Character extends MovableObject {
         this.loadImages(this.IMAGES_HURT);
         this.applyGravity();
         this.jumping_sound.volume = 0.3;
-        this.sleeping_sound.volume = 0;
+        this.sleeping_sound.volume = 0.6;
         this.animate();
     }
 
@@ -213,7 +213,7 @@ class Character extends MovableObject {
     
                 // Set a timeout to ensure the weak jump is executed before landing
                 setTimeout(() => {
-                    this.y = 120; // Reset to ground level
+                    this.y = 130; // Reset to ground level
                 }, 600); // Adjust this delay as needed for smoothness
             }
         }

@@ -8,8 +8,10 @@ class World {
     background_music = new Audio('./audio/background.mp3');
     dmg_sound = new Audio('/audio/pepedmg1.mp3');
     coin_sound = new Audio('/audio/coinpickup.mp3');
-    bottle_sound = new Audio('/audio/bottlepickup.mp3')
-       
+    bottle_sound = new Audio('/audio/bottlepickup.mp3');
+    bottlebreak_sound = new Audio('/audio/bottle-break.mp3');   
+   
+
     healthBar = new HealthBar();
     bottleBar = new BottleBar();
     bossBar = new BossBar();
@@ -31,7 +33,7 @@ class World {
         this.draw();
         this.setWorld();
         this.checkCollisions()
-        this.background_music.volume = 0;
+        this.background_music.volume = 0.4;
         this.background_music.loop = true;
 
     }
