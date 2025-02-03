@@ -64,7 +64,7 @@ class Endboss extends MovableObject {
                 setTimeout(() => {
                     world.gamePaused = true;
                     world.showWinScreen();
-                }, 1000);
+                }, 1400);
             } else if (this.isHurt()) {
                 this.playAnimation(this.IMAGES_HURT);
             } else if (this.isWalking) {

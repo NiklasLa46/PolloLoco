@@ -175,8 +175,9 @@ class Character extends MovableObject {
                     this.playDeathAnimation(this.IMAGES_DEATH); // Play the death animation
                     this.gameover_sound.play();
                     setTimeout(() => {
-                        this.world.showGameOverScreen();
-                        this.world.gameOverTriggered = true; // Trigger the game over screen after animation
+                        world.showGameOverScreen();
+                        world.gamePaused = true;// Trigger the game over screen after animation
+                        world.gameOverTriggered = true;
                     }, 1600); // Adjust this delay to match the death animation duration
                     // Ensure this logic runs only once
                 }

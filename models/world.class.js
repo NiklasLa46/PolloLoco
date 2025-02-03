@@ -160,7 +160,7 @@ class World {
         this.background_music.pause();
     
         // Display the game over screen
-        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        
         const gameOverImage = new Image();
         gameOverImage.src = this.IMAGE_GAMEOVER[0];
         gameOverImage.onload = () => {
@@ -169,7 +169,7 @@ class World {
             const scaleY = this.canvas.height / gameOverImage.height;
     
             // Use the smaller scaling factor to preserve the aspect ratio
-            const scale = Math.min(scaleX, scaleY);
+            const scale = Math.min(scaleX, scaleY) * 1.2;
     
             // Calculate new width and height
             const width = gameOverImage.width * scale;
@@ -198,7 +198,7 @@ class World {
             const scaleY = this.canvas.height / winImage.height;
 
             // Use the smaller scaling factor to preserve the aspect ratio
-            const scale = Math.min(scaleX, scaleY);
+            const scale = Math.min(scaleX, scaleY) * 0.8;
 
             // Calculate new width and height
             const width = winImage.width * scale;
