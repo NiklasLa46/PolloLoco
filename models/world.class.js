@@ -41,23 +41,25 @@ class World {
             bottle.speedX = throwDirection * 20; // Set speedX based on direction
             bottle.throw(); // Start throwing the bottle
             this.throwableObjects.push(bottle); // Push bottle into throwableObjects array for collision detection
-
+    
             // Reduce character's bottle count by 1
-            this.character.bottles -= 11; // Decrease by 1, not 11
+            this.character.bottles -= 1; // Decrease by 1, not 11
             this.bottleBar.setPercentage(this.character.bottles); // Update the bottle bar
+    
+            // Reset the idle timers on bottle throw
+            this.character.resetIdleTimers();
         }
     }
 
     checkCollisions() {
         setInterval(() => {
             // Check collisions with enemies
-            // Check collisions with enemies
             this.level.enemies.forEach((enemy, index) => {
                 if (enemy.isDying || enemy.isRemoved) return; // Skip if enemy is dying or removed
-
+    
                 // Check for jumping on the enemy
                 this.character.checkJumpOnEnemy(enemy);
-
+    
                 // Check physical collision
                 if (!this.character.isJumping && !this.character.isHurt() && !this.character.isDead()) {
                     if (this.character.isColliding(enemy)) {
@@ -67,14 +69,34 @@ class World {
                         this.healthBar.setPercentage(this.character.energy);
                     }
                 }
-
-                // Handle enemy death animation
-                if (enemy.isDead() && !enemy.isDying  && !(enemy instanceof Endboss)) {
+    
+                // Handle Endboss-specific logic
+                if (enemy instanceof Endboss) {
+                    // Update the BossBar when the boss takes damage
+                    if (enemy.isHurt() && !enemy.isDead()) {
+                        this.bossBar.setPercentage(enemy.energy);
+                    }
+    
+                    // Trigger death animation for Endboss
+                    if (enemy.isDead() && !enemy.deathAnimationPlaying) {
+                        enemy.playDeathAnimationBoss(enemy.IMAGES_DEATH); // Start the boss's death animation
+                        enemy.deathAnimationPlaying = true;
+    
+                        setTimeout(() => {
+                            const index = this.level.enemies.indexOf(enemy);
+                            if (index !== -1) {
+                                this.level.enemies.splice(index, 1); // Remove the boss from the array
+                            }
+                        }, 2000); // Adjust to match the boss's death animation duration
+                    }
+                }
+    
+                // Handle enemy death animation for regular enemies
+                if (enemy.isDead() && !enemy.isDying && !(enemy instanceof Endboss)) {
                     enemy.playDeathImage(); // Trigger the death image
                 }
             });
-
-
+    
             // Check collisions with coins
             this.level.coins.forEach((coin, index) => {
                 if (this.character.isColliding(coin)) {
@@ -85,7 +107,7 @@ class World {
                     this.coinBar.setPercentage(this.character.coins); // Update coin bar
                 }
             });
-
+    
             // Check collisions with bottles
             this.level.bottles.forEach((bottle, index) => {
                 if (this.character.isColliding(bottle) && typeof bottle.pickup === 'function') {
@@ -96,7 +118,7 @@ class World {
                     this.bottleBar.setPercentage(this.character.bottles); // Update bottle bar
                 }
             });
-
+    
             // Handle throwable bottles separately
             this.throwableObjects.forEach((bottle) => {
                 this.level.enemies.forEach((enemy) => {
@@ -105,9 +127,15 @@ class World {
                         bottle.hasCollided = true; // Mark the bottle as collided
                         enemy.hit(); // Damage the enemy
     
+                        // Update the BossBar for the Endboss
+                        if (enemy instanceof Endboss && !enemy.isDead()) {
+                            this.bossBar.setPercentage(enemy.energy);
+                        }
+    
                         if (enemy.isDead() && !enemy.deathAnimationPlaying && !(enemy instanceof Endboss)) {
                             enemy.playDeathAnimation(enemy.IMAGES_DEATH); // Start the death animation
-                            enemy.deathAnimationPlaying = true; // Mark the death animation as playing
+                            enemy.deathAnimationPlaying = true;
+    
                             setTimeout(() => {
                                 const index = this.level.enemies.indexOf(enemy);
                                 if (index !== -1) {
@@ -118,9 +146,9 @@ class World {
                     }
                 });
             });
-
         }, 50);
     }
+    
 
 
 

@@ -18,13 +18,15 @@ class StatusBar extends DrawableObject {
     }
 
     resolveImageIndex() {
-        if (this.percentage === 100) return 5;
-        if (this.percentage > 80) return 4;
-        if (this.percentage > 60) return 3;
-        if (this.percentage > 40) return 2;
-        if (this.percentage > 20) return 1;
-        return 0;
+        if (this.percentage === 0) return 0; // Explicitly handle 0% first
+        if (this.percentage > 80) return 5; // 81-100%
+        if (this.percentage > 60) return 4; // 61-80%
+        if (this.percentage > 40) return 3; // 41-60%
+        if (this.percentage > 20) return 2; // 21-40%
+        return 1; // 1-20%
     }
+    
+    
 }
 
 
