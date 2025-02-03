@@ -22,8 +22,7 @@ class World {
          'img/9_intro_outro_screens/win/win_1.png'
     ]
     gamePaused = false;
-
-
+    
 
     constructor(canvas, keyboard) {
         this.ctx = canvas.getContext('2d');

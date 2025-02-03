@@ -14,6 +14,8 @@ class DrawableObject {
         left: 0
     }
     isRemoved = false;
+    
+
 
     draw(ctx, cameraX = 0) {
         if (this.isRemoved) return; // Don't render if removed
@@ -21,6 +23,17 @@ class DrawableObject {
         const drawX = this.isFixed ? this.x : this.x - cameraX; // Adjust position based on `isFixed`
         ctx.drawImage(this.img, drawX, this.y, this.width, this.height);
     }
+
+    
+    isOverlapping(x, y, width, height) {
+        for (let obj of allObjects) {
+            if (Math.abs(obj.x - x) < width && Math.abs(obj.y - y) < height) {
+                return true; // If overlap is detected
+            }
+        }
+        return false; // No overlap
+    }
+
     
 
     loadImage(path){

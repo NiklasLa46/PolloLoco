@@ -14,7 +14,7 @@ class Coin extends UnmovableObject {
     }
     constructor() {
         super();
-        this.x = 200 + Math.random() * 2000; // Randomize position
+        this.x = 200 + Math.random() * 3000; // Randomize position
         this.loadImage(this.IMAGES_STAND[0]); // Load the first image initially
         this.loadImages(this.IMAGES_STAND); // Preload all images
       
