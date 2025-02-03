@@ -18,6 +18,10 @@ class World {
     IMAGE_GAMEOVER = [
         'img/9_intro_outro_screens/game_over/game over.png'
     ]
+    IMAGE_WIN = [
+         'img/9_intro_outro_screens/win/win_1.png'
+    ]
+    gamePaused = false;
 
 
 
@@ -46,7 +50,7 @@ class World {
             this.throwableObjects.push(bottle); // Push bottle into throwableObjects array for collision detection
     
             // Reduce character's bottle count by 1
-            this.character.bottles -= 1; // Decrease by 1, not 11
+            this.character.bottles -= 10; // Decrease by 1, not 11
             this.bottleBar.setPercentage(this.character.bottles); // Update the bottle bar
     
             // Reset the idle timers on bottle throw
@@ -75,7 +79,7 @@ class World {
                 // Handle Endboss-specific logic
                 if (enemy instanceof Endboss) {
                     // Update the BossBar when the boss takes damage
-                    if (enemy.isHurt() && !enemy.isDead()) {
+                    if (enemy.isHurt() ) {
                         this.bossBar.setPercentage(enemy.energy);
                     }
     
@@ -183,10 +187,39 @@ class World {
     }
     
 
+    showWinScreen() {
+        this.background_music.pause();
+        
+        const winImage = new Image();
+        winImage.src = this.IMAGE_WIN[0];
+        winImage.onload = () => {
+            // Calculate the scaling factors for the image
+            const scaleX = this.canvas.width / winImage.width;
+            const scaleY = this.canvas.height / winImage.height;
+
+            // Use the smaller scaling factor to preserve the aspect ratio
+            const scale = Math.min(scaleX, scaleY);
+
+            // Calculate new width and height
+            const width = winImage.width * scale;
+            const height = winImage.height * scale;
+
+            // Draw the image in the center of the canvas (foreground)
+            this.ctx.drawImage(
+                winImage,
+                (this.canvas.width - width) / 2, // Center horizontally
+                (this.canvas.height - height) / 2, // Center vertically
+                width, // New width
+                height // New height
+            );
+        };
+    }
+
     draw() {
-        if (this.gameOverTriggered) {
-            return; // Stop the game loop
+        if (this.gamePaused) {
+            return; // Stop the game loop when paused
         }
+
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         
         this.ctx.translate(this.camera_x, 0);
@@ -219,7 +252,6 @@ class World {
             this.background_music.play().catch(() => { });
         }
     }
-
 
 
 

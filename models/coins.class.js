@@ -32,7 +32,7 @@ class Coin extends UnmovableObject {
 
 
     pickup(character) {
-        character.coins += 11; // Increment coins in the character
+        character.coins += 10; // Increment coins in the character
 
     }
 }

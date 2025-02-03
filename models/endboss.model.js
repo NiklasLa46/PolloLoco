@@ -61,6 +61,10 @@ class Endboss extends MovableObject {
         setInterval(() => {
             if (this.isDead()) {
                 this.playDeathAnimationBoss(this.IMAGES_DEATH);
+                setTimeout(() => {
+                    world.gamePaused = true;
+                    world.showWinScreen();
+                }, 1000);
             } else if (this.isHurt()) {
                 this.playAnimation(this.IMAGES_HURT);
             } else if (this.isWalking) {
@@ -86,7 +90,6 @@ class Endboss extends MovableObject {
 
     playDeathAnimationBoss(images) {
         if (this.isDead() && !this.deathAnimationPlaying) {
-            console.log("Images passed to playDeathAnimation:", images);
             this.deathAnimationPlaying = true; // Set the flag to indicate the animation is playing
             this.currentImage = 0; // Reset the current image index
 

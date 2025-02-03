@@ -33,6 +33,6 @@ class Bottle extends UnmovableObject {
 
     pickup(character) {
         // Increment bottles but cap at 100
-        character.bottles = Math.min(character.bottles + 11, 100);
+        character.bottles = Math.min(character.bottles + 10, 100);
     }
 }
