@@ -60,11 +60,13 @@ class Character extends MovableObject {
         'img/2_character_pepe/4_hurt/H-42.png',
         'img/2_character_pepe/4_hurt/H-43.png',
     ]
+
     world;
     walking_sound = new Audio('./audio/footstep.mp3');
     sleeping_sound = new Audio('./audio/snoring.mp3');
     jumping_sound = new Audio('./audio/jump3.mp3')
     lastActionTime = Date.now();
+    gameover_sound = new Audio('./audio/gameover.mp3')
     idleTimeout = null;
     longIdleTimeout = null;
     speedY = 0;
@@ -169,7 +171,15 @@ class Character extends MovableObject {
 
         setInterval(() => {
             if (this.isDead()) {
-                this.playDeathAnimation(this.IMAGES_DEATH); // Use the new method for death animation
+                if (!this.world.gameOverTriggered) {
+                    this.playDeathAnimation(this.IMAGES_DEATH); // Play the death animation
+                    this.gameover_sound.play();
+                    setTimeout(() => {
+                        this.world.showGameOverScreen();
+                        this.world.gameOverTriggered = true; // Trigger the game over screen after animation
+                    }, 1600); // Adjust this delay to match the death animation duration
+                    // Ensure this logic runs only once
+                }
             } else if (this.isHurt()) {
                 this.playAnimation(this.IMAGES_HURT);
             } else if (this.isAboveGround()) {
@@ -183,6 +193,7 @@ class Character extends MovableObject {
                 }
             }
         }, 100);
+        
 
         this.resetIdleTimers(); // Initialize idle timers on character load
     }

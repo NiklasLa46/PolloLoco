@@ -9,12 +9,15 @@ class World {
     dmg_sound = new Audio('/audio/pepedmg1.mp3');
     coin_sound = new Audio('/audio/coinpickup.mp3');
     bottle_sound = new Audio('/audio/bottlepickup.mp3')
+       
     healthBar = new HealthBar();
     bottleBar = new BottleBar();
     bossBar = new BossBar();
     coinBar = new CoinBar();
     throwableObjects = [];
-
+    IMAGE_GAMEOVER = [
+        'img/9_intro_outro_screens/game_over/game over.png'
+    ]
 
 
 
@@ -68,8 +71,7 @@ class World {
                         this.dmg_sound.play();
                         this.healthBar.setPercentage(this.character.energy);
                     }
-                }
-    
+                } 
                 // Handle Endboss-specific logic
                 if (enemy instanceof Endboss) {
                     // Update the BossBar when the boss takes damage
@@ -149,42 +151,64 @@ class World {
         }, 50);
     }
     
-
-
+    showGameOverScreen() {
+        // Stop the background music
+        this.background_music.pause();
+    
+        // Display the game over screen
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        const gameOverImage = new Image();
+        gameOverImage.src = this.IMAGE_GAMEOVER[0];
+        gameOverImage.onload = () => {
+            // Calculate the scaling factors for the image
+            const scaleX = this.canvas.width / gameOverImage.width;
+            const scaleY = this.canvas.height / gameOverImage.height;
+    
+            // Use the smaller scaling factor to preserve the aspect ratio
+            const scale = Math.min(scaleX, scaleY);
+    
+            // Calculate new width and height
+            const width = gameOverImage.width * scale;
+            const height = gameOverImage.height * scale;
+    
+            // Draw the image in the center of the canvas
+            this.ctx.drawImage(
+                gameOverImage,
+                (this.canvas.width - width) / 2, // Center horizontally
+                (this.canvas.height - height) / 2, // Center vertically
+                width, // New width
+                height // New height
+            );
+        };
+    }
+    
 
     draw() {
+        if (this.gameOverTriggered) {
+            return; // Stop the game loop
+        }
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    
+        
         this.ctx.translate(this.camera_x, 0);
-    
         this.addObjectsToMap(this.level.backgroundObjects);
         this.addObjectsToMap(this.level.bottles);
         this.addObjectsToMap(this.level.coins);
         this.addObjectsToMap(this.level.enemies);
         this.addObjectsToMap(this.level.clouds);
-    
-        // Check for the Endboss's visibility and update bossBar position
         this.level.enemies.forEach((enemy) => {
             if (enemy instanceof Endboss) {
                 enemy.checkVisibility(this.camera_x, this.canvas.width);
                 if (enemy.isVisible) {
-                    // Align boss bar with the boss position (you can adjust y as needed)
-                    this.bossBar.x = enemy.x + 40; // Set the x position of the boss bar to match the boss
-                    this.bossBar.y = enemy.y - 20; // Optionally adjust the y position to place it above the boss
-                    this.addToMap(this.bossBar); // Draw the boss's health bar only if the boss is visible
+                    this.bossBar.x = enemy.x + 40;
+                    this.bossBar.y = enemy.y - 20;
+                    this.addToMap(this.bossBar);
                 }
             }
         });
-    
-        // Filter out removed throwable objects
         this.throwableObjects = this.throwableObjects.filter(bottle => !bottle.isRemoved);
         this.addObjectsToMap(this.throwableObjects);
-    
         this.addToMap(this.character);
-    
         this.ctx.translate(-this.camera_x, 0);
-    
-        // Draw fixed UI elements that are always visible
         this.addToMap(this.healthBar);
         this.addToMap(this.bottleBar);
         this.addToMap(this.coinBar);
@@ -195,7 +219,6 @@ class World {
             this.background_music.play().catch(() => { });
         }
     }
-    
 
 
 
