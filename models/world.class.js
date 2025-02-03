@@ -9,7 +9,11 @@ class World {
     dmg_sound = new Audio('/audio/pepedmg1.mp3');
     coin_sound = new Audio('/audio/coinpickup.mp3');
     bottle_sound = new Audio('/audio/bottlepickup.mp3');
-    bottlebreak_sound = new Audio('/audio/bottle-break.mp3');   
+    bottlebreak_sound = new Audio('/audio/bottle-break.mp3')   
+    chickendeath_sound = new Audio('audio/chickendeath1.mp3')
+    smallchickendeath_sound = new Audio('audio/chickendeath2.mp3')
+    bossdmg_sound = new Audio('audio/bossdmg.mp3')
+    throw_sound = new Audio('audio/throwing.mp3') 
    
 
     healthBar = new HealthBar();
