@@ -6,6 +6,7 @@ class ThrowableObject extends DrawableObject {
     splashTimer;
     animationIndex = 0;
     hasCollided = false;
+    bottlebreak_sound = new Audio('/audio/bottle-break.mp3')   
      // New property to track removal
 
     THROW_IMAGES = [
@@ -58,7 +59,7 @@ class ThrowableObject extends DrawableObject {
         clearInterval(this.timer); // Stop the throw animation
         this.speedX = 0;
         this.speedY = 0;
-    
+        this.bottlebreak_sound.play();
         let splashInterval = setInterval(() => {
             this.animationIndex++;
             if (this.animationIndex < this.SPLASH_IMAGES.length) {

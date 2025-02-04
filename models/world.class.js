@@ -9,12 +9,12 @@ class World {
     dmg_sound = new Audio('/audio/pepedmg1.mp3');
     coin_sound = new Audio('/audio/coinpickup.mp3');
     bottle_sound = new Audio('/audio/bottlepickup.mp3');
-    bottlebreak_sound = new Audio('/audio/bottle-break.mp3')   
     chickendeath_sound = new Audio('audio/chickendeath1.mp3')
     smallchickendeath_sound = new Audio('audio/chickendeath2.mp3')
     bossdmg_sound = new Audio('audio/bossdmg.mp3')
     throw_sound = new Audio('audio/throwing.mp3') 
-   
+    gamewin_sound = new Audio('audio/winsound.mp3')
+    gameover_sound = new Audio('audio/gameover.mp3')
 
     healthBar = new HealthBar();
     bottleBar = new BottleBar();
@@ -28,7 +28,7 @@ class World {
          'img/9_intro_outro_screens/win/win_1.png'
     ]
     gamePaused = false;
-    
+    hasWinSoundPlayed = false;
 
     constructor(canvas, keyboard) {
         this.ctx = canvas.getContext('2d');
@@ -52,6 +52,7 @@ class World {
             let bottle = new ThrowableObject(this.character.x + 30, this.character.y + 90); // Create bottle at character position
             bottle.speedX = throwDirection * 20; // Set speedX based on direction
             bottle.throw(); // Start throwing the bottle
+            this.throw_sound.play();
             this.throwableObjects.push(bottle); // Push bottle into throwableObjects array for collision detection
     
             // Reduce character's bottle count by 1
@@ -86,6 +87,7 @@ class World {
                     // Update the BossBar when the boss takes damage
                     if (enemy.isHurt() ) {
                         this.bossBar.setPercentage(enemy.energy);
+                        this.bossdmg_sound.play();
                     }
     
                     // Trigger death animation for Endboss
@@ -105,6 +107,12 @@ class World {
                 // Handle enemy death animation for regular enemies
                 if (enemy.isDead() && !enemy.isDying && !(enemy instanceof Endboss)) {
                     enemy.playDeathImage(); // Trigger the death image
+                    if (enemy instanceof SmallChicken) {
+                        this.smallchickendeath_sound.play();
+                    }
+                    if (enemy instanceof Chicken) {
+                        this.chickendeath_sound.play();
+                    }
                 }
             });
     
@@ -163,7 +171,7 @@ class World {
     showGameOverScreen() {
         // Stop the background music
         this.background_music.pause();
-    
+        this.character.sleeping_sound.volume = 0.0;
         // Display the game over screen
         
         const gameOverImage = new Image();
@@ -194,7 +202,12 @@ class World {
 
     showWinScreen() {
         this.background_music.pause();
-        
+        this.character.sleeping_sound.volume = 0.0;
+        if (!this.hasWinSoundPlayed) {
+            this.gamewin_sound.play();
+            this.hasWinSoundPlayed = true; // Set the flag to true after playing
+        }
+
         const winImage = new Image();
         winImage.src = this.IMAGE_WIN[0];
         winImage.onload = () => {
