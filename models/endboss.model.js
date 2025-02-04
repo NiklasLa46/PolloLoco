@@ -48,6 +48,7 @@ class Endboss extends MovableObject {
         this.speed = 2; 
         setTimeout(() => this.animate(), 100);
     }
+
     checkVisibility(cameraX, canvasWidth) {
         if (!this.isVisible) {
             const isOnScreen = this.x < Math.abs(cameraX) + canvasWidth;
@@ -105,10 +106,15 @@ class Endboss extends MovableObject {
     
     
 
-    isVisible() {
-        // Check if the end boss is visible within the camera view
-        return this.x + this.width > -world.camera_x && this.x < -world.camera_x + world.canvas.width;
+isVisible() {
+    // Check if the world object is initialized
+    if (typeof world === 'undefined' || !world) {
+        return false; // If world is not defined, consider the object not visible
     }
+    // Proceed to check visibility within the camera view
+    return this.x + this.width > -world.camera_x && this.x < -world.camera_x + world.canvas.width;
+}
+
 
     
 }

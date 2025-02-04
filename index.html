@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=, initial-scale=1.0">
+ 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Smokum&display=swap" rel="stylesheet">
@@ -32,8 +32,46 @@
     <script src="./levels/level1.js"></script>
     <title>Document</title>
 </head>
-<body onload="init()">
-    <h1>El Pollo Loco</h1>
-    <canvas id="canvas" width="720px" height="480px"></canvas>
+<body>
+    <div class="start-page" id="start-page">
+        <h2>Welcome to</h2>
+        <h1>El Pollo Loco</h1>
+            <div>
+                <button onclick="startGame()" id="start-game-btn">Start Game</button>
+                <button onclick="showInstructions()">Instructions</button>
+            </div> 
+    </div>
+    <div  id="instructions-page" class="instructions-page">
+        <h2>Welcome to</h2>
+        <h1>El Pollo Loco</h1>
+        <table class="table">
+            <tbody>
+            <tr>
+            <th>Key</th>
+            <th>Action</th>
+            </tr>
+            <tr>
+            <td>Arrow Keys</td>
+            <td>Run</td>
+            </tr>
+            <tr>
+            <td>Space Bar</td>
+            <td>Jump</td>
+            </tr>
+            <tr>
+            <td>D Key</td>
+            <td>Throw Bottle</td>
+            </tr>
+            </tbody>
+            </table>
+            <div class="button-div-instructions">
+                <button onclick="startGame()" id="start-game-btn">Start Game</button>
+                <button onclick="mainMenu()">Main Menu</button>
+            </div> 
+    </div>
+
+    <h1 style="display: none;" id="game-title">El Pollo Loco</h1>
+    <canvas id="canvas" width="720px" height="480px" style="display: none;"></canvas>
+
 </body>
 </html>
