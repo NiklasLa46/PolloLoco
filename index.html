@@ -65,13 +65,20 @@
             </tbody>
             </table>
             <div class="button-div-instructions">
-                <button onclick="startGame()" id="start-game-btn">Start Game</button>
+                <button onclick="startGame()">Start Game</button>
                 <button onclick="mainMenu()">Main Menu</button>
             </div> 
     </div>
+    <div class="canvas-div">
+        <h1 style="display: none;" id="game-title">El Pollo Loco</h1>
+        <canvas id="canvas" width="720px" height="480px" style="display: none;"></canvas>  
+        <div class="game-buttons-div" id="game-buttons-div">
+            <button id="muteButton" >Mute</button>
+            <button onclick="" >Fullscreen</button>
+            <button id="mainMenuButton" onclick="resetAndMainMenu()">Main Menu</button>
+        </div>  
 
-    <h1 style="display: none;" id="game-title">El Pollo Loco</h1>
-    <canvas id="canvas" width="720px" height="480px" style="display: none;"></canvas>
+    </div>
 
 </body>
 </html>

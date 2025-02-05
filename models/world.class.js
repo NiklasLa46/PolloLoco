@@ -29,6 +29,22 @@ class World {
     ]
     gamePaused = false;
     hasWinSoundPlayed = false;
+    allSounds = [
+        this.background_music,
+        this.dmg_sound,
+        this.coin_sound,
+        this.bottle_sound,
+        this.chickendeath_sound,
+        this.smallchickendeath_sound,
+        this.bossdmg_sound,
+        this.throw_sound,
+        this.gamewin_sound,
+        this.gameover_sound,
+        this.character.walking_sound,
+        this.character.sleeping_sound,
+        this.character.jumping_sound,
+        this.character.gameover_sound,
+    ];
 
     constructor(canvas, keyboard) {
         this.ctx = canvas.getContext('2d');
@@ -39,8 +55,26 @@ class World {
         this.checkCollisions()
         this.background_music.volume = 0.4;
         this.background_music.loop = true;
-
+        this.initializeMuteButton();
     }
+
+    initializeMuteButton() {
+        const muteButton = document.getElementById('muteButton');
+        muteButton.addEventListener('click', () => this.toggleMute());
+    }
+
+    toggleMute() {
+        const isMuted = this.allSounds.every(sound => sound.muted);
+
+        this.allSounds.forEach(sound => {
+            sound.muted = !isMuted;
+        });
+
+        // Update button text
+        const muteButton = document.getElementById('muteButton');
+        muteButton.textContent = isMuted ? 'Mute' : 'Unmute';
+    }
+
 
     setWorld() {
         this.character.world = this;
