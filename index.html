@@ -36,7 +36,7 @@
     <div class="start-page" id="start-page">
         <h2>Welcome to</h2>
         <h1>El Pollo Loco</h1>
-            <div>
+            <div class="start-buttons">
                 <button onclick="startGame()" id="start-game-btn">Start Game</button>
                 <button onclick="showInstructions()">Instructions</button>
             </div> 
@@ -70,7 +70,7 @@
             </div> 
     </div>
     <div class="canvas-div">
-        <h1 style="display: none;" id="game-title">El Pollo Loco</h1>
+        <h1 style="display: none;" id="game-title" class="canvas-cap">El Pollo Loco</h1>
         <canvas id="canvas" width="720px" height="480px" style="display: none;"></canvas>  
         <div class="restart-button">
             <button onclick="restartGame()" >Try Again!</button>

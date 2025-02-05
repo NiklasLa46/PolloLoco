@@ -64,7 +64,7 @@ document.addEventListener('keydown', function (e) {
 
 function startGame() {
     document.getElementById('start-page').style.display = 'none'; // Hide start page
-    document.getElementById('canvas').style.display = 'flex'; // Show canvas
+    document.getElementById('canvas').style.display = 'block'; // Show canvas
     document.getElementById('game-title').style.display = 'flex'; // Show game title
     document.getElementById('instructions-page').style.display = 'none';
     document.getElementById('game-buttons-div').style.display = 'flex';

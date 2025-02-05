@@ -1,54 +1,103 @@
-body{
+body {
     display: flex;
     flex-direction: column;
     align-items: center;
     background-image: url('img/pagebackround5.jpg');
-    background-size: cover; 
-    background-repeat: no-repeat; 
-    background-position: center; 
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
     height: 100vh;
     font-family: Smokum;
+    padding: 0px;
+    margin: 0px;
 }
 
-h1{
+@media only screen and (max-width:720px) {
+    canvas {
+        width: 100% ;
+        margin-top: 0px !important;
+    }
+
+    h2 {
+        display: none;
+    }
+
+    .canvas-cap{
+        display: none !important;
+    }
+
+    .game-buttons-div{
+        display: none !important;
+    }
+
+    .restart-button{
+        display: none !important;
+    }
+}
+
+@media only screen and (max-height:480px) {
+    canvas {
+        height: 100vh ;
+        margin-top: 0px !important;
+    }
+
+    h2 {
+        display: none;
+    }
+
+    .canvas-cap{
+        display: none !important;
+    }
+
+    .game-buttons-div{
+        display: none !important;
+    }
+
+    .restart-button{
+        display: none !important;
+    }
+}
+
+
+h1 {
     justify-content: center;
     margin-top: 10px;
     font-size: 100px;
-    color: #FFC521; 
-text-shadow: 0 -1px 0 #fff, 0 1px 0 #2e2e2e, 0 2px 0 #2c2c2c, 0 3px 0 #2a2a2a, 0 4px 0 #282828, 0 5px 0 #262626, 0 6px 0 #242424, 0 7px 0 #222, 0 8px 0 #202020, 0 9px 0 #1e1e1e, 0 10px 0 #1c1c1c, 0 11px 0 #1a1a1a, 0 12px 0 #181818, 0 13px 0 #161616, 0 14px 0 #141414, 0 15px 0 #121212, 0 22px 30px rgba(0,0,0,0.9), 2px 2px 2px rgba(37,16,10,0);
+    color: #FFC521;
+    text-shadow: 0 -1px 0 #fff, 0 1px 0 #2e2e2e, 0 2px 0 #2c2c2c, 0 3px 0 #2a2a2a, 0 4px 0 #282828, 0 5px 0 #262626, 0 6px 0 #242424, 0 7px 0 #222, 0 8px 0 #202020, 0 9px 0 #1e1e1e, 0 10px 0 #1c1c1c, 0 11px 0 #1a1a1a, 0 12px 0 #181818, 0 13px 0 #161616, 0 14px 0 #141414, 0 15px 0 #121212, 0 22px 30px rgba(0, 0, 0, 0.9), 2px 2px 2px rgba(37, 16, 10, 0);
 }
 
-h2{
+h2 {
     margin-top: 250px;
     font-size: 50px;
-    color: #FFC521; 
-text-shadow: 0 -1px 0 #fff, 0 1px 0 #2e2e2e, 0 2px 0 #2c2c2c, 0 3px 0 #2a2a2a, 0 4px 0 #282828, 0 5px 0 #262626, 0 6px 0 #242424, 0 7px 0 #222, 0 8px 0 #202020, 0 9px 0 #1e1e1e, 0 10px 0 #1c1c1c, 0 11px 0 #1a1a1a, 0 12px 0 #181818, 0 13px 0 #161616, 0 14px 0 #141414, 0 15px 0 #121212, 0 22px 30px rgba(0,0,0,0.9), 2px 2px 2px rgba(37,16,10,0);
+    color: #FFC521;
+    text-shadow: 0 -1px 0 #fff, 0 1px 0 #2e2e2e, 0 2px 0 #2c2c2c, 0 3px 0 #2a2a2a, 0 4px 0 #282828, 0 5px 0 #262626, 0 6px 0 #242424, 0 7px 0 #222, 0 8px 0 #202020, 0 9px 0 #1e1e1e, 0 10px 0 #1c1c1c, 0 11px 0 #1a1a1a, 0 12px 0 #181818, 0 13px 0 #161616, 0 14px 0 #141414, 0 15px 0 #121212, 0 22px 30px rgba(0, 0, 0, 0.9), 2px 2px 2px rgba(37, 16, 10, 0);
 
 }
 
-.start-page{
+.start-page {
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
-button{
+button {
     box-shadow: 0px 10px 14px -7px #000000;
-	background:linear-gradient(to bottom, #FFC521 5%, #ffe394 100%);
-	background-color:#FFC521;
-	border-radius:8px;
-	display:inline-block;
+    background: linear-gradient(to bottom, #FFC521 5%, #ffe394 100%);
+    background-color: #FFC521;
+    border-radius: 8px;
+    display: inline-block;
     outline: none;
     border-style: none;
-	cursor:pointer;
+    cursor: pointer;
     width: 200px;
-	color:#000000;
-	font-family:Arial;
-	font-size:20px;
-	font-weight:bold;
-	padding:13px 32px;
-	text-decoration:none;
-	text-shadow:0px 1px 0px #000000;  
+    color: #000000;
+    font-family: Arial;
+    font-size: 20px;
+    font-weight: bold;
+    padding: 13px 32px;
+    text-decoration: none;
+    text-shadow: 0px 1px 0px #000000;
     margin: 20px;
 }
 
@@ -56,24 +105,24 @@ button:hover {
     scale: 1.10
 }
 
-.game-buttons-div{
+.game-buttons-div {
     display: none;
     justify-content: center;
 }
 
-.restart-button{
+.restart-button {
     display: none;
     justify-content: center;
 }
 
-canvas{
+canvas {
     margin-top: 100px;
     background-color: black;
     border-radius: 25px;
-    box-shadow: 7px 7px 16px 4px rgba(0,0,0,0.66);
+    box-shadow: 7px 7px 16px 4px rgba(0, 0, 0, 0.66);
 }
 
-.instructions-page{
+.instructions-page {
     display: none;
     flex-direction: column;
     align-items: center;
@@ -83,22 +132,27 @@ table.table {
     border: 2px solid #000000;
     text-align: center;
     font-size: 45px;
-  }
-  table.table tbody td{
+}
+
+table.table tbody td {
     font-size: 35px;
-  }
-  table.table td, table.table th {
+}
+
+table.table td,
+table.table th {
     border: 2px solid #000000;
     padding: 6px 6px;
-  }
-  table.table thead {
+}
+
+table.table thead {
     border-bottom: 2px solid #000000;
-    
-  }
-  table.table thead th {
+
+}
+
+table.table thead th {
     font-weight: bold;
 }
-  
-.button-div-instructions{
+
+.button-div-instructions {
     padding-top: 20px;
 }
