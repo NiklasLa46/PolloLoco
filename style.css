@@ -11,6 +11,7 @@ body{
 }
 
 h1{
+    justify-content: center;
     margin-top: 10px;
     font-size: 100px;
     color: #FFC521; 
@@ -56,6 +57,11 @@ button:hover {
 }
 
 .game-buttons-div{
+    display: none;
+    justify-content: center;
+}
+
+.restart-button{
     display: none;
     justify-content: center;
 }

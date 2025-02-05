@@ -4,6 +4,7 @@ let keyboard = new Keyboard();
 allObjects = [];
 
 function init() {
+    initLevel()
     canvas = document.getElementById('canvas');
     world = new World(canvas, keyboard);
 
@@ -16,13 +17,55 @@ function resetAndMainMenu() {
     mainMenu();
 }
 
+function toggleFullscreen() {
+    const canvas = document.getElementById('canvas');
+    
+    if (!document.fullscreenElement && !document.mozFullScreenElement && !document.webkitFullscreenElement) {
+        // Enter fullscreen mode
+        if (canvas.requestFullscreen) {
+            canvas.requestFullscreen();
+        } else if (canvas.mozRequestFullScreen) {
+            canvas.mozRequestFullScreen();
+        } else if (canvas.webkitRequestFullscreen) {
+            canvas.webkitRequestFullscreen();
+        } else if (canvas.msRequestFullscreen) {
+            canvas.msRequestFullscreen();
+        }
+    } else {
+        // Exit fullscreen mode
+        if (document.exitFullscreen) {
+            document.exitFullscreen();
+        } else if (document.mozCancelFullScreen) {
+            document.mozCancelFullScreen();
+        } else if (document.webkitExitFullscreen) {
+            document.webkitExitFullscreen();
+        } else if (document.msExitFullscreen) {
+            document.msExitFullscreen();
+        }
+    }
+}
 
-
+// Listen for the Escape key to exit fullscreen mode
+document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') {
+        if (document.fullscreenElement || document.mozFullScreenElement || document.webkitFullscreenElement || document.msFullscreenElement) {
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+            } else if (document.mozCancelFullScreen) {
+                document.mozCancelFullScreen();
+            } else if (document.webkitExitFullscreen) {
+                document.webkitExitFullscreen();
+            } else if (document.msExitFullscreen) {
+                document.msExitFullscreen();
+            }
+        }
+    }
+});
 
 function startGame() {
     document.getElementById('start-page').style.display = 'none'; // Hide start page
     document.getElementById('canvas').style.display = 'flex'; // Show canvas
-    document.getElementById('game-title').style.display = 'block'; // Show game title
+    document.getElementById('game-title').style.display = 'flex'; // Show game title
     document.getElementById('instructions-page').style.display = 'none';
     document.getElementById('game-buttons-div').style.display = 'flex';
     init(); // Start the game

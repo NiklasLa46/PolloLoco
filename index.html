@@ -72,9 +72,12 @@
     <div class="canvas-div">
         <h1 style="display: none;" id="game-title">El Pollo Loco</h1>
         <canvas id="canvas" width="720px" height="480px" style="display: none;"></canvas>  
+        <div class="restart-button">
+            <button onclick="restartGame()" >Try Again!</button>
+        </div>
         <div class="game-buttons-div" id="game-buttons-div">
             <button id="muteButton" >Mute</button>
-            <button onclick="" >Fullscreen</button>
+            <button onclick="toggleFullscreen()" >Fullscreen</button>
             <button id="mainMenuButton" onclick="resetAndMainMenu()">Main Menu</button>
         </div>  
 

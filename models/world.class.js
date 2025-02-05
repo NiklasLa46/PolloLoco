@@ -231,6 +231,7 @@ class World {
                 height // New height
             );
         };
+        document.querySelector('.restart-button').style.display = 'flex';
     }
     
 
