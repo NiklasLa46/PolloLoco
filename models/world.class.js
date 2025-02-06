@@ -47,7 +47,7 @@ class World {
     ];
 
     allIntervalls = [
-        clearInterval(this.bottleInterval   ),
+        clearInterval(this.bottleInterval),
         clearInterval( this.longidleInterval),
         clearInterval(this.characterInterval),
         clearInterval(this.characterDamageInterval),
@@ -118,173 +118,203 @@ class World {
 
     checkCollisions() {
         setInterval(() => {
-            // Check collisions with enemies
-            this.level.enemies.forEach((enemy, index) => {
-                if (enemy.isDying || enemy.isRemoved) return; // Skip if enemy is dying or removed
-    
-                // Check for jumping on the enemy
-                this.character.checkJumpOnEnemy(enemy);
-    
-                // Check physical collision
-                if (!this.character.isJumping && !this.character.isHurt() && !this.character.isDead()) {
-                    if (this.character.isColliding(enemy)) {
-                        this.character.hit();
-                        this.dmg_sound.currentTime = 0; // Reset sound
-                        this.dmg_sound.play();
-                        this.healthBar.setPercentage(this.character.energy);
-                    }
-                } 
-                // Handle Endboss-specific logic
-                if (enemy instanceof Endboss) {
-                    // Update the BossBar when the boss takes damage
-                    if (enemy.isHurt() ) {
-                        this.bossBar.setPercentage(enemy.energy);
-                        this.bossdmg_sound.play();
-                    }
-    
-                    // Trigger death animation for Endboss
-                    if (enemy.isDead() && !enemy.deathAnimationPlaying) {
-                        enemy.playDeathAnimationBoss(enemy.IMAGES_DEATH); // Start the boss's death animation
-                        enemy.deathAnimationPlaying = true;
-    
-                        setTimeout(() => {
-                            const index = this.level.enemies.indexOf(enemy);
-                            if (index !== -1) {
-                                this.level.enemies.splice(index, 1); // Remove the boss from the array
-                            }
-                        }, 2000); // Adjust to match the boss's death animation duration
-                    }
-                }
-    
-                // Handle enemy death animation for regular enemies
-                if (enemy.isDead() && !enemy.isDying && !(enemy instanceof Endboss)) {
-                    enemy.playDeathImage(); // Trigger the death image
-                    if (enemy instanceof SmallChicken) {
-                        this.smallchickendeath_sound.play();
-                    }
-                    if (enemy instanceof Chicken) {
-                        this.chickendeath_sound.play();
-                    }
-                }
-            });
-    
-            // Check collisions with coins
-            this.level.coins.forEach((coin, index) => {
-                if (this.character.isColliding(coin)) {
-                    coin.pickup(this.character);
-                    this.coin_sound.currentTime = 0; // Reset sound
-                    this.coin_sound.play();
-                    this.level.coins.splice(index, 1); // Remove picked-up coin
-                    this.coinBar.setPercentage(this.character.coins); // Update coin bar
-                }
-            });
-    
-            // Check collisions with bottles
-            this.level.bottles.forEach((bottle, index) => {
-                if (this.character.isColliding(bottle) && typeof bottle.pickup === 'function') {
-                    bottle.pickup(this.character);
-                    this.bottle_sound.currentTime = 0; // Reset sound
-                    this.bottle_sound.play();
-                    this.level.bottles.splice(index, 1); // Remove picked-up bottle
-                    this.bottleBar.setPercentage(this.character.bottles); // Update bottle bar
-                }
-            });
-    
-            // Handle throwable bottles separately
-            this.throwableObjects.forEach((bottle) => {
-                this.level.enemies.forEach((enemy) => {
-                    if (bottle.isColliding(enemy) && !bottle.hasCollided) {
-                        bottle.playSplashAnimation();
-                        bottle.hasCollided = true; // Mark the bottle as collided
-                        enemy.hit(); // Damage the enemy
-    
-                        // Update the BossBar for the Endboss
-                        if (enemy instanceof Endboss && !enemy.isDead()) {
-                            this.bossBar.setPercentage(enemy.energy);
-                        }
-    
-                        if (enemy.isDead() && !enemy.deathAnimationPlaying && !(enemy instanceof Endboss)) {
-                            enemy.playDeathAnimation(enemy.IMAGES_DEATH); // Start the death animation
-                            enemy.deathAnimationPlaying = true;
-    
-                            setTimeout(() => {
-                                const index = this.level.enemies.indexOf(enemy);
-                                if (index !== -1) {
-                                    this.level.enemies.splice(index, 1); // Remove the enemy from the array
-                                }
-                            }, 1000); // Adjust this duration to match the length of the death animation
-                        }
-                    }
-                });
-            });
+            this.checkEnemyCollisions();
+            this.checkCoinCollisions();
+            this.checkBottleCollisions();
+            this.checkThrowableBottleCollisions();
         }, 50);
     }
     
+    checkEnemyCollisions() {
+        this.level.enemies.forEach((enemy, index) => {
+            if (enemy.isDying || enemy.isRemoved) return; // Skip if enemy is dying or removed
+            
+            // Check for jumping on the enemy
+            this.character.checkJumpOnEnemy(enemy);
+    
+            // Check physical collision
+            if (!this.character.isJumping && !this.character.isHurt() && !this.character.isDead()) {
+                if (this.character.isColliding(enemy)) {
+                    this.character.hit();
+                    this.dmg_sound.currentTime = 0; // Reset sound
+                    this.dmg_sound.play();
+                    this.healthBar.setPercentage(this.character.energy);
+                }
+            } 
+            
+            this.handleEndbossCollision(enemy);
+            this.handleEnemyDeath(enemy);
+        });
+    }
+    
+    handleEndbossCollision(enemy) {
+        if (enemy instanceof Endboss) {
+            // Update the BossBar when the boss takes damage
+            if (enemy.isHurt()) {
+                this.bossBar.setPercentage(enemy.energy);
+                this.bossdmg_sound.play();
+            }
+    
+            // Trigger death animation for Endboss
+            if (enemy.isDead() && !enemy.deathAnimationPlaying) {
+                enemy.playDeathAnimationBoss(enemy.IMAGES_DEATH); // Start the boss's death animation
+                enemy.deathAnimationPlaying = true;
+    
+                setTimeout(() => {
+                    const index = this.level.enemies.indexOf(enemy);
+                    if (index !== -1) {
+                        this.level.enemies.splice(index, 1); // Remove the boss from the array
+                    }
+                }, 2000); // Adjust to match the boss's death animation duration
+            }
+        }
+    }
+    
+    handleEnemyDeath(enemy) {
+        // Handle enemy death animation for regular enemies
+        if (enemy.isDead() && !enemy.isDying && !(enemy instanceof Endboss)) {
+            enemy.playDeathImage(); // Trigger the death image
+            if (enemy instanceof SmallChicken) {
+                this.smallchickendeath_sound.play();
+            }
+            if (enemy instanceof Chicken) {
+                this.chickendeath_sound.play();
+            }
+        }
+    }
+    
+    checkCoinCollisions() {
+        this.level.coins.forEach((coin, index) => {
+            if (this.character.isColliding(coin)) {
+                coin.pickup(this.character);
+                this.coin_sound.currentTime = 0; // Reset sound
+                this.coin_sound.play();
+                this.level.coins.splice(index, 1); // Remove picked-up coin
+                this.coinBar.setPercentage(this.character.coins); // Update coin bar
+            }
+        });
+    }
+    
+    checkBottleCollisions() {
+        this.level.bottles.forEach((bottle, index) => {
+            if (this.character.isColliding(bottle) && typeof bottle.pickup === 'function') {
+                bottle.pickup(this.character);
+                this.bottle_sound.currentTime = 0; // Reset sound
+                this.bottle_sound.play();
+                this.level.bottles.splice(index, 1); // Remove picked-up bottle
+                this.bottleBar.setPercentage(this.character.bottles); // Update bottle bar
+            }
+        });
+    }
+    
+    checkThrowableBottleCollisions() {
+        this.throwableObjects.forEach((bottle) => {
+            this.level.enemies.forEach((enemy) => {
+                if (bottle.isColliding(enemy) && !bottle.hasCollided) {
+                    bottle.playSplashAnimation();
+                    bottle.hasCollided = true; // Mark the bottle as collided
+                    enemy.hit(); // Damage the enemy
+    
+                    // Update the BossBar for the Endboss
+                    if (enemy instanceof Endboss && !enemy.isDead()) {
+                        this.bossBar.setPercentage(enemy.energy);
+                    }
+    
+                    this.handleEnemyDeathAfterThrowableBottle(enemy);
+                }
+            });
+        });
+    }
+    
+    handleEnemyDeathAfterThrowableBottle(enemy) {
+        if (enemy.isDead() && !enemy.deathAnimationPlaying && !(enemy instanceof Endboss)) {
+            enemy.playDeathAnimation(enemy.IMAGES_DEATH); // Start the death animation
+            enemy.deathAnimationPlaying = true;
+    
+            setTimeout(() => {
+                const index = this.level.enemies.indexOf(enemy);
+                if (index !== -1) {
+                    this.level.enemies.splice(index, 1); // Remove the enemy from the array
+                }
+            }, 1000); // Adjust this duration to match the length of the death animation
+        }
+    }
+    
+    
     showGameOverScreen() {
-        // Stop the background music
-        this.background_music.pause();
-        this.character.sleeping_sound.volume = 0.0;
-        // Display the game over screen
-        
+        this.stopBackgroundMusic();
+        this.muteCharacterSleepingSound()
+        this.displayGameOverImage();
+        this.showRestartButton();
+    }
+    
+    displayGameOverImage() {
         const gameOverImage = new Image();
         gameOverImage.src = this.IMAGE_GAMEOVER[0];
         gameOverImage.onload = () => {
-            // Calculate the scaling factors for the image
-            const scaleX = this.canvas.width / gameOverImage.width;
-            const scaleY = this.canvas.height / gameOverImage.height;
-    
-            // Use the smaller scaling factor to preserve the aspect ratio
-            const scale = Math.min(scaleX, scaleY) * 1.2;
-    
-            // Calculate new width and height
-            const width = gameOverImage.width * scale;
-            const height = gameOverImage.height * scale;
-    
-            // Draw the image in the center of the canvas
-            this.ctx.drawImage(
-                gameOverImage,
-                (this.canvas.width - width) / 2, // Center horizontally
-                (this.canvas.height - height) / 2, // Center vertically
-                width, // New width
-                height // New height
-            );
+            this.drawCenteredImage(gameOverImage, 1.2);
         };
+    }
+    
+    drawCenteredImage(image, x) {
+        // Calculate the scaling factors for the image
+        const scaleX = this.canvas.width / image.width;
+        const scaleY = this.canvas.height / image.height;
+    
+        // Use the smaller scaling factor to preserve the aspect ratio
+        const scale = Math.min(scaleX, scaleY) * x;
+    
+        // Calculate new width and height
+        const width = image.width * scale;
+        const height = image.height * scale;
+    
+        // Draw the image in the center of the canvas
+        this.ctx.drawImage(
+            image,
+            (this.canvas.width - width) / 2, // Center horizontally
+            (this.canvas.height - height) / 2, // Center vertically
+            width, // New width
+            height // New height
+        );
+    }
+    
+    showRestartButton() {
         document.querySelector('.restart-button').style.display = 'flex';
     }
     
+    
 
     showWinScreen() {
+        this.stopBackgroundMusic();
+        this.muteCharacterSleepingSound();
+        this.playWinSound();
+        this.displayEndScreenImage(this.IMAGE_WIN[0]);
+        this.showRestartButton();
+    }
+    
+    stopBackgroundMusic() {
         this.background_music.pause();
+    }
+    
+    muteCharacterSleepingSound() {
         this.character.sleeping_sound.volume = 0.0;
+    }
+    
+    playWinSound() {
         if (!this.hasWinSoundPlayed) {
             this.gamewin_sound.play();
             this.hasWinSoundPlayed = true; // Set the flag to true after playing
         }
-
-        const winImage = new Image();
-        winImage.src = this.IMAGE_WIN[0];
-        winImage.onload = () => {
-            // Calculate the scaling factors for the image
-            const scaleX = this.canvas.width / winImage.width;
-            const scaleY = this.canvas.height / winImage.height;
-
-            // Use the smaller scaling factor to preserve the aspect ratio
-            const scale = Math.min(scaleX, scaleY) * 0.8;
-
-            // Calculate new width and height
-            const width = winImage.width * scale;
-            const height = winImage.height * scale;
-
-            // Draw the image in the center of the canvas (foreground)
-            this.ctx.drawImage(
-                winImage,
-                (this.canvas.width - width) / 2, // Center horizontally
-                (this.canvas.height - height) / 2, // Center vertically
-                width, // New width
-                height // New height
-            );
+    }
+    
+    displayEndScreenImage(imageSrc) {
+        const endImage = new Image();
+        endImage.src = imageSrc;
+        endImage.onload = () => {
+            this.drawCenteredImage(endImage, 0.8);
         };
     }
+    
 
     draw() {
         if (this.gamePaused) {
