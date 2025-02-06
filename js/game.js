@@ -13,25 +13,9 @@ function init() {
 }
 
 function resetAndMainMenu() {
-    // Stop game sounds
-    world.toggleMute();
-
-    // Stop all intervals and clear game objects
-    if (world) {
-        world.stopGame();
-    }
-
-    // Clear the canvas
-    world.ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    // Return to the main menu
+    world.toggleMute()
     mainMenu();
-
-    // Reset game state
-    allObjects = []; // Reset any global game object arrays if used
-    keyboard = new Keyboard(); // Reset the keyboard inputs
 }
-
 
 function toggleFullscreen() {
     const canvas = document.getElementById('canvas');
@@ -99,6 +83,7 @@ function mainMenu() {
     document.getElementById('canvas').style.display = 'none'; // Show canvas
     document.getElementById('game-title').style.display = 'none'; // Show game title
     document.getElementById('game-buttons-div').style.display = 'none';
+
 };
 
 window.addEventListener('keydown', (event) => {
