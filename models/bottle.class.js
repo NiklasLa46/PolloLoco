@@ -25,7 +25,7 @@ class Bottle extends UnmovableObject {
 
     animate() {
 
-        setInterval(() => {
+        this.bottleInterval = setInterval(() => {
             this.playAnimation(this.IMAGES_STAND)
         }, 800);
     };

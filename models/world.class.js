@@ -46,6 +46,24 @@ class World {
         this.character.gameover_sound,
     ];
 
+    allIntervalls = [
+        clearInterval(this.bottleInterval   ),
+        clearInterval( this.longidleInterval),
+        clearInterval(this.characterInterval),
+        clearInterval(this.characterDamageInterval),
+        clearInterval( this.gravityIntervall),
+        clearInterval( this.chickenIntervall),
+        clearInterval( this.chickenDeathIntervall),
+        clearInterval( this.coinIntervall),
+        clearInterval(  this.bossInterval),
+        clearInterval( this.bossWalkIntervall),
+        clearInterval(this.bossDeathInterval),
+        clearInterval(this.movableDeathInterval),
+        clearInterval( this.smallChickenInterval),
+        clearInterval(this.smallChickenDeathInterval),
+        clearInterval( this.timer)
+    ]
+
     constructor(canvas, keyboard) {
         this.ctx = canvas.getContext('2d');
         this.canvas = canvas;

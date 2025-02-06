@@ -25,7 +25,7 @@ class Coin extends UnmovableObject {
 
     animate() {
 
-        setInterval(() => {
+       this.coinIntervall = setInterval(() => {
             this.playAnimation(this.IMAGES_STAND)
         }, 500);
     };

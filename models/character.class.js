@@ -134,7 +134,7 @@ class Character extends MovableObject {
     
 
     animate() {
-        setInterval(() => {
+        this.characterInterval = setInterval(() => {
             this.walking_sound.pause();
             let moving = false;
 
@@ -169,7 +169,7 @@ class Character extends MovableObject {
             this.world.camera_x = -this.x + 100;
         }, 1000 / 60);
 
-        setInterval(() => {
+       this.characterDamageInterval = setInterval(() => {
             if (this.isDead()) {
                 if (!this.world.gameOverTriggered) {
                     this.playDeathAnimation(this.IMAGES_DEATH); // Play the death animation
@@ -227,7 +227,7 @@ class Character extends MovableObject {
     
     // Apply gravity with the jumping condition
     applyGravity() {
-        setInterval(() => {
+        this.gravityIntervall = setInterval(() => {
             if (this.isAboveGround() || this.speedY > 0) {
                 this.y -= this.speedY;
                 this.speedY -= this.acceleration;

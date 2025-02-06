@@ -12,6 +12,10 @@ function init() {
     console.log('My characte is', world.character)
 }
 
+function restartGame(){
+    world.reset()
+}
+
 function resetAndMainMenu() {
     world.toggleMute()
     mainMenu();

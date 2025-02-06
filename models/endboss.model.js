@@ -59,7 +59,7 @@ class Endboss extends MovableObject {
     }
  
     animate() {
-        setInterval(() => {
+        this.bossInterval = setInterval(() => {
             if (this.isDead()) {
                 this.playDeathAnimationBoss(this.IMAGES_DEATH);
                 setTimeout(() => {
@@ -76,7 +76,7 @@ class Endboss extends MovableObject {
             }
         }, 200);
     
-        setInterval(() => {
+        this.bossWalkIntervall = setInterval(() => {
             // Check visibility and toggle walking
             if (!this.isWalking && this.isVisible()) {
                 this.isWalking = true;
@@ -94,7 +94,7 @@ class Endboss extends MovableObject {
             this.deathAnimationPlaying = true; // Set the flag to indicate the animation is playing
             this.currentImage = 0; // Reset the current image index
 
-            const deathInterval = setInterval(() => {
+            this.bossDeathInterval = setInterval(() => {
                 if (this.currentImage < images.length) {
                     this.playAnimation(images); // Play the next frame of the death animation
   
