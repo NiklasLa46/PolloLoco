@@ -48,6 +48,7 @@ class World {
 
     gameLoopInterval = null; // Store the game loop interval ID
     collisionCheckInterval = null; 
+    running = false;
 
     constructor(canvas, keyboard) {
         this.ctx = canvas.getContext('2d');
@@ -60,14 +61,21 @@ class World {
         this.background_music.loop = true;
         this.initializeMuteButton();
         this.startGameLoop();
+        this.checkCollisions(); 
     }
-
     startGameLoop() {
-        this.gameLoopInterval = requestAnimationFrame(() => this.draw());
+        this.running = true; // Set running to true
+        const loop = () => {
+            if (this.running) {
+                this.draw();
+                requestAnimationFrame(loop); // Continue the loop
+            }
+        };
+        requestAnimationFrame(loop); // Start the loop
     }
-
 
     stopGame() {
+        this.running = false;
         // Clear the game loop
         if (this.gameLoopInterval) {
             cancelAnimationFrame(this.gameLoopInterval);
@@ -142,7 +150,7 @@ class World {
 
     checkCollisions() {
         this.collisionCheckInterval = setInterval(() => {
-                // Check collisions with enemies
+            if (!this.character) return; 
                 this.level.enemies.forEach((enemy, index) => {
                     if (enemy.isDying || enemy.isRemoved) return; // Skip if enemy is dying or removed
         
@@ -248,36 +256,22 @@ class World {
     
     showGameOverScreen() {
         // Stop the background music
+        console.log('test2');
         this.background_music.pause();
         this.character.sleeping_sound.volume = 0.0;
-        // Display the game over screen
-        
+    
+        // Set the game over flag
+        this.gameOverTriggered = true; // Add this line to indicate game over state
+    
+        // Load the game over image
         const gameOverImage = new Image();
         gameOverImage.src = this.IMAGE_GAMEOVER[0];
         gameOverImage.onload = () => {
-            // Calculate the scaling factors for the image
-            const scaleX = this.canvas.width / gameOverImage.width;
-            const scaleY = this.canvas.height / gameOverImage.height;
-    
-            // Use the smaller scaling factor to preserve the aspect ratio
-            const scale = Math.min(scaleX, scaleY) * 1.2;
-    
-            // Calculate new width and height
-            const width = gameOverImage.width * scale;
-            const height = gameOverImage.height * scale;
-    
-            // Draw the image in the center of the canvas
-            this.ctx.drawImage(
-                gameOverImage,
-                (this.canvas.width - width) / 2, // Center horizontally
-                (this.canvas.height - height) / 2, // Center vertically
-                width, // New width
-                height // New height
-            );
+            this.gameOverImage = gameOverImage; // Store the loaded image for later use
         };
+    
         document.querySelector('.restart-button').style.display = 'flex';
     }
-    
 
     showWinScreen() {
         this.background_music.pause();
@@ -313,6 +307,31 @@ class World {
     }
 
     draw() {
+        if (!this.running) return;
+        if (this.gameOverTriggered) {
+            if (this.gameOverImage) { // Check if the image has been loaded
+                // Calculate the scaling factors for the image
+                const scaleX = this.canvas.width / this.gameOverImage.width;
+                const scaleY = this.canvas.height / this.gameOverImage.height;
+    
+                // Use the smaller scaling factor to preserve the aspect ratio
+                const scale = Math.min(scaleX, scaleY) * 1.2;
+    
+                // Calculate new width and height
+                const width = this.gameOverImage.width * scale;
+                const height = this.gameOverImage.height * scale;
+    
+                // Draw the image in the center of the canvas
+                this.ctx.drawImage(
+                    this.gameOverImage,
+                    (this.canvas.width - width) / 2, // Center horizontally
+                    (this.canvas.height - height) / 2, // Center vertically
+                    width, // New width
+                    height // New height
+                );
+            }
+            return; // Stop further drawing if game is over
+        } 
         if (this.gamePaused) {
             return; // Stop the game loop when paused
         }

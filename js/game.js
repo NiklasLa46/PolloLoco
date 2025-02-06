@@ -24,14 +24,15 @@ function resetAndMainMenu() {
     // Clear the canvas
     world.ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // Return to the main menu
-    mainMenu();
-
     // Reset game state
     allObjects = []; // Reset any global game object arrays if used
     keyboard = new Keyboard(); // Reset the keyboard inputs
-}
+    world.gameOverTriggered = false; // Reset the game over state
+    world.gameOverImage = null; // Clear the game over image reference
 
+    // Return to the main menu
+    mainMenu();
+}
 
 function toggleFullscreen() {
     const canvas = document.getElementById('canvas');
