@@ -60,7 +60,6 @@ class Character extends MovableObject {
         'img/2_character_pepe/4_hurt/H-42.png',
         'img/2_character_pepe/4_hurt/H-43.png',
     ]
-
     world;
     walking_sound = new Audio('./audio/footstep.mp3');
     sleeping_sound = new Audio('./audio/snoring.mp3');
@@ -71,7 +70,7 @@ class Character extends MovableObject {
     longIdleTimeout = null;
     speedY = 0;
     acceleration = 3;
-    isJumping = false; // Flag to prevent multiple jump
+    isJumping = false; 
     coins = 0;
     bottles = 0;
     offset = {
@@ -80,7 +79,7 @@ class Character extends MovableObject {
         bottom: -15,
         left: -25
     }
-    
+
     constructor() {
         super().loadImage('./img/2_character_pepe/2_walk/W-21.png');
         this.loadImages(this.IMAGES_WALKING);
@@ -91,152 +90,164 @@ class Character extends MovableObject {
         this.loadImages(this.IMAGES_HURT);
         this.applyGravity();
         this.jumping_sound.volume = 0.3;
-        this.sleeping_sound.volume = 0.6;
+        this.sleeping_sound.volume = 0.7;
         this.animate();
     }
 
     resetIdleTimers() {
-        this.sleeping_sound.pause();
+        this.stopIdleAnimations();
         this.lastActionTime = Date.now();
-    
+
+        this.startIdleAnimationTimers();
+    }
+
+    stopIdleAnimations() {
+        this.sleeping_sound.pause();
         if (this.idleTimeout) {
             clearTimeout(this.idleTimeout);
             this.idleTimeout = null;
         }
-    
         if (this.longIdleTimeout) {
             clearTimeout(this.longIdleTimeout);
             this.longIdleTimeout = null;
         }
-    
         if (this.idleInterval) {
             clearInterval(this.idleInterval);
             this.idleInterval = null;
         }
-    
         if (this.longIdleInterval) {
             clearInterval(this.longIdleInterval);
             this.longIdleInterval = null;
         }
-    
+    }
+
+    startIdleAnimationTimers() {
         this.idleTimeout = setTimeout(() => {
-            this.animationFrame = 0; // Reset animation frame
-            this.idleInterval = setInterval(() => this.playAnimation(this.IMAGES_IDLE), 200); // Play idle animation
+            this.animationFrame = 0; 
+            this.idleInterval = setInterval(() => this.playAnimation(this.IMAGES_IDLE), 200);
         }, 100);
-    
+
         this.longIdleTimeout = setTimeout(() => {
-            if (this.idleInterval) clearInterval(this.idleInterval); // Stop idle animation
-            this.animationFrame = 0; // Reset animation frame
-            this.longIdleInterval = setInterval(() => this.playAnimation(this.IMAGES_SLEEP), 200); // Play long idle animation
-            this.sleeping_sound.play();
+            this.handleLongIdleAnimation();
         }, 10000);
     }
-    
+
+    handleLongIdleAnimation() {
+        if (this.idleInterval) clearInterval(this.idleInterval); 
+        this.animationFrame = 0; 
+        this.longIdleInterval = setInterval(() => this.playAnimation(this.IMAGES_SLEEP), 200);
+        this.sleeping_sound.play();
+    }
 
     animate() {
         this.characterInterval = setInterval(() => {
             this.walking_sound.pause();
-            let moving = false;
-
-            if (this.world.keyboard.RIGHT && this.x < 719*5) {
-                this.moveRight();
-                this.otherDirection = false;
-                if (!this.isAboveGround()) {
-                    this.walking_sound.play();
-                }
-                moving = true;
-            }
-
-            if (this.world.keyboard.LEFT && this.x > -400) {
-                this.moveLeft();
-                this.otherDirection = true;
-                if (!this.isAboveGround()) {
-                    this.walking_sound.play();
-                }
-                moving = true;
-            }
+            let moving = this.handleMovement();
 
             if (this.world.keyboard.SPACE) {
-                if (!this.isAboveGround() && !this.isJumping) {
-                    this.jump();
-                }
+                this.handleJump();
             }
 
             if (moving || this.isAboveGround() || this.isHurt() || this.isDead()) {
                 this.resetIdleTimers();
             }
 
-            this.world.camera_x = -this.x + 100;
+            this.updateCamera();
         }, 1000 / 60);
 
-       this.characterDamageInterval = setInterval(() => {
-            if (this.isDead()) {
-                if (!this.world.gameOverTriggered) {
-                    this.playDeathAnimation(this.IMAGES_DEATH); // Play the death animation
-                    this.gameover_sound.play();
-                    setTimeout(() => {
-                        world.showGameOverScreen();
-                        world.gamePaused = true;// Trigger the game over screen after animation
-                        world.gameOverTriggered = true;
-                    }, 1600); // Adjust this delay to match the death animation duration
-                    // Ensure this logic runs only once
-                }
-            } else if (this.isHurt()) {
-                this.playAnimation(this.IMAGES_HURT);
-            } else if (this.isAboveGround()) {
-                this.playAnimation(this.IMAGES_JUMP);
-                if (!this.isAboveGround()) {
-                    this.playAnimation(this.IMAGES_IDLE);
-                }
-            } else {
-                if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT) {
-                    this.playAnimation(this.IMAGES_WALKING);
-                }
-            }
+        this.characterDamageInterval = setInterval(() => {
+            this.handleAnimations();
         }, 100);
-        
 
-        this.resetIdleTimers(); // Initialize idle timers on character load
+        this.resetIdleTimers(); 
     }
 
-    // Your current gravity and movement logic...
+    handleMovement() {
+        let moving = false;
 
-    // New method to check if the character jumps on top of an enemy
+        if (this.world.keyboard.RIGHT && this.x < 719 * 5) {
+            this.moveRight();
+            this.otherDirection = false;
+            this.playWalkingSound();
+            moving = true;
+        }
+
+        if (this.world.keyboard.LEFT && this.x > -400) {
+            this.moveLeft();
+            this.otherDirection = true;
+            this.playWalkingSound();
+            moving = true;
+        }
+
+        return moving;
+    }
+
+    handleJump() {
+        if (!this.isAboveGround() && !this.isJumping) {
+            this.jump();
+        }
+    }
+
+    updateCamera() {
+        this.world.camera_x = -this.x + 100;
+    }
+
+    handleAnimations() {
+        if (this.isDead()) {
+            this.handleDeath();
+        } else if (this.isHurt()) {
+            this.playAnimation(this.IMAGES_HURT);
+        } else if (this.isAboveGround()) {
+            this.playAnimation(this.IMAGES_JUMP);
+        } else if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT) {
+            this.playAnimation(this.IMAGES_WALKING);
+        }
+    }
+
+    handleDeath() {
+        if (!this.world.gameOverTriggered) {
+            this.playDeathAnimation(this.IMAGES_DEATH); 
+            this.gameover_sound.play();
+            setTimeout(() => {
+                this.world.showGameOverScreen();
+                this.world.gamePaused = true; 
+                this.world.gameOverTriggered = true;
+            }, 1600); 
+        }
+    }
+
+    playWalkingSound() {
+        if (!this.isAboveGround()) {
+            this.walking_sound.play();
+        }
+    }
+
     checkJumpOnEnemy(enemy) {
-        // Check if the character is jumping and collides with the enemy from above
         if (this.isJumping && this.y < enemy.y) {
-            // The character is above the enemy and falling, so it lands on top of it
+           
             if (this.isColliding(enemy)) {
-                enemy.hit(); // Deal damage to the enemy
-                this.isJumping = false; // Stop the jump after hitting the enemy
-                this.jump(true); // Call the jump function with the "weak" argument
-    
-                // Set a timeout to ensure the weak jump is executed before landing
+                enemy.hit(); 
+                this.isJumping = false; 
+                this.jump(true);
                 setTimeout(() => {
-                    this.y = 130; // Reset to ground level
-                }, 600); // Adjust this delay as needed for smoothness
+                    this.y = 130; 
+                }, 600);
             }
         }
     }
 
-
-    
-    
-    
-    
-    
-    // Apply gravity with the jumping condition
     applyGravity() {
         this.gravityIntervall = setInterval(() => {
             if (this.isAboveGround() || this.speedY > 0) {
                 this.y -= this.speedY;
                 this.speedY -= this.acceleration;
             } else {
-                this.isJumping = false; // Reset jumping flag when character lands
+                this.isJumping = false; 
             }
         }, 1000 / 25);
     }
-    isAboveGround(){
+
+    isAboveGround() {
         return this.y < 120;
     }
 
