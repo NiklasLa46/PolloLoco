@@ -2,6 +2,24 @@ let canvas;
 let ctx;
 let keyboard = new Keyboard();
 allObjects = [];
+allIntervalls = [
+    clearInterval(this.bottleInterval),
+    clearInterval(this.longidleInterval),
+    clearInterval(this.characterInterval),
+    clearInterval(this.characterDamageInterval),
+    clearInterval(this.gravityIntervall),
+    clearInterval(this.chickenIntervall),
+    clearInterval(this.chickenDeathIntervall),
+    clearInterval(this.coinIntervall),
+    clearInterval(this.bossInterval),
+    clearInterval(this.bossWalkIntervall),
+    clearInterval(this.bossDeathInterval),
+    clearInterval(this.movableDeathInterval),
+    clearInterval(this.smallChickenInterval),
+    clearInterval(this.smallChickenDeathInterval),
+    clearInterval(this.timer),
+    clearInterval(this.worldCollisionsInterval)
+]
 
 function init() {
     initLevel()
@@ -12,18 +30,75 @@ function init() {
     console.log('My characte is', world.character)
 }
 
-function restartGame(){
-    world.reset()
+function resetAndMainMenu() {
+    stopGame();  // Stop the current game
+    mainMenu();  // Show the main menu
 }
 
-function resetAndMainMenu() {
-    world.toggleMute()
-    mainMenu();
+function clearTimers() {
+    allIntervalls.forEach(clearInterval);
+
+    if (world.character) {
+        // Clear character's idle-related timeouts and intervals
+        const { character } = world;
+
+        if (character.idleTimeout) clearTimeout(character.idleTimeout);
+        if (character.longIdleTimeout) clearTimeout(character.longIdleTimeout);
+        if (character.idleInterval) clearInterval(character.idleInterval);
+        if (character.longIdleInterval) clearInterval(character.longIdleInterval);
+
+        // Reset character's idle state
+        character.idleTimeout = character.longIdleTimeout = character.idleInterval = character.longIdleInterval = null;
+    }
 }
+
+// Helper function to stop sounds
+function stopSounds() {
+    if (world.sleeping_sound) {
+        world.sleeping_sound.pause();
+        world.sleeping_sound.currentTime = 0;
+    }
+
+    if (world.background_music) {
+        world.background_music.pause();
+    }
+}
+
+// Helper function to reset game state
+function resetGameState() {
+    if (world.character) {
+        world.character.stopIdleAnimations();
+    }
+
+    world.gamePaused = true;
+    world.character = null;
+    world.level = null;
+
+    // Reset canvas and objects
+    canvas = document.getElementById('canvas');
+    ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    allObjects = [];
+    this.throwableObjects = [];
+    this.healthBar = null;
+    this.bottleBar = null;
+    this.coinBar = null;
+}
+
+function stopGame() {
+    clearTimers();
+    stopSounds();
+    resetGameState();
+}
+
+
+
+
 
 function toggleFullscreen() {
     const canvas = document.getElementById('canvas');
-    
+
     if (!document.fullscreenElement && !document.mozFullScreenElement && !document.webkitFullscreenElement) {
         // Enter fullscreen mode
         if (canvas.requestFullscreen) {

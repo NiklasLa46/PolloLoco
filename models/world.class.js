@@ -117,7 +117,7 @@ class World {
     }
 
     checkCollisions() {
-        setInterval(() => {
+        this.worldCollisionsInterval = setInterval(() => {
             this.checkEnemyCollisions();
             this.checkCoinCollisions();
             this.checkBottleCollisions();
@@ -126,6 +126,9 @@ class World {
     }
     
     checkEnemyCollisions() {
+        if (!this.level || !this.level.enemies) {
+            return; // Return early if level or enemies are not defined
+        }
         this.level.enemies.forEach((enemy, index) => {
             if (enemy.isDying || enemy.isRemoved) return; // Skip if enemy is dying or removed
             
@@ -184,6 +187,9 @@ class World {
     }
     
     checkCoinCollisions() {
+        if (!this.level || !this.level.coins) {
+            return; // Return early if level or enemies are not defined
+        }
         this.level.coins.forEach((coin, index) => {
             if (this.character.isColliding(coin)) {
                 coin.pickup(this.character);
@@ -196,6 +202,9 @@ class World {
     }
     
     checkBottleCollisions() {
+        if (!this.level || !this.level.bottles) {
+            return; // Return early if level or enemies are not defined
+        }
         this.level.bottles.forEach((bottle, index) => {
             if (this.character.isColliding(bottle) && typeof bottle.pickup === 'function') {
                 bottle.pickup(this.character);

@@ -13,10 +13,20 @@ class MovableObject extends DrawableObject {
     hit() {
         if (!this.isHurt() && !this.isDead()) {
             this.energy = Math.max(0, this.energy - 20); // Prevent energy from going below 0
+            console.log('hit')
             if (this.energy > 0) {
                 this.lastHit = Date.now(); // Record time of hit
             }
         }
+    }
+
+    reset() {
+        this.x = initialX;
+        this.y = initialY;
+        this.energy = 100;
+        this.isJumping = false;
+        this.isWalking = false;
+        this.speed = 0.15;
     }
 
     /**
