@@ -25,14 +25,17 @@ function init() {
     initLevel()
     canvas = document.getElementById('canvas');
     world = new World(canvas, keyboard);
-
-
-    console.log('My characte is', world.character)
 }
 
 function resetAndMainMenu() {
     stopGame();  // Stop the current game
     mainMenu();  // Show the main menu
+}
+
+function restartGame(){
+    stopGame();
+    init();
+    document.getElementById('restartButton').style.display = 'none';
 }
 
 function clearTimers() {
@@ -91,10 +94,6 @@ function stopGame() {
     stopSounds();
     resetGameState();
 }
-
-
-
-
 
 function toggleFullscreen() {
     const canvas = document.getElementById('canvas');
