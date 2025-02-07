@@ -20,12 +20,22 @@ allIntervalls = [
     clearInterval(this.timer),
     clearInterval(this.worldCollisionsInterval)
 ]
+let leftBtn = document.getElementById('leftBtn');
 
 function init() {
     initLevel()
     canvas = document.getElementById('canvas');
     world = new World(canvas, keyboard);
+    showBottomButtons();
 }
+
+function showBottomButtons(){
+    if (window.innerWidth <= 1200) {
+        document.querySelector('.bottom-buttons').style.display = 'flex';
+    }
+}
+
+
 
 function resetAndMainMenu() {
     hideCanvasButtons(); 
@@ -171,32 +181,17 @@ function mainMenu() {
     document.getElementById('game-buttons-div').style.display = 'none';
 };
 
-window.addEventListener('keydown', (event) => {
-    if (event.keyCode == 39) {
-        keyboard.RIGHT = true;
-    }
-
-    if (event.keyCode == 37) {
-        keyboard.LEFT = true;
-    }
-
-    if (event.keyCode == 38) {
-        keyboard.UP = true;
-    }
-
-    if (event.keyCode == 40) {
-        keyboard.DOWN = true;
-    }
-
-    if (event.keyCode == 32) {
-        keyboard.SPACE = true;
-    }
-
-    if (event.keyCode == 68) {
-        keyboard.D = true;
-        world.throwBottle();
-    }
+// Assuming btnLeft is already defined as your left button
+leftBtn.addEventListener('touchstart', (event) => {
+    console.log('Left button pressed');
+    keyboard.LEFT = true;
 });
+
+leftBtn.addEventListener('touchend', (event) => {
+    console.log('Left button released');
+    keyboard.LEFT = false;
+});
+
 
 window.addEventListener('keyup', (event) => {
     if (event.keyCode == 39) {

@@ -255,6 +255,7 @@ class World {
         this.muteCharacterSleepingSound()
         this.displayGameOverImage();
         this.showRestartButton();
+        this.hideBottomButtons();
     }
     
     displayGameOverImage() {
@@ -291,6 +292,12 @@ class World {
         document.querySelector('.restart-button').style.display = 'flex';
         if (window.innerWidth <= 1200) {
             document.querySelector('.all-canvas-buttons').style.display = 'block';
+        }
+    }
+
+    hideBottomButtons(){
+        if (window.innerWidth <= 1200) {
+            document.querySelector('.bottom-buttons').style.display = 'none';
         }
     }
     

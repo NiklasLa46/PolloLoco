@@ -113,3 +113,45 @@ table.table thead th {
 .all-canvas-buttons{
     display: none;
 }
+
+.bottom-buttons {
+    display: none;
+    justify-content: space-between; /* This will position the two groups of buttons on the left and right */
+    position: fixed; /* Keep it fixed at the bottom of the screen */
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 10px;
+    z-index: 1000; /* Ensure it sits on top of other content */
+}
+
+/* Style the left and right button containers */
+.left-buttons, .right-buttons {
+    display: flex;
+    justify-content: space-between;
+}
+
+.left-buttons button, .right-buttons button {
+    margin: 20px 20px; /* Space between buttons */
+    padding: 10px;
+    font-size: 16px;
+    border: none;
+    color: white;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.movement-button {
+    width: 50px; /* Set a fixed width */
+    height: 50px; /* Set a fixed height */
+    background-color: transparent; /* Make the background transparent */
+    border: 2px solid gray; /* Gray border */
+    border-radius: 50%; /* Make the button round */
+    display: flex; /* Flexbox to center the icon */
+    justify-content: center; /* Center the icon horizontally */
+    align-items: center; /* Center the icon vertically */
+    cursor: pointer; /* Show a pointer when hovering */
+    transition: all 0.3s ease; /* Smooth transition for hover effect */
+    padding: 0; /* Remove padding */
+    margin: 0px;
+}

@@ -73,6 +73,16 @@
     <div class="canvas-div">
         <h1 style="display: none;" id="game-title" class="canvas-cap">El Pollo Loco</h1>
         <canvas id="canvas" width="720px" height="480px" style="display: none;"></canvas>  
+        <div id="bottomButtons" class="bottom-buttons">
+            <div class="left-buttons">
+                <button class="movement-button" id="leftBtn"></button>
+                <button class="movement-button" id="rightBtn"></button>
+            </div>
+            <div class="right-buttons">
+                <button class="movement-button" id="jumpBtn"></button>
+                <button class="movement-button" id="throwBtn"></button>
+            </div>
+        </div>        
         <div id="" class="all-canvas-buttons">
             <button onclick="restartGame()">Try Again!</button>
             <button onclick="resetAndMainMenu()">Main Menu</button>
