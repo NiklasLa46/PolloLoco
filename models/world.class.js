@@ -289,6 +289,9 @@ class World {
     
     showRestartButton() {
         document.querySelector('.restart-button').style.display = 'flex';
+        if (window.innerWidth <= 1200) {
+            document.querySelector('.all-canvas-buttons').style.display = 'block';
+        }
     }
     
     

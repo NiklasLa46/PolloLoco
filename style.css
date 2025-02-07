@@ -12,129 +12,6 @@ body {
     margin: 0px;
 }
 
-@media only screen and (max-width:720px) {
-    canvas {
-        width: 100% !important;
-        height: auto !important;
-        /* Ensure it scales properly */
-        margin-top: 0px !important;
-    }
-
-    /* Hide certain elements for small screens */
-    h2,
-    .canvas-cap,
-    .game-buttons-div,
-    .restart-button,
-    .instructions-h1 {
-        display: none !important;
-    }
-
-    .instructions-page {
-        height: 100vh;
-        justify-content: center;
-    }
-
-}
-
-@media only screen and (max-height:480px) {
-    canvas {
-        width: 100% !important;
-        /* Adjust width */
-        height: 100vh !important;
-        /* Ensure full screen height */
-        margin-top: 0px !important;
-    }
-
-    h2,
-    .canvas-cap,
-    .game-buttons-div,
-    .restart-button,
-    .instructions-h1 {
-        display: none !important;
-    }
-
-
-    .instructions-page {
-        height: 100vh;
-        justify-content: center;
-    }
-}
-
-@media only screen and (max-device-width: 667px) and (max-device-height: 375px) {
-    canvas {
-        width: 100% !important;
-        height: 100vh !important;
-        /* Make sure the canvas takes up the entire height */
-        margin-top: 0 !important;
-    }
-
-    h2,
-    .canvas-cap,
-    .game-buttons-div,
-    .restart-button,
-    .instructions-h1 {
-        display: none !important;
-    }
-
-
-
-    .instructions-page {
-        height: 100vh;
-        justify-content: center;
-    }
-}
-
-@media only screen and (max-device-width: 1280px) and (max-device-height: 800px) {
-    canvas {
-        width: 100% !important;
-        height: 100vh !important;
-        /* Make sure the canvas takes up the entire height */
-        margin-top: 0 !important;
-    }
-
-    h2,
-    .canvas-cap,
-    .game-buttons-div,
-    .restart-button,
-    .instructions-h1 {
-        display: none !important;
-    }
-
-
-
-    .instructions-page {
-        height: 100vh;
-        justify-content: center;
-    }
-}
-
-@media only screen and (max-device-width: 1180px) and (max-device-height: 820px) {
-    canvas {
-        width: 100% !important;
-        height: 100vh !important;
-        /* Make sure the canvas takes up the entire height */
-        margin-top: 0 !important;
-    }
-
-
-    h2,
-    .canvas-cap,
-    .game-buttons-div,
-    .restart-button,
-    .instructions-h1 {
-        display: none !important;
-    }
-
-
-
-    .instructions-page {
-        height: 100vh;
-        justify-content: center;
-    }
-}
-
-
-
 h1 {
     justify-content: center;
     margin-top: 10px;
@@ -231,4 +108,8 @@ table.table thead th {
 
 .button-div-instructions {
     padding-top: 20px;
+}
+
+.all-canvas-buttons{
+    display: none;
 }

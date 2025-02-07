@@ -7,6 +7,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Smokum&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="responsive.css">
     <link rel="icon" href="./img/favicon.png">
     <script src="./models/world.class.js"></script>
     <script src="./models/drawable-object.class.js"></script>
@@ -72,15 +73,18 @@
     <div class="canvas-div">
         <h1 style="display: none;" id="game-title" class="canvas-cap">El Pollo Loco</h1>
         <canvas id="canvas" width="720px" height="480px" style="display: none;"></canvas>  
-        <div class="restart-button">
-            <button id="restartButton" onclick="restartGame()" >Try Again!</button>
+        <div id="" class="all-canvas-buttons">
+            <button onclick="restartGame()">Try Again!</button>
+            <button onclick="resetAndMainMenu()">Main Menu</button>
         </div>
-        <div class="game-buttons-div" id="game-buttons-div">
-            <button id="muteButton" >Mute</button>
-            <button onclick="toggleFullscreen()" >Fullscreen</button>
-            <button id="mainMenuButton" onclick="resetAndMainMenu()">Main Menu</button>
-        </div>  
-
+            <div class="restart-button">
+                <button id="restartButton" onclick="restartGame()" >Try Again!</button>
+            </div>
+            <div class="game-buttons-div" id="game-buttons-div">
+                <button id="muteButton" >Mute</button>
+                <button id="Fullscreen" onclick="toggleFullscreen()" >Fullscreen</button>
+                <button id="mainMenuButton" onclick="resetAndMainMenu()">Main Menu</button>
+            </div>  
     </div>
 
 </body>

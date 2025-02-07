@@ -28,15 +28,23 @@ function init() {
 }
 
 function resetAndMainMenu() {
+    hideCanvasButtons(); 
     stopGame();  // Stop the current game
-    mainMenu();  // Show the main menu
+    mainMenu();
+    // Show the main menu
 }
 
 function restartGame(){
     stopGame();
     init();
+    hideCanvasButtons();
     document.getElementById('restartButton').style.display = 'none';
 }
+
+function hideCanvasButtons() {
+    document.querySelector('.all-canvas-buttons').style.display = 'none';
+}
+
 
 function clearTimers() {
     allIntervalls.forEach(clearInterval);
@@ -161,7 +169,6 @@ function mainMenu() {
     document.getElementById('canvas').style.display = 'none'; // Show canvas
     document.getElementById('game-title').style.display = 'none'; // Show game title
     document.getElementById('game-buttons-div').style.display = 'none';
-
 };
 
 window.addEventListener('keydown', (event) => {
