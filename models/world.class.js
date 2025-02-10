@@ -314,6 +314,7 @@ class World {
         this.stopBackgroundMusic();
         this.muteCharacterSleepingSound();
         this.playWinSound();
+        console.log('show screen')
         this.displayEndScreenImage(this.IMAGE_WIN[0]);
         setTimeout(() => {
             this.showRestartButton(); // Delay button appearance if needed

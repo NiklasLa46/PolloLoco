@@ -83,16 +83,13 @@ class Endboss extends MovableObject {
         if (!this.deathAnimationPlaying) {
             this.deathAnimationPlaying = true;
             this.currentImage = 0;
-
             const deathInterval = setInterval(() => {
                 if (this.currentImage < this.IMAGES_DEATH.length) {
                     this.playAnimation(this.IMAGES_DEATH);
                 } else {
                     clearInterval(deathInterval);
-                    setTimeout(() => {
                         world.gamePaused = true;
                         world.showWinScreen();
-                    }, 400);
                 }
             }, 350);
         }
