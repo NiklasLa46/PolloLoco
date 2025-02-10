@@ -186,3 +186,28 @@ table.table thead th {
     width: 50px;
     filter: brightness(0) saturate(100%) invert(89%) sepia(12%) saturate(6972%) hue-rotate(339deg) brightness(106%) contrast(101%);
 }
+
+#turnMessage {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    height: 100vh;
+    width: 100vw;
+    transform: translate(-50%, -50%);
+    padding: 20px;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: rgb(255, 255, 255);
+    text-align: center;
+    border-radius: 10px;
+    display: none; /* Initially hidden */
+    z-index: 1000;
+    font-size: 100px; /* Increased font size */
+}
+
+.turn-message{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-top: 30vh;
+}
+

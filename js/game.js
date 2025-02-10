@@ -165,6 +165,26 @@ function stopGame() {
     resetGameState();
 }
 
+function checkOrientation() {
+    const turnMessage = document.getElementById("turnMessage");
+
+    // Check if the screen is in vertical (portrait) orientation
+    if (window.innerHeight > window.innerWidth) {
+        // Screen is vertical, hide the message
+        turnMessage.style.display = "block";
+    } else {
+        // Screen is horizontal, show the message
+        turnMessage.style.display = "none";
+    }
+}
+
+// Run the function when the page loads
+window.addEventListener("load", checkOrientation);
+
+// Run the function on window resize (for dynamic screen orientation changes)
+window.addEventListener("resize", checkOrientation);
+
+
 function toggleFullscreen() {
     const canvas = document.getElementById('canvas');
 
