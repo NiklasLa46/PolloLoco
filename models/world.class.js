@@ -75,6 +75,7 @@ class World {
         this.background_music.loop = true;
         this.initializeMuteButton();
     }
+    
 
     initializeMuteButton() {
         const muteButton = document.getElementById('muteButton');

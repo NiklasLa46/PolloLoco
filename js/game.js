@@ -20,7 +20,56 @@ allIntervalls = [
     clearInterval(this.timer),
     clearInterval(this.worldCollisionsInterval)
 ]
+
+document.addEventListener("DOMContentLoaded", () => {
+// Get references to all the buttons
 let leftBtn = document.getElementById('leftBtn');
+let rightBtn = document.getElementById('rightBtn');
+let jumpBtn = document.getElementById('jumpBtn');
+let throwBtn = document.getElementById('throwBtn');
+
+// Left button (move left)
+leftBtn.addEventListener('touchstart', (event) => {
+    console.log('Left button pressed');
+    keyboard.LEFT = true;
+});
+leftBtn.addEventListener('touchend', (event) => {
+    console.log('Left button released');
+    keyboard.LEFT = false;
+});
+
+// Right button (move right)
+rightBtn.addEventListener('touchstart', (event) => {
+    console.log('Right button pressed');
+    keyboard.RIGHT = true;
+});
+rightBtn.addEventListener('touchend', (event) => {
+    console.log('Right button released');
+    keyboard.RIGHT = false;
+});
+
+// Jump button (spacebar equivalent)
+jumpBtn.addEventListener('touchstart', (event) => {
+    console.log('Jump button pressed');
+    keyboard.SPACE = true;
+});
+jumpBtn.addEventListener('touchend', (event) => {
+    console.log('Jump button released');
+    keyboard.SPACE = false;
+});
+
+// Throw button (D key equivalent)
+throwBtn.addEventListener('touchstart', (event) => {
+    console.log('Throw button pressed');
+    keyboard.D = true;
+    world.throwBottle();
+});
+throwBtn.addEventListener('touchend', (event) => {
+    console.log('Throw button released');
+    keyboard.D = false;
+});
+});
+
 
 function init() {
     initLevel()
@@ -181,17 +230,31 @@ function mainMenu() {
     document.getElementById('game-buttons-div').style.display = 'none';
 };
 
-// Assuming btnLeft is already defined as your left button
-leftBtn.addEventListener('touchstart', (event) => {
-    console.log('Left button pressed');
-    keyboard.LEFT = true;
-});
+window.addEventListener('keydown', (event) => {
+    if (event.keyCode == 39) {
+        keyboard.RIGHT = true;
+    }
 
-leftBtn.addEventListener('touchend', (event) => {
-    console.log('Left button released');
-    keyboard.LEFT = false;
-});
+    if (event.keyCode == 37) {
+        keyboard.LEFT = true;
+    }
 
+    if (event.keyCode == 38) {
+        keyboard.UP = true;
+    }
+
+    if (event.keyCode == 40) {
+        keyboard.DOWN = true;
+    }
+
+    if (event.keyCode == 32) {
+        keyboard.SPACE = true;
+    }
+    if (event.keyCode == 68) {
+        keyboard.D = true;
+        world.throwBottle();
+    }
+});
 
 window.addEventListener('keyup', (event) => {
     if (event.keyCode == 39) {
