@@ -38,8 +38,8 @@
         <h2>Welcome to</h2>
         <h1>El Pollo Loco</h1>
             <div class="start-buttons">
-                <button onclick="startGame()" id="start-game-btn">Start Game</button>
-                <button onclick="showInstructions()">Instructions</button>
+                <button class="button-gradient" onclick="startGame()" id="start-game-btn">Start Game</button>
+                <button class="button-gradient" onclick="showInstructions()">Instructions</button>
             </div> 
     </div>
     <div  id="instructions-page" class="instructions-page">
@@ -66,34 +66,37 @@
             </tbody>
             </table>
             <div class="button-div-instructions">
-                <button onclick="startGame()">Start Game</button>
-                <button onclick="mainMenu()">Main Menu</button>
+                <button class="button-gradient" onclick="startGame()">Start Game</button>
+                <button class="button-gradient" onclick="mainMenu()">Main Menu</button>
             </div> 
     </div>
     <div class="canvas-div">
         <h1 style="display: none;" id="game-title" class="canvas-cap">El Pollo Loco</h1>
         <canvas id="canvas" width="720px" height="480px" style="display: none;"></canvas>  
+        <div class="mute-responsive-div">
+            <button class="mute-responsive" id="mute-responsive"><img src="./img/mute.png" alt=""></button>
+        </div>
         <div id="bottomButtons" class="bottom-buttons">
             <div class="left-buttons">
-                <button class="movement-button" id="leftBtn"></button>
-                <button class="movement-button" id="rightBtn"></button>
+                <button class="movement-button" id="leftBtn"><img class="button-img" src="./img/arrow-left.png" alt=""></button>
+                <button class="movement-button" id="rightBtn"><img class="button-img" src="./img/arrow-right.png" alt=""></button>
             </div>
             <div class="right-buttons">
-                <button class="movement-button" id="jumpBtn"></button>
-                <button class="movement-button" id="throwBtn"></button>
+                <button class="movement-button" id="jumpBtn"><img class="button-img" src="./img/jump.png" alt=""></button>
+                <button class="movement-button" id="throwBtn"><img class="button-img" src="./img/throw.png" alt=""></button>
             </div>
         </div>        
         <div id="" class="all-canvas-buttons">
-            <button onclick="restartGame()">Try Again!</button>
-            <button onclick="resetAndMainMenu()">Main Menu</button>
+            <button class="button-gradient" onclick="restartGame()">Try Again!</button>
+            <button class="button-gradient" onclick="resetAndMainMenu()">Main Menu</button>
         </div>
             <div class="restart-button">
-                <button id="restartButton" onclick="restartGame()" >Try Again!</button>
+                <button class="button-gradient" id="restartButton" onclick="restartGame()" >Try Again!</button>
             </div>
             <div class="game-buttons-div" id="game-buttons-div">
-                <button id="muteButton" >Mute</button>
-                <button id="Fullscreen" onclick="toggleFullscreen()" >Fullscreen</button>
-                <button id="mainMenuButton" onclick="resetAndMainMenu()">Main Menu</button>
+                <button class="button-gradient" id="muteButton" >Mute</button>
+                <button class="button-gradient" id="Fullscreen" onclick="toggleFullscreen()" >Fullscreen</button>
+                <button class="button-gradient" id="mainMenuButton" onclick="resetAndMainMenu()">Main Menu</button>
             </div>  
     </div>
 

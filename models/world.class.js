@@ -79,7 +79,9 @@ class World {
 
     initializeMuteButton() {
         const muteButton = document.getElementById('muteButton');
+        const muteButtonRespo = document.getElementById('mute-responsive');
         muteButton.addEventListener('click', () => this.toggleMute());
+        muteButtonRespo.addEventListener('click', () => this.toggleMute());
     }
 
     toggleMute() {
@@ -255,8 +257,12 @@ class World {
         this.stopBackgroundMusic();
         this.muteCharacterSleepingSound()
         this.displayGameOverImage();
-        this.showRestartButton();
+       
         this.hideBottomButtons();
+
+        setTimeout(() => {
+            this.showRestartButton(); // Delay button appearance if needed
+        }, 200); 
     }
     
     displayGameOverImage() {
@@ -309,7 +315,9 @@ class World {
         this.muteCharacterSleepingSound();
         this.playWinSound();
         this.displayEndScreenImage(this.IMAGE_WIN[0]);
-        this.showRestartButton();
+        setTimeout(() => {
+            this.showRestartButton(); // Delay button appearance if needed
+        }, 200); 
     }
     
     stopBackgroundMusic() {
@@ -317,8 +325,12 @@ class World {
     }
     
     muteCharacterSleepingSound() {
-        this.character.sleeping_sound.volume = 0.0;
+        if (this.character && this.character.sleeping_sound) {
+            this.character.sleeping_sound.volume = 0.0;
+        }
     }
+    
+    
     
     playWinSound() {
         if (!this.hasWinSoundPlayed) {

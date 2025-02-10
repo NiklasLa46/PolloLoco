@@ -35,8 +35,7 @@ h2 {
 }
 
 button {
-    box-shadow: 0px 10px 14px -7px #000000;
-    background: linear-gradient(to bottom, #FFC521 5%, #ffe394 100%);
+    box-shadow: 0px 10px 14px -7px #000000;   
     background-color: #FFC521;
     border-radius: 8px;
     display: inline-block;
@@ -52,6 +51,10 @@ button {
     text-decoration: none;
     text-shadow: 0px 1px 0px #000000;
     margin: 20px;
+}
+
+.button-gradient{
+    background: linear-gradient(to bottom, #FFC521 5%, #ffe394 100%);
 }
 
 button:hover {
@@ -134,18 +137,20 @@ table.table thead th {
 .left-buttons button, .right-buttons button {
     margin: 20px 20px; /* Space between buttons */
     padding: 10px;
+    width: 60px;
+    height: 60px;
     font-size: 16px;
-    border: none;
     color: white;
     cursor: pointer;
     border-radius: 5px;
 }
 
 .movement-button {
+    box-shadow: none;
     width: 50px; /* Set a fixed width */
     height: 50px; /* Set a fixed height */
     background-color: transparent; /* Make the background transparent */
-    border: 2px solid gray; /* Gray border */
+    border: 2px solid #FFC521; /* Gray border */
     border-radius: 50%; /* Make the button round */
     display: flex; /* Flexbox to center the icon */
     justify-content: center; /* Center the icon horizontally */
@@ -154,4 +159,30 @@ table.table thead th {
     transition: all 0.3s ease; /* Smooth transition for hover effect */
     padding: 0; /* Remove padding */
     margin: 0px;
+}
+
+.mute-responsive {
+    display: none; /* Hidden on larger screens */
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    z-index: 1000; /* Ensures it appears above other elements */
+    background-color: transparent !important; /* Make the background transparent */
+    border: 2px solid #FFC521; /* Gray border */
+    cursor: pointer; /* Show a pointer when hovering */
+    transition: all 0.3s ease; /* Smooth transition for hover effect */
+    margin: 0px;
+    padding: 0px;
+    width: auto;
+    filter: brightness(0) saturate(100%) invert(89%) sepia(12%) saturate(6972%) hue-rotate(339deg) brightness(106%) contrast(101%);
+}
+
+.mute-responsive-div{
+    padding: 0px;
+    margin: 0px;
+}
+
+.button-img{
+    width: 50px;
+    filter: brightness(0) saturate(100%) invert(89%) sepia(12%) saturate(6972%) hue-rotate(339deg) brightness(106%) contrast(101%);
 }

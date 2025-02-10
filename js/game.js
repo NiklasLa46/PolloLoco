@@ -81,6 +81,7 @@ function init() {
 function showBottomButtons(){
     if (window.innerWidth <= 1200) {
         document.querySelector('.bottom-buttons').style.display = 'flex';
+        document.querySelector('.mute-responsive').style.display = 'flex';
     }
 }
 
@@ -95,9 +96,11 @@ function resetAndMainMenu() {
 
 function restartGame(){
     stopGame();
-    init();
     hideCanvasButtons();
+    
     document.getElementById('restartButton').style.display = 'none';
+    init();
+    
 }
 
 function hideCanvasButtons() {
