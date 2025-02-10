@@ -79,6 +79,7 @@ class Character extends MovableObject {
         bottom: -15,
         left: -25
     }
+   isDeadPlaying = false;
 
     constructor() {
         super().loadImage('./img/2_character_pepe/2_walk/W-21.png');
@@ -164,21 +165,26 @@ class Character extends MovableObject {
 
     handleMovement() {
         let moving = false;
-
+    
+        // Prevent movement if the character is dead
+        if (this.isDeadPlaying) {
+            return false;
+        }
+    
         if (this.world.keyboard.RIGHT && this.x < 719 * 5) {
             this.moveRight();
             this.otherDirection = false;
             this.playWalkingSound();
             moving = true;
         }
-
+    
         if (this.world.keyboard.LEFT && this.x > -400) {
             this.moveLeft();
             this.otherDirection = true;
             this.playWalkingSound();
             moving = true;
         }
-
+    
         return moving;
     }
 
@@ -206,8 +212,14 @@ class Character extends MovableObject {
 
     handleDeath() {
         if (!this.world.gameOverTriggered) {
+            this.isDeadPlaying = true;  // Set the flag to true when the character dies
             this.playDeathAnimation(this.IMAGES_DEATH); 
             this.gameover_sound.play();
+            
+            // Disable movement during death animation
+            this.world.keyboard.RIGHT = false;
+            this.world.keyboard.LEFT = false;
+
             setTimeout(() => {
                 this.world.showGameOverScreen();
                 this.world.gamePaused = true; 
@@ -215,6 +227,7 @@ class Character extends MovableObject {
             }, 1600); 
         }
     }
+    
 
     playWalkingSound() {
         if (!this.isAboveGround()) {

@@ -163,7 +163,7 @@ class World {
     
             // Trigger death animation for Endboss
             if (enemy.isDead() && !enemy.deathAnimationPlaying) {
-                enemy.playDeathAnimationBoss(enemy.IMAGES_DEATH); // Start the boss's death animation
+                enemy.playDeathAnimation(enemy.IMAGES_DEATH); // Start the boss's death animation
                 enemy.deathAnimationPlaying = true;
     
                 setTimeout(() => {
