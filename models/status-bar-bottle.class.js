@@ -1,7 +1,14 @@
 class BottleBar extends StatusBar {
-    constructor(maxBottles = 10) { // Specify max bottles
+    /**
+     * Constructor for the BottleBar class.
+     * Initializes the maximum number of bottles and the images for the bottle bar,
+     * sets the position on the screen, and starts the bottle bar at 0% full.
+     * 
+     * @param {number} maxBottles The maximum number of bottles (default is 10).
+     */
+    constructor(maxBottles = 10) {
         super();
-        this.maxBottles = maxBottles; // Total bottles to collect
+        this.maxBottles = maxBottles;
         this.IMAGES = [
             'img/7_statusbars/1_statusbar/3_statusbar_bottle/blue/0.png',
             'img/7_statusbars/1_statusbar/3_statusbar_bottle/blue/20.png',
@@ -13,9 +20,8 @@ class BottleBar extends StatusBar {
         this.loadImages(this.IMAGES);
         this.x = 20;
         this.y = 65;
-        this.setPercentage(0); // Start at 0 bottles collected
+        this.setPercentage(0);
     }
-
-
 }
+
 

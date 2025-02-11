@@ -1,7 +1,7 @@
 class SmallChicken extends MovableObject {
     height = 70;
     width = 70;
-    y = 350; // Initial Y position
+    y = 350; 
     IMAGES_DEATH = [
         'img/3_enemies_chicken/chicken_small/2_dead/dead.png'
     ];
@@ -10,7 +10,7 @@ class SmallChicken extends MovableObject {
         'img/3_enemies_chicken/chicken_small/1_walk/2_w.png',
         'img/3_enemies_chicken/chicken_small/1_walk/3_w.png',
     ];
-    isDying = false; // New flag to track death state
+    isDying = false; 
     energy = 20;
     offset = {
         top: -15,
@@ -19,10 +19,10 @@ class SmallChicken extends MovableObject {
         left: -5
     };
 
-    jumpInterval; // Variable to store jump interval
-    isJumping = false; // Track jumping state
-    speedY = 0; // Initial vertical speed for jump
-    jumpHeight = 15; // Set a fixed jump height (lower than the character's jump)
+    jumpInterval; 
+    isJumping = false; 
+    speedY = 0; 
+    jumpHeight = 15; 
 
     constructor() {
         super().loadImage('img/3_enemies_chicken/chicken_small/1_walk/1_w.png');
@@ -31,49 +31,60 @@ class SmallChicken extends MovableObject {
         this.loadImages(this.IMAGES_WALKING);
         this.loadImages(this.IMAGES_DEATH);
         this.animate();
-        this.startJumping(); // Start random jumping after instantiation
+        this.startJumping(); 
     }
 
-    // New method to trigger random jumps
+    /**
+     * Starts a random interval for triggering jumps.
+     * The chicken will jump every 5-10 seconds.
+     */
     startJumping() {
         this.jumpInterval = setInterval(() => {
-            this.jump(); // Trigger a fixed jump every 5-10 seconds
-        }, 5000 + Math.random() * 5000); // Random interval between 5-10 seconds
+            this.jump(); 
+        }, 5000 + Math.random() * 5000); 
     }
 
-    // Jump method (same height for each jump)
+    /**
+     * Makes the chicken jump with a fixed height.
+     * Plays the jumping sound each time.
+     */
     jump() {
         if (this.jumping_sound) {
-            this.jumping_sound.currentTime = 0; // Reset sound to the start
+            this.jumping_sound.currentTime = 0; 
             this.jumping_sound.play();
         }
-        this.speedY = this.jumpHeight; // Fixed jump height
-        this.isJumping = true; // Mark as jumping
+        this.speedY = this.jumpHeight; 
+        this.isJumping = true; 
     }
 
-    // Update the vertical position when jumping
+    /**
+     * Updates the vertical position when the chicken is jumping.
+     * Simulates gravity when the jump is completed.
+     */
     updateJump() {
         if (this.isJumping) {
-            this.y -= this.speedY; // Move up
-            this.speedY -= 1; // Simulate gravity (decrease upward speed)
+            this.y -= this.speedY; 
+            this.speedY -= 1; 
 
-            // If the chicken reaches the peak of the jump, stop the jump
             if (this.speedY <= 0) {
                 this.isJumping = false;
             }
         } else {
-            // If not jumping, apply gravity to bring the chicken down
-            if (this.y < 350) { // Ensure it doesn't go below ground level
-                this.y += 5; // Falling speed (gravity)
+            if (this.y < 350) { 
+                this.y += 5; 
             }
         }
     }
 
+    /**
+     * Animates the chicken’s movements.
+     * Handles walking and jumping logic, and plays the walking animation.
+     */
     animate() {
         this.smallChickenInterval = setInterval(() => {
             if (!this.isDead() && !this.isDying) {
                 this.moveLeft();
-                this.updateJump(); // Update jumping logic
+                this.updateJump(); 
             }
         }, 1000 / 60);
 
@@ -84,18 +95,27 @@ class SmallChicken extends MovableObject {
         }, 200);
     }
 
+    /**
+     * Plays the death image and marks the chicken for removal.
+     * Stops the death animation once completed.
+     */
     playDeathImage() {
-        if (this.isDying) return; // Ensure this runs only once
+        if (this.isDying) return; 
 
-        this.isDying = true; // Mark as dying
-        this.img = this.imageCache[this.IMAGES_DEATH[0]]; // Set death image
+        this.isDying = true; 
+        this.img = this.imageCache[this.IMAGES_DEATH[0]]; 
         setTimeout(() => {
-            this.isRemoved = true; // Mark for removal
-        }, 1000); // Wait for death animation to finish
+            this.isRemoved = true; 
+        }, 1000); 
     }
 
+    /**
+     * Checks if the chicken is dead based on its energy or removal status.
+     * @returns {boolean} True if the chicken is dead, false otherwise.
+     */
     isDead() {
-        return this.energy <= 0 || this.isRemoved; // Include removal check
+        return this.energy <= 0 || this.isRemoved; 
     }
 }
+
 

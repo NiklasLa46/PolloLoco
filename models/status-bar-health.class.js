@@ -1,4 +1,9 @@
 class HealthBar extends StatusBar {
+    /**
+     * Constructor for the HealthBar class.
+     * Initializes the images for the health bar, sets the position on the screen,
+     * and starts the health bar at 100% full health.
+     */
     constructor() {
         super();
         this.IMAGES = [
@@ -12,9 +17,7 @@ class HealthBar extends StatusBar {
         this.loadImages(this.IMAGES);
         this.x = 20;
         this.y = 10;
-        this.setPercentage(100); // Start at full health
+        this.setPercentage(100);
     }
-
-
 }
 

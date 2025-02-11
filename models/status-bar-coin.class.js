@@ -1,7 +1,14 @@
 class CoinBar extends StatusBar {
-    constructor(maxCoins = 10) { // Specify max coins
+    /**
+     * Constructor for the CoinBar class.
+     * Initializes the maximum number of coins and the images for the coin bar,
+     * sets the position on the screen, and starts the coin bar at 0% full.
+     * 
+     * @param {number} maxCoins The maximum number of coins (default is 10).
+     */
+    constructor(maxCoins = 10) {
         super();
-        this.maxCoins = maxCoins; // Total coins to collect
+        this.maxCoins = maxCoins;
         this.IMAGES = [
             'img/7_statusbars/1_statusbar/1_statusbar_coin/orange/0.png',
             'img/7_statusbars/1_statusbar/1_statusbar_coin/orange/20.png',
@@ -13,9 +20,7 @@ class CoinBar extends StatusBar {
         this.loadImages(this.IMAGES);
         this.x = 20;
         this.y = 120;
-        this.setPercentage(0); // Start at 0 coins collected
+        this.setPercentage(0);
     }
-
-
 }
 
