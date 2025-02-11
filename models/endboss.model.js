@@ -1,3 +1,7 @@
+/**
+ * Represents the end boss character in the game.
+ * Provides methods for handling animation, movement, and death.
+ */
 class Endboss extends MovableObject {
     height = 400;
     width = 250;
@@ -54,31 +58,60 @@ class Endboss extends MovableObject {
         setTimeout(() => this.animate(), 100);
     }
 
+    /**
+     * Checks if the boss is visible within the camera view.
+     * @param {number} cameraX - The current X position of the camera.
+     * @param {number} canvasWidth - The width of the canvas.
+     */
     checkVisibility(cameraX, canvasWidth) {
         this.isVisible = this.x + this.width > -cameraX && this.x < -cameraX + canvasWidth;
     }
 
-    animate() {
-        this.bossInterval = setInterval(() => {
-            if (this.isDead()) {
-                this.handleDeath();
-            } else if (this.isHurt()) {
-                this.playAnimation(this.IMAGES_HURT);
-            } else if (this.isWalking) {
-                this.moveLeft();
-                this.playAnimation(this.IMAGES_WALKING);
-            } else {
-                this.playAnimation(this.IMAGES_ALERT);
-            }
-        }, 200);
+/**
+ * Starts the main animation loop for the boss.
+ * Handles different states of the boss (dead, hurt, walking, or alert).
+ */
+startBossAnimation() {
+    this.bossInterval = setInterval(() => {
+        if (this.isDead()) {
+            this.handleDeath();
+        } else if (this.isHurt()) {
+            this.playAnimation(this.IMAGES_HURT);
+        } else if (this.isWalking) {
+            this.moveLeft();
+            this.playAnimation(this.IMAGES_WALKING);
+        } else {
+            this.playAnimation(this.IMAGES_ALERT);
+        }
+    }, 200);
+}
 
-        this.bossWalkInterval = setInterval(() => {
-            if (this.isVisible && !this.isDead()) {
-                this.isWalking = true;
-            }
-        }, 500);
-    }
+/**
+ * Starts the walking animation loop for the boss.
+ * Activates the walking state when the boss is visible and not dead.
+ */
+startWalkingAnimation() {
+    this.bossWalkInterval = setInterval(() => {
+        if (this.isVisible && !this.isDead()) {
+            this.isWalking = true;
+        }
+    }, 500);
+}
 
+/**
+ * Main animation handler for the boss.
+ * Calls the functions to initiate the boss animation and walking animation loops.
+ */
+animate() {
+    this.startBossAnimation();
+    this.startWalkingAnimation();
+}
+
+    
+
+    /**
+     * Handles the death animation of the boss.
+     */
     handleDeath() {
         if (!this.deathAnimationPlaying) {
             this.deathAnimationPlaying = true;
@@ -88,11 +121,12 @@ class Endboss extends MovableObject {
                     this.playAnimation(this.IMAGES_DEATH);
                 } else {
                     clearInterval(deathInterval);
-                        world.gamePaused = true;
-                        world.showWinScreen();
+                    world.gamePaused = true;
+                    world.showWinScreen();
                 }
             }, 350);
         }
     }
 }
+
 
