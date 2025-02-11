@@ -11,17 +11,11 @@ class SoundManager {
         new Audio('audio/winsound.mp3'),
         new Audio('audio/gameover.mp3'),
         new Audio('audio/bossdeath.mp3'),
-        new Audio('./audio/footstep.mp3'),
-        new Audio('./audio/snoring.mp3'),
-        new Audio('./audio/jump3.mp3'),
-        new Audio('./audio/gameover.mp3')
     ];
 
     background_music = this.allSounds[0];
     gamewin_sound = this.allSounds[8];
     gameover_sound = this.allSounds[9];
-    sleeping_sound = this.allSounds[12];
-    jumping_sound = this.allSounds[13]
 
     initializeMuteButton() {
         const muteButton = document.getElementById('muteButton');

@@ -18,7 +18,6 @@ class World {
     hasWinSoundPlayed = false;
     
     soundManager = new SoundManager(); // Initialize SoundManager
-    gameManager;
 
     allIntervalls = [
         clearInterval(this.bottleInterval),
@@ -48,16 +47,24 @@ class World {
         this.ctx = canvas.getContext('2d');
         this.canvas = canvas;
         this.keyboard = keyboard;
-        this.gameManager = new GameManager(this.soundManager);
         this.draw();
         this.setWorld();
         this.checkCollisions();
         this.soundManager.background_music.volume = 0.4;
         this.soundManager.background_music.loop = true;
         this.soundManager.playBackgroundMusicIfNeeded(); // Make sure background music is playing
-       
+        this.initializeMuteButton();
     }
 
+    /**
+     * Initializes the mute button and sets up the event listeners to toggle mute/unmute.
+     */
+    initializeMuteButton() {
+        const muteButton = document.getElementById('muteButton');
+        const muteButtonRespo = document.getElementById('mute-responsive');
+        muteButton.addEventListener('click', () => this.soundManager.toggleMute());
+        muteButtonRespo.addEventListener('click', () => this.soundManager.toggleMute());
+    }
 
     /**
      * Sets up the world by assigning the character's world context.
@@ -299,10 +306,10 @@ showGameOverScreen() {
     this.soundManager.stopBackgroundMusic();
     this.muteCharacterSleepingSound();
     this.displayGameOverImage();
-    this.gameManager.hideBottomButtons();
+    this.hideBottomButtons();
 
     setTimeout(() => {
-        this.gameManager.showRestartButton();
+        this.showRestartButton();
     }, 200);
 }
 
@@ -338,6 +345,24 @@ drawCenteredImage(image, scaleFactor) {
     );
 }
 
+/**
+ * Displays the restart button and makes it visible on the screen.
+ */
+showRestartButton() {
+    document.querySelector('.restart-button').style.display = 'flex';
+    if (window.innerWidth <= 1200) {
+        document.querySelector('.all-canvas-buttons').style.display = 'block';
+    }
+}
+
+/**
+ * Hides the bottom buttons on smaller screens.
+ */
+hideBottomButtons() {
+    if (window.innerWidth <= 1200) {
+        document.querySelector('.bottom-buttons').style.display = 'none';
+    }
+}
 
 /**
  * Displays the win screen, stops the background music, plays the win sound, 
@@ -350,7 +375,7 @@ showWinScreen() {
     this.soundManager.playSound(8); // Play the win sound
     this.displayEndScreenImage(this.IMAGE_WIN[0]);
     setTimeout(() => {
-        this.gameManager.showRestartButton();
+        this.showRestartButton();
     }, 200);
 }
 
