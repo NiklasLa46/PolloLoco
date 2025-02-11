@@ -43,5 +43,23 @@ class SoundManager {
         this.allSounds[index].currentTime = 0;
         this.allSounds[index].play();
     }
+
+    muteCharacterSleepingSound() {
+        if (this.character && this.character.sleeping_sound) {
+            this.character.sleeping_sound.volume = 0.0;
+            console.log(this.character.sleeping_sound.volume);
+            console.log('log')
+        }
+    }
+
+    /**
+ * Stops the character's sleeping sound completely by pausing it and resetting its current time.
+ */
+stopCharacterSleepingSound() {
+    if (this.character && this.character.sleeping_sound) {
+        this.character.sleeping_sound.pause(); 
+        this.character.sleeping_sound.currentTime = 0;
+    }
+}
 }
 
