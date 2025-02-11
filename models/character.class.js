@@ -1,7 +1,3 @@
-/**
- * Represents the main character in the game, controlled by the player.
- * Handles movement, animations, interactions, and state management.
- */
 class Character extends MovableObject {
     height = 300;
     y = 130;
@@ -58,23 +54,23 @@ class Character extends MovableObject {
         'img/2_character_pepe/5_dead/D-55.png',
         'img/2_character_pepe/5_dead/D-56.png',
         'img/2_character_pepe/5_dead/D-57.png'
-    ];
+    ]
     IMAGES_HURT = [
         'img/2_character_pepe/4_hurt/H-41.png',
         'img/2_character_pepe/4_hurt/H-42.png',
         'img/2_character_pepe/4_hurt/H-43.png',
-    ];
+    ]
     world;
     walking_sound = new Audio('./audio/footstep.mp3');
     sleeping_sound = new Audio('./audio/snoring.mp3');
-    jumping_sound = new Audio('./audio/jump3.mp3');
-    gameover_sound = new Audio('./audio/gameover.mp3');
+    jumping_sound = new Audio('./audio/jump3.mp3')
     lastActionTime = Date.now();
+    gameover_sound = new Audio('./audio/gameover.mp3')
     idleTimeout = null;
     longIdleTimeout = null;
     speedY = 0;
     acceleration = 3;
-    isJumping = false;
+    isJumping = false; 
     coins = 0;
     bottles = 0;
     offset = {
@@ -82,149 +78,126 @@ class Character extends MovableObject {
         right: -25,
         bottom: -15,
         left: -25
-    };
-    isDeadPlaying = false;
+    }
+   isDeadPlaying = false;
 
     constructor() {
         super().loadImage('./img/2_character_pepe/2_walk/W-21.png');
-        this.initializeImages();
-        this.applyGravity();
-        this.jumping_sound.volume = 0.3;
-        this.sleeping_sound.volume = 0.7;
-        this.animate();
-    }
-
-    /**
-     * Preloads all image sequences for the character animations.
-     */
-    initializeImages() {
         this.loadImages(this.IMAGES_WALKING);
         this.loadImages(this.IMAGES_IDLE);
         this.loadImages(this.IMAGES_SLEEP);
         this.loadImages(this.IMAGES_JUMP);
         this.loadImages(this.IMAGES_DEATH);
         this.loadImages(this.IMAGES_HURT);
+        this.applyGravity();
+        this.jumping_sound.volume = 0.3;
+        this.sleeping_sound.volume = 0.7;
+        this.animate();
     }
 
-    /**
-     * Resets idle timers to prevent idle animations from triggering during activity.
-     */
     resetIdleTimers() {
         this.stopIdleAnimations();
         this.lastActionTime = Date.now();
+
         this.startIdleAnimationTimers();
     }
 
-    /**
-     * Stops all idle animation timers and sounds.
-     */
     stopIdleAnimations() {
         this.sleeping_sound.pause();
-        this.clearTimer(this.idleTimeout);
-        this.clearTimer(this.longIdleTimeout);
-        this.clearTimer(this.idleInterval);
-        this.clearTimer(this.longIdleInterval);
+        if (this.idleTimeout) {
+            clearTimeout(this.idleTimeout);
+            this.idleTimeout = null;
+        }
+        if (this.longIdleTimeout) {
+            clearTimeout(this.longIdleTimeout);
+            this.longIdleTimeout = null;
+        }
+        if (this.idleInterval) {
+            clearInterval(this.idleInterval);
+            this.idleInterval = null;
+        }
+        if (this.longIdleInterval) {
+            clearInterval(this.longIdleInterval);
+            this.longIdleInterval = null;
+        }
     }
 
-    /**
-     * Starts timers for idle and long idle animations.
-     */
     startIdleAnimationTimers() {
         this.idleTimeout = setTimeout(() => {
+            this.animationFrame = 0; 
             this.idleInterval = setInterval(() => this.playAnimation(this.IMAGES_IDLE), 200);
         }, 100);
 
-        this.longIdleTimeout = setTimeout(() => this.handleLongIdleAnimation(), 10000);
+        this.longIdleTimeout = setTimeout(() => {
+            this.handleLongIdleAnimation();
+        }, 10000);
     }
 
-    /**
-     * Handles the long idle animation with sound effects.
-     */
     handleLongIdleAnimation() {
-        this.clearTimer(this.idleInterval);
+        if (this.idleInterval) clearInterval(this.idleInterval); 
+        this.animationFrame = 0; 
         this.longIdleInterval = setInterval(() => this.playAnimation(this.IMAGES_SLEEP), 200);
         this.sleeping_sound.play();
     }
 
-    /**
-     * Main animation loop for character movement and interactions.
-     */
     animate() {
         this.characterInterval = setInterval(() => {
             this.walking_sound.pause();
-            const moving = this.handleMovement();
-            if (this.world.keyboard.SPACE) this.handleJump();
+            let moving = this.handleMovement();
+
+            if (this.world.keyboard.SPACE) {
+                this.handleJump();
+            }
+
             if (moving || this.isAboveGround() || this.isHurt() || this.isDead()) {
                 this.resetIdleTimers();
             }
+
             this.updateCamera();
         }, 1000 / 60);
 
-        this.characterDamageInterval = setInterval(() => this.handleAnimations(), 100);
-        this.resetIdleTimers();
+        this.characterDamageInterval = setInterval(() => {
+            this.handleAnimations();
+        }, 100);
+
+        this.resetIdleTimers(); 
     }
 
-/**
- * Handles the character's movement based on keyboard input.
- * @returns {boolean} Whether the character is moving.
- */
-handleMovement() {
-    if (this.isDeadPlaying) return false;
-
-    const isMovingRight = this.checkAndMoveRight();
-    const isMovingLeft = this.checkAndMoveLeft();
-
-    return isMovingRight || isMovingLeft;
-}
-
-/**
- * Checks if the character should move right and handles the movement.
- * @returns {boolean} Whether the character moved right.
- */
-checkAndMoveRight() {
-    if (this.world.keyboard.RIGHT && this.x < 719 * 5) {
-        this.moveRight();
-        this.otherDirection = false;
-        this.playWalkingSound();
-        return true;
+    handleMovement() {
+        let moving = false;
+    
+        // Prevent movement if the character is dead
+        if (this.isDeadPlaying) {
+            return false;
+        }
+    
+        if (this.world.keyboard.RIGHT && this.x < 719 * 5) {
+            this.moveRight();
+            this.otherDirection = false;
+            this.playWalkingSound();
+            moving = true;
+        }
+    
+        if (this.world.keyboard.LEFT && this.x > -400) {
+            this.moveLeft();
+            this.otherDirection = true;
+            this.playWalkingSound();
+            moving = true;
+        }
+    
+        return moving;
     }
-    return false;
-}
 
-/**
- * Checks if the character should move left and handles the movement.
- * @returns {boolean} Whether the character moved left.
- */
-checkAndMoveLeft() {
-    if (this.world.keyboard.LEFT && this.x > -400) {
-        this.moveLeft();
-        this.otherDirection = true;
-        this.playWalkingSound();
-        return true;
-    }
-    return false;
-}
-
-
-    /**
-     * Handles the character's jump action.
-     */
     handleJump() {
         if (!this.isAboveGround() && !this.isJumping) {
             this.jump();
         }
     }
 
-    /**
-     * Updates the camera position based on the character's location.
-     */
     updateCamera() {
         this.world.camera_x = -this.x + 100;
     }
 
-    /**
-     * Handles character animations based on the current state.
-     */
     handleAnimations() {
         if (this.isDead()) {
             this.handleDeath();
@@ -237,75 +210,58 @@ checkAndMoveLeft() {
         }
     }
 
-    /**
-     * Handles character death, triggering death animations and ending the game.
-     */
     handleDeath() {
         if (!this.world.gameOverTriggered) {
-            this.isDeadPlaying = true;
-            this.playDeathAnimation(this.IMAGES_DEATH);
+            this.isDeadPlaying = true;  // Set the flag to true when the character dies
+            this.playDeathAnimation(this.IMAGES_DEATH); 
             this.gameover_sound.play();
+            
+            // Disable movement during death animation
             this.world.keyboard.RIGHT = false;
             this.world.keyboard.LEFT = false;
 
             setTimeout(() => {
                 this.world.showGameOverScreen();
-                this.world.gamePaused = true;
+                this.world.gamePaused = true; 
                 this.world.gameOverTriggered = true;
-            }, 1600);
+            }, 1600); 
         }
     }
+    
 
-    /**
-     * Plays the walking sound if the character is not jumping.
-     */
     playWalkingSound() {
-        if (!this.isAboveGround()) this.walking_sound.play();
-    }
-
-    /**
-     * Checks and handles when the character jumps on an enemy.
-     * @param {Object} enemy - The enemy to check collision with.
-     */
-    checkJumpOnEnemy(enemy) {
-        if (this.isJumping && this.y < enemy.y && this.isColliding(enemy)) {
-            enemy.hit();
-            this.isJumping = false;
-            this.jump(true);
-            setTimeout(() => {
-                this.y = 130;
-            }, 600);
+        if (!this.isAboveGround()) {
+            this.walking_sound.play();
         }
     }
 
-    /**
-     * Applies gravity to the character, pulling them downward when in the air.
-     */
+    checkJumpOnEnemy(enemy) {
+        if (this.isJumping && this.y < enemy.y) {
+           
+            if (this.isColliding(enemy)) {
+                enemy.hit(); 
+                this.isJumping = false; 
+                this.jump(true);
+                setTimeout(() => {
+                    this.y = 130; 
+                }, 600);
+            }
+        }
+    }
+
     applyGravity() {
         this.gravityIntervall = setInterval(() => {
             if (this.isAboveGround() || this.speedY > 0) {
                 this.y -= this.speedY;
                 this.speedY -= this.acceleration;
             } else {
-                this.isJumping = false;
+                this.isJumping = false; 
             }
         }, 1000 / 25);
     }
 
-    /**
-     * Determines if the character is above the ground.
-     * @returns {boolean} True if the character is above the ground.
-     */
     isAboveGround() {
         return this.y < 120;
     }
 
-    /**
-     * Clears a timer or interval if it exists.
-     * @param {number|null} timer - The timer or interval ID to clear.
-     */
-    clearTimer(timer) {
-        if (timer) clearTimeout(timer) || clearInterval(timer);
-    }
 }
-
