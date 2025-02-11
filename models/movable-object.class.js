@@ -13,13 +13,15 @@ class MovableObject extends DrawableObject {
     hit() {
         if (!this.isHurt() && !this.isDead()) {
             this.energy = Math.max(0, this.energy - 20); // Prevent energy from going below 0
-            console.log('hit')
             if (this.energy > 0) {
                 this.lastHit = Date.now(); // Record time of hit
             }
         }
     }
 
+    /**
+     * Resets the object to its initial position and state.
+     */
     reset() {
         this.x = initialX;
         this.y = initialY;
@@ -32,6 +34,7 @@ class MovableObject extends DrawableObject {
     /**
      * Plays the death animation sequence for the object.
      * Removes the object after the animation completes.
+     * @param {Array} images - The sequence of images for the death animation.
      */
     playDeathAnimation(images) {
         if (this.isDead() && !this.deathAnimationPlaying) {
@@ -52,6 +55,7 @@ class MovableObject extends DrawableObject {
 
     /**
      * Checks if the object is dead based on its energy level.
+     * @returns {boolean} Whether the object is dead.
      */
     isDead() {
         return this.energy === 0;
@@ -59,6 +63,7 @@ class MovableObject extends DrawableObject {
 
     /**
      * Checks if the object is in the "hurt" state (within 1 second of being hit).
+     * @returns {boolean} Whether the object is hurt.
      */
     isHurt() {
         return (Date.now() - this.lastHit) / 1000 < 1;
@@ -69,7 +74,6 @@ class MovableObject extends DrawableObject {
      */
     moveRight() {
         this.x += this.speed;
-        // Optional: Add boundary or animation handling here
     }
 
     /**
@@ -77,11 +81,11 @@ class MovableObject extends DrawableObject {
      */
     moveLeft() {
         this.x -= this.speed;
-        // Optional: Add boundary or animation handling here
     }
 
     /**
      * Makes the object jump with an optional weaker force.
+     * @param {boolean} weak - Whether the jump force should be weak.
      */
     jump(weak = false) {
         if (this.jumping_sound) {
@@ -94,6 +98,7 @@ class MovableObject extends DrawableObject {
 
     /**
      * Plays an animation by cycling through an array of image paths.
+     * @param {Array} images - The array of image paths for the animation.
      */
     playAnimation(images) {
         if (images.length > 0) {
@@ -103,5 +108,3 @@ class MovableObject extends DrawableObject {
         }
     }
 }
-
-
