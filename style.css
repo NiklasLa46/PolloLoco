@@ -211,3 +211,25 @@ table.table thead th {
     padding-top: 30vh;
 }
 
+.link-div {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    background-color: transparent; /* Optional: Add background color if needed */
+    padding: 10px; /* Optional: Add some padding for spacing */
+}
+
+.link-div a {
+    font-size: 30px;
+    color: #000000;
+    text-decoration: none;
+    margin: 0 10px; /* Add spacing between links */
+}
+
+.link-div a:hover {
+    text-decoration: underline; /* Optional: Add an underline on hover */
+}
+
+
