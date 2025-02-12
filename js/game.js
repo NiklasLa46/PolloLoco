@@ -127,13 +127,13 @@ function clearTimers() {
 
 // Helper function to stop sounds
 function stopSounds() {
-    if (world.sleeping_sound) {
-        world.sleeping_sound.pause();
-        world.sleeping_sound.currentTime = 0;
+    if (world.soundManager.sleeping_sound) {
+        world.soundManager.sleeping_sound.pause();
+        world.soundManager.sleeping_sound.currentTime = 0;
     }
 
-    if (world.background_music) {
-        world.background_music.pause();
+    if (world.soundManager.background_music) {
+        world.soundManager.background_music.pause();
     }
 }
 

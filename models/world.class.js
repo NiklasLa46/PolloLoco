@@ -5,8 +5,6 @@ class World {
     keyboard;
     ctx;
     camera_x = 0;
-    
-    // Remove direct sound declarations from here
     healthBar = new HealthBar();
     bottleBar = new BottleBar();
     bossBar = new BossBar();
@@ -16,26 +14,7 @@ class World {
     IMAGE_WIN = ['img/9_intro_outro_screens/win/win_1.png'];
     gamePaused = false;
     hasWinSoundPlayed = false;
-    
     soundManager = new SoundManager(this.character); // Initialize SoundManager
-
-    allIntervalls = [
-        clearInterval(this.bottleInterval),
-        clearInterval(this.longidleInterval),
-        clearInterval(this.characterInterval),
-        clearInterval(this.characterDamageInterval),
-        clearInterval(this.gravityIntervall),
-        clearInterval(this.chickenIntervall),
-        clearInterval(this.chickenDeathIntervall),
-        clearInterval(this.coinIntervall),
-        clearInterval(this.bossInterval),
-        clearInterval(this.bossWalkIntervall),
-        clearInterval(this.bossDeathInterval),
-        clearInterval(this.movableDeathInterval),
-        clearInterval(this.smallChickenInterval),
-        clearInterval(this.smallChickenDeathInterval),
-        clearInterval(this.timer),
-    ];
 
     /**
      * Creates a new instance of the World class, setting up the canvas, keyboard,
