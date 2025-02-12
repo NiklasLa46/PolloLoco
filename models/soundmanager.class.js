@@ -17,6 +17,10 @@ class SoundManager {
     gamewin_sound = this.allSounds[8];
     gameover_sound = this.allSounds[9];
 
+    constructor(character) {
+        this.character = character; // Pass the character instance when initializing SoundManager
+    }
+
     initializeMuteButton() {
         const muteButton = document.getElementById('muteButton');
         muteButton.addEventListener('click', () => this.toggleMute());
@@ -25,6 +29,12 @@ class SoundManager {
     toggleMute() {
         const isMuted = this.allSounds.every(sound => sound.muted);
         this.allSounds.forEach(sound => sound.muted = !isMuted);
+
+        if (isMuted) {
+            this.character.unmuteSounds(); // Unmute character sounds
+        } else {
+            this.character.muteSounds(); // Mute character sounds
+        }
         const muteButton = document.getElementById('muteButton');
         muteButton.textContent = isMuted ? 'Mute' : 'Unmute';
     }

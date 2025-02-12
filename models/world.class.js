@@ -17,7 +17,7 @@ class World {
     gamePaused = false;
     hasWinSoundPlayed = false;
     
-    soundManager = new SoundManager(); // Initialize SoundManager
+    soundManager = new SoundManager(this.character); // Initialize SoundManager
 
     allIntervalls = [
         clearInterval(this.bottleInterval),
