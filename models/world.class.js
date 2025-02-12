@@ -77,6 +77,7 @@ class World {
             bottle.speedX = throwDirection * 20;
             bottle.throw();
             this.soundManager.playSound(7); // Play throwing sound
+            this.collisionManager.throwableObjects.push(bottle);
             this.throwableObjects.push(bottle);
             this.character.bottles -= 10;
             this.bottleBar.setPercentage(this.character.bottles);

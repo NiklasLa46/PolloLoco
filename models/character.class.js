@@ -165,46 +165,46 @@ class Character extends MovableObject {
         this.resetIdleTimers();
     }
 
-/**
- * Handles the character's movement based on keyboard input.
- * @returns {boolean} Whether the character is moving.
- */
-handleMovement() {
-    if (this.isDeadPlaying) return false;
+    /**
+     * Handles the character's movement based on keyboard input.
+     * @returns {boolean} Whether the character is moving.
+     */
+    handleMovement() {
+        if (this.isDeadPlaying) return false;
 
-    const isMovingRight = this.checkAndMoveRight();
-    const isMovingLeft = this.checkAndMoveLeft();
+        const isMovingRight = this.checkAndMoveRight();
+        const isMovingLeft = this.checkAndMoveLeft();
 
-    return isMovingRight || isMovingLeft;
-}
-
-/**
- * Checks if the character should move right and handles the movement.
- * @returns {boolean} Whether the character moved right.
- */
-checkAndMoveRight() {
-    if (this.world.keyboard.RIGHT && this.x < 719 * 5) {
-        this.moveRight();
-        this.otherDirection = false;
-        this.playWalkingSound();
-        return true;
+        return isMovingRight || isMovingLeft;
     }
-    return false;
-}
 
-/**
- * Checks if the character should move left and handles the movement.
- * @returns {boolean} Whether the character moved left.
- */
-checkAndMoveLeft() {
-    if (this.world.keyboard.LEFT && this.x > -400) {
-        this.moveLeft();
-        this.otherDirection = true;
-        this.playWalkingSound();
-        return true;
+    /**
+     * Checks if the character should move right and handles the movement.
+     * @returns {boolean} Whether the character moved right.
+     */
+    checkAndMoveRight() {
+        if (this.world.keyboard.RIGHT && this.x < 719 * 5) {
+            this.moveRight();
+            this.otherDirection = false;
+            this.playWalkingSound();
+            return true;
+        }
+        return false;
     }
-    return false;
-}
+
+    /**
+     * Checks if the character should move left and handles the movement.
+     * @returns {boolean} Whether the character moved left.
+     */
+    checkAndMoveLeft() {
+        if (this.world.keyboard.LEFT && this.x > -400) {
+            this.moveLeft();
+            this.otherDirection = true;
+            this.playWalkingSound();
+            return true;
+        }
+        return false;
+    }
 
 
     /**
@@ -268,24 +268,17 @@ checkAndMoveLeft() {
      * Checks and handles when the character jumps on an enemy.
      * @param {Object} enemy - The enemy to check collision with.
      */
-checkJumpOnEnemy(enemy) {
-    if (this.isJumping && this.y < enemy.y && this.isColliding(enemy)) {
-        console.log("Jump on enemy detected!");  // Add this log
-        enemy.hit();
-        console.log(enemy.energy)
-        this.isJumping = false;
-        this.jump(true);
-        this.collisonHandler.handleEnemyDeath(enemy)
-        setTimeout(() => {
-            this.y = 130;
-        }, 600);
+    checkJumpOnEnemy(enemy) {
+        if (this.isJumping && this.y < enemy.y && this.isColliding(enemy)) {
+            enemy.hit();
+            this.isJumping = false;
+            this.jump(true);
+            this.collisonHandler.handleEnemyDeath(enemy)
+            setTimeout(() => {
+                this.y = 130;
+            }, 600);
+        }
     }
-}
-
-    
-
-
-    
 
     /**
      * Applies gravity to the character, pulling them downward when in the air.

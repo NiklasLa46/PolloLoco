@@ -1,4 +1,5 @@
 class CollisionManager {
+    throwableObjects = [];
     constructor(character, level, soundManager, healthBar, bottleBar, bossBar, throwableObjects) {
         this.character = character;
         this.level = level;
@@ -37,13 +38,11 @@ checkCharacterCollisionsWithEnemy(enemy) {
 
     if (!this.character.isJumping && !this.character.isHurt() && !this.character.isDead()) {
         if (this.character.isColliding(enemy)) {
-            console.log('Collision detected!');
             this.character.hit(); // Character hits the enemy
             this.soundManager.playSound(1); // Play damage sound
             this.healthBar.setPercentage(this.character.energy);
             
             if (enemy.isDead() && !enemy.isDying) {
-                console.log('Enemy is dead, triggering death');
                 this.handleEnemyDeath(enemy); // Handle the death logic
             }
         }
@@ -129,7 +128,6 @@ handleEnemyDeath(enemy) {
 
     checkThrowableBottleCollisions() {
         this.throwableObjects.forEach((bottle) => {
-            console.log('collision')
             this.level.enemies.forEach((enemy) => {
                 if (bottle.isColliding(enemy) && !bottle.hasCollided) {
                     bottle.playSplashAnimation();
@@ -146,7 +144,7 @@ handleEnemyDeath(enemy) {
 
     handleEnemyDeathAfterThrowableBottle(enemy) {
         if (enemy.isDead() && !enemy.deathAnimationPlaying && !(enemy instanceof Endboss)) {
-            enemy.playDeathAnimation(enemy.IMAGES_DEATH);
+            this.handleEnemyDeath(enemy)
             enemy.deathAnimationPlaying = true;
 
             setTimeout(() => {
