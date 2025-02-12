@@ -15,6 +15,7 @@ class World {
     gamePaused = false;
     hasWinSoundPlayed = false;
     soundManager = new SoundManager(this.character); // Initialize SoundManager
+    collisionManager;
 
     /**
      * Creates a new instance of the World class, setting up the canvas, keyboard,
@@ -28,11 +29,24 @@ class World {
         this.keyboard = keyboard;
         this.draw();
         this.setWorld();
-        this.checkCollisions();
         this.soundManager.background_music.volume = 0.4;
         this.soundManager.background_music.loop = true;
         this.soundManager.playBackgroundMusicIfNeeded(); // Make sure background music is playing
         this.initializeMuteButton();
+        this.collisionManager = new CollisionManager(
+            this.character, 
+            this.level, 
+            this.soundManager, 
+            this.healthBar, 
+            this.bottleBar, 
+            this.bossBar, 
+            this.throwableObjects
+        );
+        this.checkCollisions();
+    }
+    
+    checkCollisions() {
+        this.collisionManager.checkCollisions();
     }
 
     /**
@@ -70,211 +84,15 @@ class World {
         }
     }
 
-    /**
-     * Starts the collision check interval that continuously checks for collisions between 
-     * the player, enemies, coins, bottles, and throwable bottles.
-     */
-    checkCollisions() {
-        this.worldCollisionsInterval = setInterval(() => {
-            this.checkEnemyCollisions();
-            this.checkCoinCollisions();
-            this.checkBottleCollisions();
-            this.checkThrowableBottleCollisions();
-        }, 50);
-    }
-
-    /**
-     * Checks for collisions between the character and the enemies in the level.
-     */
-    checkEnemyCollisions() {
-        if (!this.level || !this.level.enemies) {
-            return;
-        }
-
-        this.level.enemies.forEach((enemy) => {
-            if (this.isValidEnemy(enemy)) {
-                this.checkCharacterCollisionsWithEnemy(enemy);
-                this.handleEndbossCollision(enemy);
-                this.handleEnemyDeath(enemy);
-            }
-        });
-    }
-
-    /**
-     * Checks if the enemy is valid for collision (not dying or removed).
-     * @param {Enemy} enemy - The enemy object to check.
-     * @returns {boolean} - Whether the enemy is valid for checking collisions.
-     */
-    isValidEnemy(enemy) {
-        return !enemy.isDying && !enemy.isRemoved;
-    }
-
-    /**
-     * Checks for collisions between the character and a valid enemy.
-     * If a collision is detected, the character takes damage.
-     * @param {Enemy} enemy - The enemy to check for collisions.
-     */
-    checkCharacterCollisionsWithEnemy(enemy) {
-        this.character.checkJumpOnEnemy(enemy);
-
-        if (!this.character.isJumping && !this.character.isHurt() && !this.character.isDead()) {
-            if (this.character.isColliding(enemy)) {
-                this.character.hit();
-                this.soundManager.playSound(1); // Play damage sound
-                this.healthBar.setPercentage(this.character.energy);
-            }
-        }
-    }
-
-    // Additional sound-related methods can be refactored similarly, using `soundManager.playSound()`
 
 
 
-/**
- * Handles the collision with the endboss, updating the boss's health and triggering 
- * its death animation when necessary.
- * @param {Enemy} enemy - The enemy object involved in the collision (specifically an Endboss).
- */
-handleEndbossCollision(enemy) {
-    if (enemy instanceof Endboss) {
-        this.updateBossHealth(enemy);
-        this.checkAndTriggerBossDeath(enemy);
-    }
-}
 
-/**
- * Updates the boss's health and plays the damage sound if the boss is hurt.
- * @param {Endboss} enemy - The boss enemy whose health is to be updated.
- */
-updateBossHealth(enemy) {
-    if (enemy.isHurt()) {
-        this.bossBar.setPercentage(enemy.energy);
-        this.soundManager.playSound(6); // Play boss damage sound
-    }
-}
 
-/**
- * Checks if the boss is dead and triggers its death animation.
- * @param {Endboss} enemy - The boss enemy to check for death.
- */
-checkAndTriggerBossDeath(enemy) {
-    if (enemy.isDead() && !enemy.deathAnimationPlaying) {
-        this.soundManager.playSound(10); // Play boss death sound
-        enemy.playDeathAnimation(enemy.IMAGES_DEATH);
-        enemy.deathAnimationPlaying = true;
 
-        setTimeout(() => {
-            this.removeDeadBoss(enemy);
-        }, 2000); // Adjust to match the boss's death animation duration
-    }
-}
 
-/**
- * Removes the boss from the level after its death animation has finished.
- * @param {Endboss} enemy - The dead boss to remove from the level.
- */
-removeDeadBoss(enemy) {
-    const index = this.level.enemies.indexOf(enemy);
-    if (index !== -1) {
-        this.level.enemies.splice(index, 1);
-    }
-}
 
-/**
- * Handles the death animation for enemies that are not the endboss. This includes 
- * playing the death animation and triggering specific death sounds for each enemy type.
- * @param {Enemy} enemy - The enemy object that is being handled for death.
- */
-handleEnemyDeath(enemy) {
-    if (enemy.isDead() && !enemy.isDying && !(enemy instanceof Endboss)) {
-        enemy.playDeathImage();
-        if (enemy instanceof SmallChicken) {
-            this.soundManager.playSound(5); // Play small chicken death sound
-        }
-        if (enemy instanceof Chicken) {
-            this.soundManager.playSound(4); // Play chicken death sound
-        }
-    }
-}
 
-/**
- * Checks for collisions between the character and the coins in the level. If a 
- * collision is detected, the coin is picked up, and the coin bar is updated.
- */
-checkCoinCollisions() {
-    if (!this.level || !this.level.coins) {
-        return;
-    }
-
-    this.level.coins.forEach((coin, index) => {
-        if (this.character.isColliding(coin)) {
-            coin.pickup(this.character);
-            this.soundManager.playSound(2); // Play coin pickup sound
-            this.level.coins.splice(index, 1);
-            this.coinBar.setPercentage(this.character.coins);
-        }
-    });
-}
-
-/**
- * Checks for collisions between the character and the bottles in the level. If a 
- * collision is detected, the bottle is picked up, and the bottle bar is updated.
- */
-checkBottleCollisions() {
-    if (!this.level || !this.level.bottles) {
-        return;
-    }
-
-    this.level.bottles.forEach((bottle, index) => {
-        if (this.character.isColliding(bottle) && typeof bottle.pickup === 'function') {
-            bottle.pickup(this.character);
-            this.soundManager.playSound(3); // Play bottle pickup sound
-            this.level.bottles.splice(index, 1);
-            this.bottleBar.setPercentage(this.character.bottles);
-        }
-    });
-}
-
-/**
- * Checks for collisions between throwable bottles and enemies. If a collision is 
- * detected, the bottle triggers a splash animation, and the enemy takes damage.
- */
-checkThrowableBottleCollisions() {
-    this.throwableObjects.forEach((bottle) => {
-        this.level.enemies.forEach((enemy) => {
-            if (bottle.isColliding(enemy) && !bottle.hasCollided) {
-                bottle.playSplashAnimation();
-                bottle.hasCollided = true;
-                enemy.hit();
-
-                if (enemy instanceof Endboss && !enemy.isDead()) {
-                    this.bossBar.setPercentage(enemy.energy);
-                }
-
-                this.handleEnemyDeathAfterThrowableBottle(enemy);
-            }
-        });
-    });
-}
-
-/**
- * Handles enemy death after a throwable bottle collision by triggering the death 
- * animation and removing the enemy from the level.
- * @param {Enemy} enemy - The enemy to be removed from the level.
- */
-handleEnemyDeathAfterThrowableBottle(enemy) {
-    if (enemy.isDead() && !enemy.deathAnimationPlaying && !(enemy instanceof Endboss)) {
-        enemy.playDeathAnimation(enemy.IMAGES_DEATH);
-        enemy.deathAnimationPlaying = true;
-
-        setTimeout(() => {
-            const index = this.level.enemies.indexOf(enemy);
-            if (index !== -1) {
-                this.level.enemies.splice(index, 1);
-            }
-        }, 1000);
-    }
-}
 
 
 /**

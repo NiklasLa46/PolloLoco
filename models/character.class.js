@@ -85,13 +85,14 @@ class Character extends MovableObject {
     };
     isDeadPlaying = false;
 
-    constructor() {
+    constructor(collisionHandler) {
         super().loadImage('./img/2_character_pepe/2_walk/W-21.png');
         this.initializeImages();
         this.applyGravity();
         this.jumping_sound.volume = 0.3;
         this.sleeping_sound.volume = 0.7;
         this.animate();
+        this.collisonHandler = new CollisionManager();
     }
 
     /**
@@ -267,16 +268,24 @@ checkAndMoveLeft() {
      * Checks and handles when the character jumps on an enemy.
      * @param {Object} enemy - The enemy to check collision with.
      */
-    checkJumpOnEnemy(enemy) {
-        if (this.isJumping && this.y < enemy.y && this.isColliding(enemy)) {
-            enemy.hit();
-            this.isJumping = false;
-            this.jump(true);
-            setTimeout(() => {
-                this.y = 130;
-            }, 600);
-        }
+checkJumpOnEnemy(enemy) {
+    if (this.isJumping && this.y < enemy.y && this.isColliding(enemy)) {
+        console.log("Jump on enemy detected!");  // Add this log
+        enemy.hit();
+        console.log(enemy.energy)
+        this.isJumping = false;
+        this.jump(true);
+        this.collisonHandler.handleEnemyDeath(enemy)
+        setTimeout(() => {
+            this.y = 130;
+        }, 600);
     }
+}
+
+    
+
+
+    
 
     /**
      * Applies gravity to the character, pulling them downward when in the air.
