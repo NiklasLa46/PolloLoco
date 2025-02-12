@@ -307,20 +307,5 @@ checkAndMoveLeft() {
     clearTimer(timer) {
         if (timer) clearTimeout(timer) || clearInterval(timer);
     }
-
-    muteSounds() {
-        this.walking_sound.muted = true;
-        this.sleeping_sound.muted = true;
-        this.jumping_sound.muted = true;
-        this.gameover_sound.muted = true;
-    }
-
-    // Add a method to unmute all character sounds
-    unmuteSounds() {
-        this.walking_sound.muted = false;
-        this.sleeping_sound.muted = false;
-        this.jumping_sound.muted = false;
-        this.gameover_sound.muted = false;
-    }
 }
 

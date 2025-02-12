@@ -1,3 +1,7 @@
+/**
+ * The World class handles the game world, including the main character, level, sounds, 
+ * and in-game status bars. It manages the game environment, collisions, and game state.
+ */
 class World {
     character = new Character();
     level = level1;
@@ -5,8 +9,17 @@ class World {
     keyboard;
     ctx;
     camera_x = 0;
-    
-    // Remove direct sound declarations from here
+    background_music = new Audio('./audio/background.mp3');
+    dmg_sound = new Audio('/audio/pepedmg1.mp3');
+    coin_sound = new Audio('/audio/coinpickup.mp3');
+    bottle_sound = new Audio('/audio/bottlepickup.mp3');
+    chickendeath_sound = new Audio('audio/chickendeath1.mp3');
+    smallchickendeath_sound = new Audio('audio/chickendeath2.mp3');
+    bossdmg_sound = new Audio('audio/bossdmg.mp3');
+    throw_sound = new Audio('audio/throwing.mp3');
+    gamewin_sound = new Audio('audio/winsound.mp3');
+    gameover_sound = new Audio('audio/gameover.mp3');
+    bossdeath_sound = new Audio('audio/bossdeath.mp3')
     healthBar = new HealthBar();
     bottleBar = new BottleBar();
     bossBar = new BossBar();
@@ -16,8 +29,22 @@ class World {
     IMAGE_WIN = ['img/9_intro_outro_screens/win/win_1.png'];
     gamePaused = false;
     hasWinSoundPlayed = false;
-    
-    soundManager = new SoundManager(this.character); // Initialize SoundManager
+    allSounds = [
+        this.background_music,
+        this.dmg_sound,
+        this.coin_sound,
+        this.bottle_sound,
+        this.chickendeath_sound,
+        this.smallchickendeath_sound,
+        this.bossdmg_sound,
+        this.throw_sound,
+        this.gamewin_sound,
+        this.gameover_sound,
+        this.character.walking_sound,
+        this.character.sleeping_sound,
+        this.character.jumping_sound,
+        this.character.gameover_sound,
+    ];
 
     allIntervalls = [
         clearInterval(this.bottleInterval),
@@ -50,9 +77,8 @@ class World {
         this.draw();
         this.setWorld();
         this.checkCollisions();
-        this.soundManager.background_music.volume = 0.4;
-        this.soundManager.background_music.loop = true;
-        this.soundManager.playBackgroundMusicIfNeeded(); // Make sure background music is playing
+        this.background_music.volume = 0.4;
+        this.background_music.loop = true;
         this.initializeMuteButton();
     }
 
@@ -62,8 +88,23 @@ class World {
     initializeMuteButton() {
         const muteButton = document.getElementById('muteButton');
         const muteButtonRespo = document.getElementById('mute-responsive');
-        muteButton.addEventListener('click', () => this.soundManager.toggleMute());
-        muteButtonRespo.addEventListener('click', () => this.soundManager.toggleMute());
+        muteButton.addEventListener('click', () => this.toggleMute());
+        muteButtonRespo.addEventListener('click', () => this.toggleMute());
+    }
+
+    /**
+     * Toggles the mute state of all sounds in the game.
+     * If any sound is unmuted, it will mute them all, and vice versa.
+     */
+    toggleMute() {
+        const isMuted = this.allSounds.every(sound => sound.muted);
+
+        this.allSounds.forEach(sound => {
+            sound.muted = !isMuted;
+        });
+
+        const muteButton = document.getElementById('muteButton');
+        muteButton.textContent = isMuted ? 'Mute' : 'Unmute';
     }
 
     /**
@@ -73,82 +114,80 @@ class World {
         this.character.world = this;
     }
 
-    /**
-     * Throws a bottle if the character has bottles available, sets the throwing direction,
-     * and handles the bottle's movement and collision detection.
-     */
-    throwBottle() {
-        if (this.character.bottles > 0) {
-            let throwDirection = this.character.otherDirection ? -1 : 1;
-            let bottle = new ThrowableObject(this.character.x + 30, this.character.y + 90);
-            bottle.speedX = throwDirection * 20;
-            bottle.throw();
-            this.soundManager.playSound(7); // Play throwing sound
-            this.throwableObjects.push(bottle);
-            this.character.bottles -= 10;
-            this.bottleBar.setPercentage(this.character.bottles);
-            this.character.resetIdleTimers();
+/**
+ * Throws a bottle if the character has bottles available, sets the throwing direction,
+ * and handles the bottle's movement and collision detection.
+ */
+throwBottle() {
+    if (this.character.bottles > 0) {
+        let throwDirection = this.character.otherDirection ? -1 : 1;
+        let bottle = new ThrowableObject(this.character.x + 30, this.character.y + 90);
+        bottle.speedX = throwDirection * 20;
+        bottle.throw();
+        this.throw_sound.play();
+        this.throwableObjects.push(bottle);
+        this.character.bottles -= 10;
+        this.bottleBar.setPercentage(this.character.bottles);
+        this.character.resetIdleTimers();
+    }
+}
+
+/**
+ * Starts the collision check interval that continuously checks for collisions between 
+ * the player, enemies, coins, bottles, and throwable bottles.
+ */
+checkCollisions() {
+    this.worldCollisionsInterval = setInterval(() => {
+        this.checkEnemyCollisions();
+        this.checkCoinCollisions();
+        this.checkBottleCollisions();
+        this.checkThrowableBottleCollisions();
+    }, 50);
+}
+
+/**
+ * Checks for collisions between the character and the enemies in the level.
+ */
+checkEnemyCollisions() {
+    if (!this.level || !this.level.enemies) {
+        return;
+    }
+
+    this.level.enemies.forEach((enemy) => {
+        if (this.isValidEnemy(enemy)) {
+            this.checkCharacterCollisionsWithEnemy(enemy);
+            this.handleEndbossCollision(enemy);
+            this.handleEnemyDeath(enemy);
+        }
+    });
+}
+
+/**
+ * Checks if the enemy is valid for collision (not dying or removed).
+ * @param {Enemy} enemy - The enemy object to check.
+ * @returns {boolean} - Whether the enemy is valid for checking collisions.
+ */
+isValidEnemy(enemy) {
+    return !enemy.isDying && !enemy.isRemoved;
+}
+
+/**
+ * Checks for collisions between the character and a valid enemy.
+ * If a collision is detected, the character takes damage.
+ * @param {Enemy} enemy - The enemy to check for collisions.
+ */
+checkCharacterCollisionsWithEnemy(enemy) {
+    this.character.checkJumpOnEnemy(enemy);
+
+    if (!this.character.isJumping && !this.character.isHurt() && !this.character.isDead()) {
+        if (this.character.isColliding(enemy)) {
+            this.character.hit();
+            this.dmg_sound.currentTime = 0;
+            this.dmg_sound.play();
+            this.healthBar.setPercentage(this.character.energy);
         }
     }
-
-    /**
-     * Starts the collision check interval that continuously checks for collisions between 
-     * the player, enemies, coins, bottles, and throwable bottles.
-     */
-    checkCollisions() {
-        this.worldCollisionsInterval = setInterval(() => {
-            this.checkEnemyCollisions();
-            this.checkCoinCollisions();
-            this.checkBottleCollisions();
-            this.checkThrowableBottleCollisions();
-        }, 50);
-    }
-
-    /**
-     * Checks for collisions between the character and the enemies in the level.
-     */
-    checkEnemyCollisions() {
-        if (!this.level || !this.level.enemies) {
-            return;
-        }
-
-        this.level.enemies.forEach((enemy) => {
-            if (this.isValidEnemy(enemy)) {
-                this.checkCharacterCollisionsWithEnemy(enemy);
-                this.handleEndbossCollision(enemy);
-                this.handleEnemyDeath(enemy);
-            }
-        });
-    }
-
-    /**
-     * Checks if the enemy is valid for collision (not dying or removed).
-     * @param {Enemy} enemy - The enemy object to check.
-     * @returns {boolean} - Whether the enemy is valid for checking collisions.
-     */
-    isValidEnemy(enemy) {
-        return !enemy.isDying && !enemy.isRemoved;
-    }
-
-    /**
-     * Checks for collisions between the character and a valid enemy.
-     * If a collision is detected, the character takes damage.
-     * @param {Enemy} enemy - The enemy to check for collisions.
-     */
-    checkCharacterCollisionsWithEnemy(enemy) {
-        this.character.checkJumpOnEnemy(enemy);
-
-        if (!this.character.isJumping && !this.character.isHurt() && !this.character.isDead()) {
-            if (this.character.isColliding(enemy)) {
-                this.character.hit();
-                this.soundManager.playSound(1); // Play damage sound
-                this.healthBar.setPercentage(this.character.energy);
-            }
-        }
-    }
-
-    // Additional sound-related methods can be refactored similarly, using `soundManager.playSound()`
-
+}
 
 
 /**
@@ -170,7 +209,7 @@ handleEndbossCollision(enemy) {
 updateBossHealth(enemy) {
     if (enemy.isHurt()) {
         this.bossBar.setPercentage(enemy.energy);
-        this.soundManager.playSound(6); // Play boss damage sound
+        this.bossdmg_sound.play();
     }
 }
 
@@ -180,7 +219,7 @@ updateBossHealth(enemy) {
  */
 checkAndTriggerBossDeath(enemy) {
     if (enemy.isDead() && !enemy.deathAnimationPlaying) {
-        this.soundManager.playSound(10); // Play boss death sound
+        this.bossdeath_sound.play()
         enemy.playDeathAnimation(enemy.IMAGES_DEATH);
         enemy.deathAnimationPlaying = true;
 
@@ -201,6 +240,7 @@ removeDeadBoss(enemy) {
     }
 }
 
+
 /**
  * Handles the death animation for enemies that are not the endboss. This includes 
  * playing the death animation and triggering specific death sounds for each enemy type.
@@ -210,14 +250,15 @@ handleEnemyDeath(enemy) {
     if (enemy.isDead() && !enemy.isDying && !(enemy instanceof Endboss)) {
         enemy.playDeathImage();
         if (enemy instanceof SmallChicken) {
-            this.soundManager.playSound(5); // Play small chicken death sound
+            this.smallchickendeath_sound.play();
         }
         if (enemy instanceof Chicken) {
-            this.soundManager.playSound(4); // Play chicken death sound
+            this.chickendeath_sound.play();
         }
     }
 }
 
+    
 /**
  * Checks for collisions between the character and the coins in the level. If a 
  * collision is detected, the coin is picked up, and the coin bar is updated.
@@ -230,7 +271,8 @@ checkCoinCollisions() {
     this.level.coins.forEach((coin, index) => {
         if (this.character.isColliding(coin)) {
             coin.pickup(this.character);
-            this.soundManager.playSound(2); // Play coin pickup sound
+            this.coin_sound.currentTime = 0;
+            this.coin_sound.play();
             this.level.coins.splice(index, 1);
             this.coinBar.setPercentage(this.character.coins);
         }
@@ -249,7 +291,8 @@ checkBottleCollisions() {
     this.level.bottles.forEach((bottle, index) => {
         if (this.character.isColliding(bottle) && typeof bottle.pickup === 'function') {
             bottle.pickup(this.character);
-            this.soundManager.playSound(3); // Play bottle pickup sound
+            this.bottle_sound.currentTime = 0;
+            this.bottle_sound.play();
             this.level.bottles.splice(index, 1);
             this.bottleBar.setPercentage(this.character.bottles);
         }
@@ -297,13 +340,12 @@ handleEnemyDeathAfterThrowableBottle(enemy) {
     }
 }
 
-
 /**
  * Displays the game over screen, stops the background music, and hides the 
  * bottom buttons.
  */
 showGameOverScreen() {
-    this.soundManager.stopBackgroundMusic();
+    this.stopBackgroundMusic();
     this.muteCharacterSleepingSound();
     this.displayGameOverImage();
     this.hideBottomButtons();
@@ -369,14 +411,21 @@ hideBottomButtons() {
  * and shows the end screen image.
  */
 showWinScreen() {
-    
-    this.soundManager.stopBackgroundMusic();
-    this.muteCharacterSleepingSound(); // Mute before playing the win sound
-    this.soundManager.playSound(8); // Play the win sound
+    this.stopBackgroundMusic();
+    this.muteCharacterSleepingSound();
+    this.playWinSound();
     this.displayEndScreenImage(this.IMAGE_WIN[0]);
+
     setTimeout(() => {
         this.showRestartButton();
     }, 200);
+}
+
+/**
+ * Stops the background music by pausing it.
+ */
+stopBackgroundMusic() {
+    this.background_music.pause();
 }
 
 /**
@@ -389,17 +438,26 @@ muteCharacterSleepingSound() {
 }
 
 /**
- * Displays the end screen image (win or game over).
- * @param {string} imageSrc - The source of the image to display.
+ * Plays the win sound if it hasn't been played already.
  */
-displayEndScreenImage(imageSrc) {
-    const endScreenImage = new Image();
-    endScreenImage.src = imageSrc;
-    endScreenImage.onload = () => {
-        this.drawCenteredImage(endScreenImage, 0.8);
-    };
+playWinSound() {
+    if (!this.hasWinSoundPlayed) {
+        this.gamewin_sound.play();
+        this.hasWinSoundPlayed = true;
+    }
 }
 
+/**
+ * Displays the end screen image at the center of the canvas.
+ * @param {string} imageSrc - The source URL of the image to display.
+ */
+displayEndScreenImage(imageSrc) {
+    const endImage = new Image();
+    endImage.src = imageSrc;
+    endImage.onload = () => {
+        this.drawCenteredImage(endImage, 0.8);
+    };
+}
 
 /**
  * Main drawing function that updates the game state and redraws everything on the canvas.
@@ -409,20 +467,20 @@ draw() {
     if (this.gamePaused) return;
 
     this.clearCanvas();
-    this.applyCanvasTranslation();
-    
+    this.translateCanvas();
+
     this.drawBackgroundObjects();
     this.drawLevelObjects();
     this.drawEnemies();
     this.drawThrowableObjects();
     this.drawCharacter();
     this.resetCanvasTranslation();
-
+    
     this.drawUI();
 
     requestAnimationFrame(() => this.draw());
 
-    this.soundManager.playBackgroundMusicIfNeeded();
+    this.playBackgroundMusicIfNeeded();
 }
 
 /**
@@ -433,9 +491,9 @@ clearCanvas() {
 }
 
 /**
- * Applies the translation to the canvas for camera movement.
+ * Translates the canvas for camera movement.
  */
-applyCanvasTranslation() {
+translateCanvas() {
     this.ctx.translate(this.camera_x, 0);
 }
 
@@ -450,7 +508,10 @@ drawBackgroundObjects() {
  * Draws all objects (coins, bottles, enemies, clouds) to the canvas.
  */
 drawLevelObjects() {
-    this.addObjectsToMap([...this.level.bottles, ...this.level.coins, ...this.level.clouds, ...this.level.enemies]);
+    this.addObjectsToMap(this.level.bottles);
+    this.addObjectsToMap(this.level.coins);
+    this.addObjectsToMap(this.level.clouds);
+    this.addObjectsToMap(this.level.enemies);
 }
 
 /**
@@ -459,21 +520,14 @@ drawLevelObjects() {
 drawEnemies() {
     this.level.enemies.forEach((enemy) => {
         if (enemy instanceof Endboss) {
-            this.updateBossVisibility(enemy);
+            enemy.checkVisibility(this.camera_x, this.canvas.width);
+            if (enemy.isVisible) {
+                this.bossBar.x = enemy.x + 40;
+                this.bossBar.y = enemy.y - 20;
+                this.addToMap(this.bossBar);
+            }
         }
     });
-}
-
-/**
- * Updates the visibility of the endboss and draws the boss bar.
- */
-updateBossVisibility(enemy) {
-    enemy.checkVisibility(this.camera_x, this.canvas.width);
-    if (enemy.isVisible) {
-        this.bossBar.x = enemy.x + 40;
-        this.bossBar.y = enemy.y - 20;
-        this.addToMap(this.bossBar);
-    }
 }
 
 /**
@@ -508,11 +562,23 @@ drawUI() {
 }
 
 /**
+ * Plays the background music if it is not already playing.
+ */
+playBackgroundMusicIfNeeded() {
+    if (!this.background_music.playing) {
+        this.background_music.play().catch(() => { });
+    }
+}
+
+
+/**
  * Adds a list of objects to the map for drawing.
  * @param {Array} objects - The objects to add to the map.
  */
 addObjectsToMap(objects) {
-    objects.forEach(o => this.addToMap(o));
+    objects.forEach(o => {
+        this.addToMap(o);
+    });
 }
 
 /**
@@ -529,7 +595,7 @@ addToMap(mo) {
             mo.drawFrame(this.ctx);
         }
         if (mo.otherDirection) {
-            this.flipImageBack(mo);
+            this.flipImageBack(mo)
         }
     }
 }
