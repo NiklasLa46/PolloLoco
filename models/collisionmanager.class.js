@@ -1,5 +1,16 @@
 class CollisionManager {
     throwableObjects = [];
+
+    /**
+     * Creates an instance of the CollisionManager.
+     * @param {Character} character - The main character of the game.
+     * @param {Level} level - The level of the game containing enemies, coins, and bottles.
+     * @param {SoundManager} soundManager - The sound manager for playing sounds.
+     * @param {HealthBar} healthBar - The health bar to display the character's health.
+     * @param {BottleBar} bottleBar - The bottle bar to display the character's bottle count.
+     * @param {BossBar} bossBar - The boss bar to display the boss's health.
+     * @param {Array} throwableObjects - List of throwable objects in the game.
+     */
     constructor(character, level, soundManager, healthBar, bottleBar, bossBar, throwableObjects) {
         this.character = character;
         this.level = level;
@@ -8,9 +19,12 @@ class CollisionManager {
         this.bottleBar = bottleBar;
         this.bossBar = bossBar;
         this.throwableObjects = throwableObjects;
-        this.soundManager = new SoundManager()
+        this.soundManager = new SoundManager();
     }
 
+    /**
+     * Starts the collision checks at a fixed interval.
+     */
     checkCollisions() {
         this.worldCollisionsInterval = setInterval(() => {
             this.checkEnemyCollisions();
@@ -19,6 +33,10 @@ class CollisionManager {
             this.checkThrowableBottleCollisions();
         }, 50);
     }
+
+    /**
+     * Checks for collisions between the character and enemies.
+     */
     checkEnemyCollisions() {
         if (!this.level || !this.level.enemies) return;
         this.level.enemies.forEach((enemy) => {
@@ -29,46 +47,55 @@ class CollisionManager {
         });
     }
 
+    /**
+     * Determines if the enemy is valid for collision checks.
+     * @param {Enemy} enemy - The enemy to check.
+     * @returns {boolean} - Whether the enemy is valid for collision.
+     */
     isValidEnemy(enemy) {
         return !enemy.isDying && !enemy.isRemoved;
     }
 
-checkCharacterCollisionsWithEnemy(enemy) {
-    this.character.checkJumpOnEnemy(enemy); // Check if the character jumps on the enemy
-
-    if (!this.character.isJumping && !this.character.isHurt() && !this.character.isDead()) {
-        if (this.character.isColliding(enemy)) {
-            this.character.hit(); // Character hits the enemy
-            this.soundManager.playSound(1); // Play damage sound
-            this.healthBar.setPercentage(this.character.energy);
-            
-            if (enemy.isDead() && !enemy.isDying) {
-                this.handleEnemyDeath(enemy); // Handle the death logic
+    /**
+     * Checks for collisions between the character and a specific enemy.
+     * @param {Enemy} enemy - The enemy to check for collisions with.
+     */
+    checkCharacterCollisionsWithEnemy(enemy) {
+        this.character.checkJumpOnEnemy(enemy);
+        
+        if (!this.character.isJumping && !this.character.isHurt() && !this.character.isDead()) {
+            if (this.character.isColliding(enemy)) {
+                this.character.hit();
+                this.soundManager.playSound(1);
+                this.healthBar.setPercentage(this.character.energy);
+                
+                if (enemy.isDead() && !enemy.isDying) {
+                    this.handleEnemyDeath(enemy);
+                }
             }
         }
     }
-}
 
-    
-    
     /**
- * Handles the death animation for enemies that are not the endboss. This includes 
- * playing the death animation and triggering specific death sounds for each enemy type.
- * @param {Enemy} enemy - The enemy object that is being handled for death.
- */
-handleEnemyDeath(enemy) {
-    if (enemy.isDead() && !enemy.isDying && !(enemy instanceof Endboss)) {
-        enemy.playDeathImage();
-        if (enemy instanceof SmallChicken) {
-            this.soundManager.playSound(5); // Play small chicken death sound
-        }
-        if (enemy instanceof Chicken) {
-            this.soundManager.playSound(4); // Play chicken death sound
+     * Handles the death animation and sound for an enemy.
+     * @param {Enemy} enemy - The enemy to handle the death for.
+     */
+    handleEnemyDeath(enemy) {
+        if (enemy.isDead() && !enemy.isDying && !(enemy instanceof Endboss)) {
+            enemy.playDeathImage();
+            if (enemy instanceof SmallChicken) {
+                this.soundManager.playSound(5);
+            }
+            if (enemy instanceof Chicken) {
+                this.soundManager.playSound(4);
+            }
         }
     }
-}
 
-
+    /**
+     * Handles collisions with the Endboss.
+     * @param {Enemy} enemy - The enemy being checked for Endboss collision.
+     */
     handleEndbossCollision(enemy) {
         if (enemy instanceof Endboss) {
             this.updateBossHealth(enemy);
@@ -76,16 +103,24 @@ handleEnemyDeath(enemy) {
         }
     }
 
+    /**
+     * Updates the health bar for the Endboss.
+     * @param {Endboss} enemy - The Endboss to update the health for.
+     */
     updateBossHealth(enemy) {
         if (enemy.isHurt()) {
             this.bossBar.setPercentage(enemy.energy);
-            this.soundManager.playSound(6); // Play boss damage sound
+            this.soundManager.playSound(6);
         }
     }
 
+    /**
+     * Checks and triggers the death of the Endboss.
+     * @param {Endboss} enemy - The Endboss to check for death.
+     */
     checkAndTriggerBossDeath(enemy) {
         if (enemy.isDead() && !enemy.deathAnimationPlaying) {
-            this.soundManager.playSound(10); // Play boss death sound
+            this.soundManager.playSound(10);
             enemy.playDeathAnimation(enemy.IMAGES_DEATH);
             enemy.deathAnimationPlaying = true;
 
@@ -95,6 +130,10 @@ handleEnemyDeath(enemy) {
         }
     }
 
+    /**
+     * Removes a dead boss from the level.
+     * @param {Endboss} enemy - The Endboss to remove.
+     */
     removeDeadBoss(enemy) {
         const index = this.level.enemies.indexOf(enemy);
         if (index !== -1) {
@@ -102,30 +141,39 @@ handleEnemyDeath(enemy) {
         }
     }
 
+    /**
+     * Checks for collisions between the character and coins.
+     */
     checkCoinCollisions() {
         if (!this.level || !this.level.coins) return;
         this.level.coins.forEach((coin, index) => {
             if (this.character.isColliding(coin)) {
                 coin.pickup(this.character);
-                this.soundManager.playSound(2); // Play coin pickup sound
+                this.soundManager.playSound(2);
                 this.level.coins.splice(index, 1);
                 this.bottleBar.setPercentage(this.character.coins);
             }
         });
     }
 
+    /**
+     * Checks for collisions between the character and bottles.
+     */
     checkBottleCollisions() {
         if (!this.level || !this.level.bottles) return;
         this.level.bottles.forEach((bottle, index) => {
             if (this.character.isColliding(bottle)) {
                 bottle.pickup(this.character);
-                this.soundManager.playSound(3); // Play bottle pickup sound
+                this.soundManager.playSound(3);
                 this.level.bottles.splice(index, 1);
                 this.bottleBar.setPercentage(this.character.bottles);
             }
         });
     }
 
+    /**
+     * Checks for collisions between throwable bottles and enemies.
+     */
     checkThrowableBottleCollisions() {
         this.throwableObjects.forEach((bottle) => {
             this.level.enemies.forEach((enemy) => {
@@ -142,9 +190,13 @@ handleEnemyDeath(enemy) {
         });
     }
 
+    /**
+     * Handles the death of an enemy after being hit by a throwable bottle.
+     * @param {Enemy} enemy - The enemy to check for death after a bottle hit.
+     */
     handleEnemyDeathAfterThrowableBottle(enemy) {
         if (enemy.isDead() && !enemy.deathAnimationPlaying && !(enemy instanceof Endboss)) {
-            this.handleEnemyDeath(enemy)
+            this.handleEnemyDeath(enemy);
             enemy.deathAnimationPlaying = true;
 
             setTimeout(() => {
@@ -156,3 +208,4 @@ handleEnemyDeath(enemy) {
         }
     }
 }
+
