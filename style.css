@@ -2,15 +2,29 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
+    position: relative; /* Required for pseudo-element positioning */
+    font-family: Smokum;
+    padding: 0px;
+    margin: 0px;
+    height: 100vh;
+    overflow: hidden; /* To prevent scrolling issues if necessary */
+}
+
+body::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
     background-image: url('img/pagebackround5.jpg');
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
-    height: 100vh;
-    font-family: Smokum;
-    padding: 0px;
-    margin: 0px;
+    opacity: 0.6; /* Adjust this value to control the opacity */
+    z-index: -1; /* Ensures it stays behind the content */
 }
+
 
 h1 {
     justify-content: center;

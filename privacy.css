@@ -1,12 +1,29 @@
 body {
-    margin: 0;
-    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative; /* Required for pseudo-element positioning */
+
     font-family: Arial, sans-serif;
-    background: url('img/pagebackround5.jpg') no-repeat center center fixed;
-    background-size: cover;
+    padding: 0px;
+    margin: 0px;
+    height: 100vh;
+    overflow: hidden; /* To prevent scrolling issues if necessary */
+}
+
+body::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
     height: 100%;
-    overflow-y: auto;
-    overflow: hidden;
+    background-image: url('img/pagebackround5.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    opacity: 0.5; /* Adjust this value to control the opacity */
+    z-index: -1; /* Ensures it stays behind the content */
 }
 
 h1{

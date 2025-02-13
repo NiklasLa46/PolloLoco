@@ -217,10 +217,12 @@ class World {
         this.drawLevelObjects();
         this.drawEnemies();
         this.drawThrowableObjects();
+        this.resetCanvasTranslation();
+        this.drawUI();
+        this.applyCanvasTranslation();
         this.drawCharacter();
         this.resetCanvasTranslation();
 
-        this.drawUI();
 
         requestAnimationFrame(() => this.draw());
 
