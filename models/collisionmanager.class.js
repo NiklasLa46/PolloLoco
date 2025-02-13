@@ -19,7 +19,6 @@ class CollisionManager {
         this.bottleBar = bottleBar;
         this.bossBar = bossBar;
         this.throwableObjects = throwableObjects;
-        this.soundManager = new SoundManager();
     }
 
     /**
@@ -62,7 +61,6 @@ class CollisionManager {
      */
     checkCharacterCollisionsWithEnemy(enemy) {
         this.character.checkJumpOnEnemy(enemy);
-        
         if (!this.character.isJumping && !this.character.isHurt() && !this.character.isDead()) {
             if (this.character.isColliding(enemy)) {
                 this.character.hit();
@@ -91,6 +89,7 @@ class CollisionManager {
             }
         }
     }
+    
 
     /**
      * Handles collisions with the Endboss.
@@ -179,6 +178,7 @@ class CollisionManager {
             this.level.enemies.forEach((enemy) => {
                 if (bottle.isColliding(enemy) && !bottle.hasCollided) {
                     bottle.playSplashAnimation();
+                    this.soundManager.playSound(11)
                     bottle.hasCollided = true;
                     enemy.hit();
                     if (enemy instanceof Endboss && !enemy.isDead()) {

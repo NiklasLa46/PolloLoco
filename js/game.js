@@ -19,100 +19,103 @@ allIntervalls = [
     clearInterval(this.smallChickenDeathInterval),
     clearInterval(this.timer),
     clearInterval(this.worldCollisionsInterval)
-]
+];
 
+/**
+ * Initializes the game, sets up the canvas, and initializes the world object with keyboard input.
+ * Also shows bottom buttons if the screen width is below 1200px.
+ */
 document.addEventListener("DOMContentLoaded", () => {
-// Get references to all the buttons
-let leftBtn = document.getElementById('leftBtn');
-let rightBtn = document.getElementById('rightBtn');
-let jumpBtn = document.getElementById('jumpBtn');
-let throwBtn = document.getElementById('throwBtn');
+    let leftBtn = document.getElementById('leftBtn');
+    let rightBtn = document.getElementById('rightBtn');
+    let jumpBtn = document.getElementById('jumpBtn');
+    let throwBtn = document.getElementById('throwBtn');
 
-// Left button (move left)
-leftBtn.addEventListener('touchstart', (event) => {
-    console.log('Left button pressed');
-    keyboard.LEFT = true;
-});
-leftBtn.addEventListener('touchend', (event) => {
-    console.log('Left button released');
-    keyboard.LEFT = false;
-});
+    leftBtn.addEventListener('touchstart', (event) => {
+        keyboard.LEFT = true;
+    });
+    leftBtn.addEventListener('touchend', (event) => {
+        keyboard.LEFT = false;
+    });
 
-// Right button (move right)
-rightBtn.addEventListener('touchstart', (event) => {
-    console.log('Right button pressed');
-    keyboard.RIGHT = true;
-});
-rightBtn.addEventListener('touchend', (event) => {
-    console.log('Right button released');
-    keyboard.RIGHT = false;
-});
+    rightBtn.addEventListener('touchstart', (event) => {
+        keyboard.RIGHT = true;
+    });
+    rightBtn.addEventListener('touchend', (event) => {
+        keyboard.RIGHT = false;
+    });
 
-// Jump button (spacebar equivalent)
-jumpBtn.addEventListener('touchstart', (event) => {
-    console.log('Jump button pressed');
-    keyboard.SPACE = true;
-});
-jumpBtn.addEventListener('touchend', (event) => {
-    console.log('Jump button released');
-    keyboard.SPACE = false;
-});
+    jumpBtn.addEventListener('touchstart', (event) => {
+        keyboard.SPACE = true;
+    });
+    jumpBtn.addEventListener('touchend', (event) => {
+        keyboard.SPACE = false;
+    });
 
-// Throw button (D key equivalent)
-throwBtn.addEventListener('touchstart', (event) => {
-    console.log('Throw button pressed');
-    keyboard.D = true;
-    world.throwBottle();
-});
-throwBtn.addEventListener('touchend', (event) => {
-    console.log('Throw button released');
-    keyboard.D = false;
-});
+    throwBtn.addEventListener('touchstart', (event) => {
+        keyboard.D = true;
+        world.throwBottle();
+    });
+    throwBtn.addEventListener('touchend', (event) => {
+        keyboard.D = false;
+    });
 });
 
-
+/**
+ * Initializes the game level, creates a canvas, and starts the world with keyboard input.
+ * Additionally, it adjusts the visibility of the bottom buttons for smaller screens.
+ */
 function init() {
-    initLevel()
+    initLevel();
     canvas = document.getElementById('canvas');
     world = new World(canvas, keyboard);
     showBottomButtons();
 }
 
-function showBottomButtons(){
+/**
+ * Displays the bottom buttons and mute option on small screens (below 1200px width).
+ */
+function showBottomButtons() {
     if (window.innerWidth <= 1200) {
         document.querySelector('.bottom-buttons').style.display = 'flex';
         document.querySelector('.mute-responsive').style.display = 'flex';
     }
 }
 
-
-
+/**
+ * Resets the game state and displays the main menu after stopping the current game.
+ */
 function resetAndMainMenu() {
-    hideCanvasButtons(); 
-    stopGame();  // Stop the current game
+    hideCanvasButtons();
+    stopGame();
     mainMenu();
-    // Show the main menu
 }
 
-function restartGame(){
+/**
+ * Restarts the game by stopping the current game and reinitializing it.
+ */
+function restartGame() {
     stopGame();
     hideCanvasButtons();
     
     document.getElementById('restartButton').style.display = 'none';
     init();
-    
 }
 
+/**
+ * Hides the canvas control buttons from the screen.
+ */
 function hideCanvasButtons() {
     document.querySelector('.all-canvas-buttons').style.display = 'none';
 }
 
-
+/**
+ * Clears all active intervals and timeouts, including those related to character idle animations.
+ */
 function clearTimers() {
     allIntervalls.forEach(clearInterval);
 
     if (world.character) {
-        // Clear character's idle-related timeouts and intervals
         const { character } = world;
 
         if (character.idleTimeout) clearTimeout(character.idleTimeout);
@@ -120,12 +123,13 @@ function clearTimers() {
         if (character.idleInterval) clearInterval(character.idleInterval);
         if (character.longIdleInterval) clearInterval(character.longIdleInterval);
 
-        // Reset character's idle state
         character.idleTimeout = character.longIdleTimeout = character.idleInterval = character.longIdleInterval = null;
     }
 }
 
-// Helper function to stop sounds
+/**
+ * Stops all active sounds and resets their playback position.
+ */
 function stopSounds() {
     if (world.soundManager.sleeping_sound) {
         world.soundManager.sleeping_sound.pause();
@@ -137,7 +141,9 @@ function stopSounds() {
     }
 }
 
-// Helper function to reset game state
+/**
+ * Resets the game state, including clearing the canvas, removing all objects, and resetting the UI elements.
+ */
 function resetGameState() {
     if (world.character) {
         world.character.stopIdleAnimations();
@@ -147,7 +153,6 @@ function resetGameState() {
     world.character = null;
     world.level = null;
 
-    // Reset canvas and objects
     canvas = document.getElementById('canvas');
     ctx = canvas.getContext('2d');
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -159,37 +164,38 @@ function resetGameState() {
     this.coinBar = null;
 }
 
+/**
+ * Stops the game, clears all timers, stops sounds, and resets the game state.
+ */
 function stopGame() {
     clearTimers();
     stopSounds();
     resetGameState();
 }
 
+/**
+ * Checks the screen orientation and displays a message if the screen is in portrait mode.
+ */
 function checkOrientation() {
     const turnMessage = document.getElementById("turnMessage");
 
-    // Check if the screen is in vertical (portrait) orientation
     if (window.innerHeight > window.innerWidth) {
-        // Screen is vertical, hide the message
         turnMessage.style.display = "block";
     } else {
-        // Screen is horizontal, show the message
         turnMessage.style.display = "none";
     }
 }
 
-// Run the function when the page loads
 window.addEventListener("load", checkOrientation);
-
-// Run the function on window resize (for dynamic screen orientation changes)
 window.addEventListener("resize", checkOrientation);
 
-
+/**
+ * Toggles fullscreen mode for the game canvas, either entering or exiting fullscreen.
+ */
 function toggleFullscreen() {
     const canvas = document.getElementById('canvas');
 
     if (!document.fullscreenElement && !document.mozFullScreenElement && !document.webkitFullscreenElement) {
-        // Enter fullscreen mode
         if (canvas.requestFullscreen) {
             canvas.requestFullscreen();
         } else if (canvas.mozRequestFullScreen) {
@@ -200,7 +206,6 @@ function toggleFullscreen() {
             canvas.msRequestFullscreen();
         }
     } else {
-        // Exit fullscreen mode
         if (document.exitFullscreen) {
             document.exitFullscreen();
         } else if (document.mozCancelFullScreen) {
@@ -213,7 +218,9 @@ function toggleFullscreen() {
     }
 }
 
-// Listen for the Escape key to exit fullscreen mode
+/**
+ * Listens for the Escape key press to exit fullscreen mode if in fullscreen.
+ */
 document.addEventListener('keydown', function (e) {
     if (e.key === 'Escape') {
         if (document.fullscreenElement || document.mozFullScreenElement || document.webkitFullscreenElement || document.msFullscreenElement) {
@@ -230,29 +237,40 @@ document.addEventListener('keydown', function (e) {
     }
 });
 
+/**
+ * Starts the game by hiding the start page, displaying the canvas, and initializing the game.
+ */
 function startGame() {
-    document.getElementById('start-page').style.display = 'none'; // Hide start page
-    document.getElementById('canvas').style.display = 'block'; // Show canvas
-    document.getElementById('game-title').style.display = 'flex'; // Show game title
+    document.getElementById('start-page').style.display = 'none'; 
+    document.getElementById('canvas').style.display = 'block'; 
+    document.getElementById('game-title').style.display = 'flex'; 
     document.getElementById('instructions-page').style.display = 'none';
     document.getElementById('game-buttons-div').style.display = 'flex';
-    init(); // Start the game
-};
+    init();
+}
 
+/**
+ * Displays the instructions page and hides the start page.
+ */
 function showInstructions() {
-    document.getElementById('start-page').style.display = 'none'; // Hide start page
-    document.getElementById('instructions-page').style.display = 'flex'; // Show canvas
+    document.getElementById('start-page').style.display = 'none'; 
+    document.getElementById('instructions-page').style.display = 'flex'; 
+}
 
-};
-
+/**
+ * Displays the main menu, hides the game interface, and stops the game.
+ */
 function mainMenu() {
-    document.getElementById('start-page').style.display = 'flex'; // Hide start page
-    document.getElementById('instructions-page').style.display = 'none'; // Show canvas
-    document.getElementById('canvas').style.display = 'none'; // Show canvas
-    document.getElementById('game-title').style.display = 'none'; // Show game title
+    document.getElementById('start-page').style.display = 'flex'; 
+    document.getElementById('instructions-page').style.display = 'none'; 
+    document.getElementById('canvas').style.display = 'none'; 
+    document.getElementById('game-title').style.display = 'none'; 
     document.getElementById('game-buttons-div').style.display = 'none';
-};
+}
 
+/**
+ * Listens for keydown events and updates the keyboard state based on the pressed keys.
+ */
 window.addEventListener('keydown', (event) => {
     if (event.keyCode == 39) {
         keyboard.RIGHT = true;
@@ -279,6 +297,9 @@ window.addEventListener('keydown', (event) => {
     }
 });
 
+/**
+ * Listens for keyup events and updates the keyboard state when keys are released.
+ */
 window.addEventListener('keyup', (event) => {
     if (event.keyCode == 39) {
         keyboard.RIGHT = false;
@@ -303,4 +324,4 @@ window.addEventListener('keyup', (event) => {
     if (event.keyCode == 68) {
         keyboard.D = false;
     }
-})
+});

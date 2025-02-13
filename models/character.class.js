@@ -69,6 +69,8 @@ class Character extends MovableObject {
     sleeping_sound = new Audio('./audio/snoring.mp3');
     jumping_sound = new Audio('./audio/jump3.mp3');
     gameover_sound = new Audio('./audio/gameover.mp3');
+    chicken_sound = new Audio('audio/chickendeath1.mp3');
+    smallchicken_sound = new Audio('audio/chickendeath2.mp3');
     lastActionTime = Date.now();
     idleTimeout = null;
     longIdleTimeout = null;
@@ -85,14 +87,14 @@ class Character extends MovableObject {
     };
     isDeadPlaying = false;
 
-    constructor(collisionHandler) {
+    constructor(collisionManager) {
         super().loadImage('./img/2_character_pepe/2_walk/W-21.png');
         this.initializeImages();
         this.applyGravity();
         this.jumping_sound.volume = 0.3;
         this.sleeping_sound.volume = 0.7;
         this.animate();
-        this.collisonHandler = new CollisionManager();
+        this.collisionManager = collisionManager;
     }
 
     /**
@@ -273,10 +275,29 @@ class Character extends MovableObject {
             enemy.hit();
             this.isJumping = false;
             this.jump(true);
-            this.collisonHandler.handleEnemyDeath(enemy)
+            this.handleEnemyDeath(enemy)
             setTimeout(() => {
                 this.y = 130;
             }, 600);
+        }
+    }
+
+    
+    /**
+     * Handles the death animation and sound for an enemy.
+     * @param {Enemy} enemy - The enemy to handle the death for.
+     */
+    handleEnemyDeath(enemy) {
+        if (enemy.isDead() && !enemy.isDying && !(enemy instanceof Endboss)) {
+            enemy.playDeathImage();
+           
+
+            if (enemy instanceof SmallChicken) {
+                this.smallchicken_sound.play();
+            }
+            if (enemy instanceof Chicken) {
+                this.chicken_sound.play();
+            }
         }
     }
 
@@ -315,6 +336,8 @@ class Character extends MovableObject {
         this.sleeping_sound.muted = true;
         this.jumping_sound.muted = true;
         this.gameover_sound.muted = true;
+        this.chicken_sound.muted = true;
+        this.smallchicken_sound.muted = true;
     }
 
     // Add a method to unmute all character sounds
@@ -323,6 +346,8 @@ class Character extends MovableObject {
         this.sleeping_sound.muted = false;
         this.jumping_sound.muted = false;
         this.gameover_sound.muted = false;
+        this.chicken_sound.muted = false;
+        this.smallchicken_sound.muted = false;
     }
 }
 

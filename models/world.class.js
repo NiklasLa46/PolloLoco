@@ -14,8 +14,19 @@ class World {
     IMAGE_WIN = ['img/9_intro_outro_screens/win/win_1.png'];
     gamePaused = false;
     hasWinSoundPlayed = false;
-    soundManager = new SoundManager(this.character); // Initialize SoundManager
-    collisionManager;
+    soundManager = new SoundManager(this.character);
+    
+
+    collisionManager = new CollisionManager(
+        this.character,
+        this.level,
+        this.soundManager,
+        this.healthBar,
+        this.bottleBar,
+        this.bossBar,
+        this.throwableObjects,
+    );
+   
 
     /**
      * Creates a new instance of the World class, setting up the canvas, keyboard,
@@ -33,15 +44,6 @@ class World {
         this.soundManager.background_music.loop = true;
         this.soundManager.playBackgroundMusicIfNeeded(); // Make sure background music is playing
         this.initializeMuteButton();
-        this.collisionManager = new CollisionManager(
-            this.character,
-            this.level,
-            this.soundManager,
-            this.healthBar,
-            this.bottleBar,
-            this.bossBar,
-            this.throwableObjects
-        );
         this.checkCollisions();
     }
 

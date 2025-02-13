@@ -107,7 +107,6 @@ handleSplash() {
         clearInterval(this.timer);
         this.speedX = 0;
         this.speedY = 0;
-        this.bottlebreak_sound.play();
         let splashInterval = setInterval(() => {
             this.animationIndex++;
             if (this.animationIndex < this.SPLASH_IMAGES.length) {
