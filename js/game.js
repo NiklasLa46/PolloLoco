@@ -107,6 +107,7 @@ function restartGame() {
  */
 function hideCanvasButtons() {
     document.querySelector('.all-canvas-buttons').style.display = 'none';
+
 }
 
 /**
@@ -246,6 +247,7 @@ function startGame() {
     document.getElementById('game-title').style.display = 'flex'; 
     document.getElementById('instructions-page').style.display = 'none';
     document.getElementById('game-buttons-div').style.display = 'flex';
+    document.getElementById('link-div').style.display = 'none';
     init();
 }
 
@@ -266,6 +268,8 @@ function mainMenu() {
     document.getElementById('canvas').style.display = 'none'; 
     document.getElementById('game-title').style.display = 'none'; 
     document.getElementById('game-buttons-div').style.display = 'none';
+    document.getElementById('all-canvas-buttons').style.display = 'none';
+    document.getElementById('link-div').style.display = 'flex';
 }
 
 /**
