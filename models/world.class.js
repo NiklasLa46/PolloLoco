@@ -14,6 +14,7 @@ class World {
     IMAGE_WIN = ['img/9_intro_outro_screens/win/win_1.png'];
     gamePaused = false;
     hasWinSoundPlayed = false;
+    isGameOverOrWon = false;
     soundManager = new SoundManager(this.character);
     
 
@@ -99,7 +100,7 @@ class World {
         this.muteCharacterSleepingSound();
         this.displayGameOverImage();
         this.hideBottomButtons();
-
+        this.isGameOverOrWon = true;
         setTimeout(() => {
             this.showRestartButton();
         }, 200);
@@ -142,9 +143,10 @@ class World {
      */
     showRestartButton() {
         document.querySelector('.restart-button').style.display = 'flex';
+        if (this.isGameOverOrWon = true) {
         if (window.innerWidth <= 1200) {
             document.querySelector('.all-canvas-buttons').style.display = 'block';
-        }
+        }}
     }
 
     /**
@@ -166,6 +168,7 @@ class World {
         this.muteCharacterSleepingSound(); // Mute before playing the win sound
         this.soundManager.playSound(8); // Play the win sound
         this.displayEndScreenImage(this.IMAGE_WIN[0]);
+        this.isGameOverOrWon = true;
         setTimeout(() => {
             this.showRestartButton();
         }, 200);

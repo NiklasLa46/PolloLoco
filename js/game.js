@@ -88,6 +88,8 @@ function showBottomButtons() {
 function resetAndMainMenu() {
     hideCanvasButtons();
     stopGame();
+    document.getElementById('restartButton').style.display = 'none';
+    document.getElementById('game-buttons-div').style.display = 'none';
     mainMenu();
 }
 
@@ -97,7 +99,7 @@ function resetAndMainMenu() {
 function restartGame() {
     stopGame();
     hideCanvasButtons();
-    
+    document.getElementById('game-buttons-div').style.display = 'flex';
     document.getElementById('restartButton').style.display = 'none';
     init();
 }
@@ -106,8 +108,8 @@ function restartGame() {
  * Hides the canvas control buttons from the screen.
  */
 function hideCanvasButtons() {
+    world.isGameOverOrWon = false;
     document.querySelector('.all-canvas-buttons').style.display = 'none';
-
 }
 
 /**
