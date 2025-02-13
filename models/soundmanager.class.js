@@ -8,17 +8,17 @@ class SoundManager {
      */
     allSounds = [
         new Audio('./audio/background.mp3'),
-        new Audio('/audio/pepedmg1.mp3'),
-        new Audio('/audio/coinpickup.mp3'),
-        new Audio('/audio/bottlepickup.mp3'),
-        new Audio('audio/chickendeath1.mp3'),
-        new Audio('audio/chickendeath2.mp3'),
-        new Audio('audio/bossdmg.mp3'),
-        new Audio('audio/throwing.mp3'),
-        new Audio('audio/winsound.mp3'),
-        new Audio('audio/gameover.mp3'),
-        new Audio('audio/deathboss.mp3'),
-        new Audio('audio/bottle-break.mp3')
+        new Audio('./audio/pepedmg1.mp3'),
+        new Audio('./audio/coinpickup.mp3'),
+        new Audio('./audio/bottlepickup.mp3'),
+        new Audio('./audio/chickendeath1.mp3'),
+        new Audio('./audio/chickendeath2.mp3'),
+        new Audio('./audio/bossdmg.mp3'),
+        new Audio('./audio/throwing.mp3'),
+        new Audio('./audio/winsound.mp3'),
+        new Audio('./audio/gameover.mp3'),
+        new Audio('./audio/deathboss.mp3'),
+        new Audio('./audio/bottle-break.mp3')
     ];
 
     /**
