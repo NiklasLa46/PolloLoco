@@ -11,7 +11,6 @@ class ThrowableObject extends DrawableObject {
     splashTimer;
     animationIndex = 0;
     hasCollided = false;
-    bottlebreak_sound = new Audio('/audio/bottle-break.mp3');
 
     THROW_IMAGES = [
         'img/6_salsa_bottle/bottle_rotation/1_bottle_rotation.png',
