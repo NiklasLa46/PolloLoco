@@ -20,6 +20,7 @@ allIntervalls = [
     clearInterval(this.timer),
     clearInterval(this.worldCollisionsInterval)
 ];
+originalPlay = HTMLMediaElement.prototype.play;
 
 /**
  * Initializes the game, sets up the canvas, and initializes the world object with keyboard input.
@@ -70,6 +71,10 @@ function init() {
     canvas = document.getElementById('canvas');
     world = new World(canvas, keyboard);
     showBottomButtons();
+
+    HTMLMediaElement.prototype.play = originalPlay;
+
+
 }
 
 /**
@@ -117,7 +122,7 @@ function hideCanvasButtons() {
  */
 function clearTimers() {
     allIntervalls.forEach(clearInterval);
-
+    this.world.stopCollisionChecks()
     if (world.character) {
         const { character } = world;
 
@@ -138,6 +143,11 @@ function stopSounds() {
         world.soundManager.sleeping_sound.pause();
         world.soundManager.sleeping_sound.currentTime = 0;
     }
+
+    // Override the play method to prevent audio or video from playing
+    HTMLMediaElement.prototype.play = function () {
+        return Promise.resolve();  // Just return a resolved promise, so it doesn't play
+    };
 
     if (world.soundManager.background_music) {
         world.soundManager.background_music.pause();
@@ -171,6 +181,7 @@ function resetGameState() {
  * Stops the game, clears all timers, stops sounds, and resets the game state.
  */
 function stopGame() {
+    clearInterval(this.worldCollisionsInterval);
     clearTimers();
     stopSounds();
     resetGameState();
@@ -244,9 +255,9 @@ document.addEventListener('keydown', function (e) {
  * Starts the game by hiding the start page, displaying the canvas, and initializing the game.
  */
 function startGame() {
-    document.getElementById('start-page').style.display = 'none'; 
-    document.getElementById('canvas').style.display = 'block'; 
-    document.getElementById('game-title').style.display = 'flex'; 
+    document.getElementById('start-page').style.display = 'none';
+    document.getElementById('canvas').style.display = 'block';
+    document.getElementById('game-title').style.display = 'flex';
     document.getElementById('instructions-page').style.display = 'none';
     document.getElementById('game-buttons-div').style.display = 'flex';
     document.getElementById('link-div').style.display = 'none';
@@ -257,18 +268,18 @@ function startGame() {
  * Displays the instructions page and hides the start page.
  */
 function showInstructions() {
-    document.getElementById('start-page').style.display = 'none'; 
-    document.getElementById('instructions-page').style.display = 'flex'; 
+    document.getElementById('start-page').style.display = 'none';
+    document.getElementById('instructions-page').style.display = 'flex';
 }
 
 /**
  * Displays the main menu, hides the game interface, and stops the game.
  */
 function mainMenu() {
-    document.getElementById('start-page').style.display = 'flex'; 
-    document.getElementById('instructions-page').style.display = 'none'; 
-    document.getElementById('canvas').style.display = 'none'; 
-    document.getElementById('game-title').style.display = 'none'; 
+    document.getElementById('start-page').style.display = 'flex';
+    document.getElementById('instructions-page').style.display = 'none';
+    document.getElementById('canvas').style.display = 'none';
+    document.getElementById('game-title').style.display = 'none';
     document.getElementById('game-buttons-div').style.display = 'none';
     document.getElementById('all-canvas-buttons').style.display = 'none';
     document.getElementById('link-div').style.display = 'flex';

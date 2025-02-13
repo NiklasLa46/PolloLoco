@@ -1,5 +1,6 @@
 class CollisionManager {
     throwableObjects = [];
+    worldCollisionsInterval = null;
 
     /**
      * Creates an instance of the CollisionManager.
@@ -31,6 +32,14 @@ class CollisionManager {
             this.checkBottleCollisions();
             this.checkThrowableBottleCollisions();
         }, 50);
+    }
+
+        /**
+     * Stops the collision checks by clearing the Intervall.
+     */
+    stopCollisions() {
+        clearInterval(this.worldCollisionsInterval);
+        this.worldCollisionsInterval = null;
     }
 
     /**

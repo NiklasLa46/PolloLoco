@@ -27,7 +27,7 @@ class World {
         this.bossBar,
         this.throwableObjects,
     );
-   
+
 
     /**
      * Creates a new instance of the World class, setting up the canvas, keyboard,
@@ -46,6 +46,13 @@ class World {
         this.soundManager.playBackgroundMusicIfNeeded(); // Make sure background music is playing
         this.initializeMuteButton();
         this.checkCollisions();
+    }
+
+           /**
+     * Calls the Function to stop Collision checking.
+     */
+    stopCollisionChecks() {
+        this.collisionManager.stopCollisions();
     }
 
        /**
