@@ -41,31 +41,47 @@ class SoundManager {
      * @param {Object} character - The character object, responsible for game sound-related actions.
      */
     constructor(character) {
-        this.character = character; 
+        this.character = character;
+
+        const savedMuteState = localStorage.getItem('muteState');
+        const isMuted = savedMuteState === 'true'; 
+        this.allSounds.forEach(sound => sound.muted = isMuted);
+
+        if (isMuted) {
+            this.character.muteSounds();
+        } else {
+            this.character.unmuteSounds();
+        }
     }
 
     /**
      * Initializes the mute button functionality by attaching a click event listener.
-     * The button toggles mute/unmute for all sounds.
+     * The button toggles mute/unmute for all sounds and saves the state in localStorage.
      */
     initializeMuteButton() {
         const muteButton = document.getElementById('muteButton');
+        const isMuted = this.allSounds.every(sound => sound.muted);
+        muteButton.textContent = isMuted ? 'Unmute' : 'Mute'; 
+
         muteButton.addEventListener('click', () => this.toggleMute());
     }
 
     /**
      * Toggles the mute state for all sounds.
      * Updates the text of the mute button to reflect the current state ("Mute" or "Unmute").
+     * Saves the mute state to localStorage.
      */
     toggleMute() {
         const isMuted = this.allSounds.every(sound => sound.muted);
         this.allSounds.forEach(sound => sound.muted = !isMuted);
 
         if (isMuted) {
-            this.character.unmuteSounds(); 
+            this.character.unmuteSounds();
         } else {
-            this.character.muteSounds(); 
+            this.character.muteSounds();
         }
+        
+        localStorage.setItem('muteState', !isMuted);
 
         const muteButton = document.getElementById('muteButton');
         muteButton.textContent = isMuted ? 'Mute' : 'Unmute';
