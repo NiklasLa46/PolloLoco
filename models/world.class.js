@@ -16,6 +16,8 @@ class World {
     hasWinSoundPlayed = false;
     isGameOverOrWon = false;
     soundManager = new SoundManager(this.character);
+    boss = new Endboss();
+
     
 
     collisionManager = new CollisionManager(

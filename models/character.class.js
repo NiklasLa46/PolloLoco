@@ -180,12 +180,9 @@ class Character extends MovableObject {
         return isMovingRight || isMovingLeft;
     }
 
-    /**
-     * Checks if the character should move right and handles the movement.
-     * @returns {boolean} Whether the character moved right.
-     */
     checkAndMoveRight() {
-        if (this.world.keyboard.RIGHT && this.x < 719 * 5) {
+        const boss = this.world.boss; // Access the boss from the world
+        if (this.world.keyboard.RIGHT && this.x < boss.x) {
             this.moveRight();
             this.otherDirection = false;
             this.playWalkingSound();
@@ -193,7 +190,6 @@ class Character extends MovableObject {
         }
         return false;
     }
-
     /**
      * Checks if the character should move left and handles the movement.
      * @returns {boolean} Whether the character moved left.
