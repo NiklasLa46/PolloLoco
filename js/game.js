@@ -99,7 +99,6 @@ function init() {
     canvas = document.getElementById('canvas');
     world = new World(canvas, keyboard);
     showBottomButtons();
-
     HTMLMediaElement.prototype.play = originalPlay;
 
 
@@ -119,9 +118,7 @@ function showBottomButtons() {
  * Resets the game state and displays the main menu after stopping the current game.
  */
 function resetAndMainMenu() {
-    hideCanvasButtons();
     stopGame();
-    document.getElementById('restartButton').style.display = 'none';
     document.getElementById('game-buttons-div').style.display = 'none';
     mainMenu();
 }
@@ -131,20 +128,21 @@ function resetAndMainMenu() {
  */
 function restartGame() {
     stopGame();
-    hideCanvasButtons();
+    hideRestartButton()
     document.getElementById('game-buttons-div').style.display = 'flex';
-    document.getElementById('restartButton').style.display = 'none';
     init();
 }
 
 /**
- * Hides the canvas control buttons from the screen.
+ * Hides the restart Button after restart.
  */
-function hideCanvasButtons() {
-    world.isGameOverOrWon = false;
-    document.querySelector('.all-canvas-buttons').style.display = 'none';
+function hideRestartButton() {
+    const allCanvasButtons = document.getElementById('all-canvas-buttons');
+    if (window.innerWidth <= 1200) {
+        allCanvasButtons.style.display = 'none';  // Hide buttons on small screens
+    }
+    document.getElementById('restartButton').style.display = 'none'; // Hide main restart button
 }
-
 /**
  * Clears all active intervals and timeouts, including those related to character idle animations.
  */
@@ -311,7 +309,6 @@ function mainMenu() {
     document.getElementById('canvas').style.display = 'none';
     document.getElementById('game-title').style.display = 'none';
     document.getElementById('game-buttons-div').style.display = 'none';
-    document.getElementById('all-canvas-buttons').style.display = 'none';
     document.getElementById('link-div').style.display = 'flex';
 }
 

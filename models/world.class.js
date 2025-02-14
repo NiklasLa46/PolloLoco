@@ -14,7 +14,7 @@ class World {
     IMAGE_WIN = ['img/9_intro_outro_screens/win/win_1.png'];
     gamePaused = false;
     hasWinSoundPlayed = false;
-    isGameOverOrWon = false;
+   
     soundManager = new SoundManager(this.character);
     boss = new Endboss();
 
@@ -41,6 +41,7 @@ class World {
         this.ctx = canvas.getContext('2d');
         this.canvas = canvas;
         this.keyboard = keyboard;
+        this.restartButtonVisible = false; 
         this.draw();
         this.setWorld();
         this.soundManager.background_music.volume = 0.4;
@@ -109,7 +110,7 @@ class World {
         this.muteCharacterSleepingSound();
         this.displayGameOverImage();
         this.hideBottomButtons();
-        this.isGameOverOrWon = true;
+ 
         setTimeout(() => {
             this.showRestartButton();
         }, 200);
@@ -151,12 +152,19 @@ class World {
      * Displays the restart button and makes it visible on the screen.
      */
     showRestartButton() {
-        document.querySelector('.restart-button').style.display = 'flex';
-        if (this.isGameOverOrWon = true) {
+        // Check if it's a small screen (e.g., screen width <= 1200px)
         if (window.innerWidth <= 1200) {
-            document.querySelector('.all-canvas-buttons').style.display = 'block';
-        }}
+            const allCanvasButtons = document.getElementById('all-canvas-buttons');
+            if (!this.restartButtonVisible) {
+                allCanvasButtons.style.display = 'flex';  // Show buttons on small screens
+                this.restartButtonVisible = true;
+            }
+        } else {
+            // Handle larger screens by showing normal restart button logic
+            document.getElementById('restartButton').style.display = 'flex';
+        }
     }
+    
 
     /**
      * Hides the bottom buttons on smaller screens.
@@ -177,7 +185,6 @@ class World {
         this.muteCharacterSleepingSound(); // Mute before playing the win sound
         this.soundManager.playSound(8); // Play the win sound
         this.displayEndScreenImage(this.IMAGE_WIN[0]);
-        this.isGameOverOrWon = true;
         setTimeout(() => {
             this.showRestartButton();
         }, 200);
