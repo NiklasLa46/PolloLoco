@@ -191,9 +191,11 @@ function stopGame() {
  * Checks the screen orientation and displays a message if the screen is in portrait mode.
  */
 function checkOrientation() {
+    const isTouchDevice = window.matchMedia("(pointer: coarse)").matches;
+    const isLandscape = window.matchMedia("(orientation: landscape)").matches;
     const turnMessage = document.getElementById("turnMessage");
 
-    if (window.innerHeight > window.innerWidth) {
+    if (isTouchDevice && !isLandscape) {
         turnMessage.style.display = "block";
     } else {
         turnMessage.style.display = "none";
