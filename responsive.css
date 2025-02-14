@@ -155,4 +155,8 @@ body, .movement-button {
     touch-action: manipulation; /* Prevent zoom and pan gestures */
 }
 
+#leftBtn, #rightBtn, #jumpBtn, #throwBtn {
+    touch-action: manipulation;
+}
+
 

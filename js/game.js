@@ -32,33 +32,61 @@ document.addEventListener("DOMContentLoaded", () => {
     let jumpBtn = document.getElementById('jumpBtn');
     let throwBtn = document.getElementById('throwBtn');
 
-    leftBtn.addEventListener('touchstart', (event) => {
-        keyboard.LEFT = true;
-    });
-    leftBtn.addEventListener('touchend', (event) => {
-        keyboard.LEFT = false;
+    const setMovementState = (direction, state) => {
+        keyboard[direction] = state;
+    };
+
+    leftBtn.addEventListener('pointerdown', (event) => {
+        event.preventDefault();
+        setMovementState('LEFT', true);
     });
 
-    rightBtn.addEventListener('touchstart', (event) => {
-        keyboard.RIGHT = true;
-    });
-    rightBtn.addEventListener('touchend', (event) => {
-        keyboard.RIGHT = false;
+    leftBtn.addEventListener('pointerup', (event) => {
+        setMovementState('LEFT', false);
     });
 
-    jumpBtn.addEventListener('touchstart', (event) => {
-        keyboard.SPACE = true;
-    });
-    jumpBtn.addEventListener('touchend', (event) => {
-        keyboard.SPACE = false;
+    leftBtn.addEventListener('pointercancel', (event) => {
+        setMovementState('LEFT', false);
     });
 
-    throwBtn.addEventListener('touchstart', (event) => {
-        keyboard.D = true;
+    rightBtn.addEventListener('pointerdown', (event) => {
+        event.preventDefault();
+        setMovementState('RIGHT', true);
+    });
+
+    rightBtn.addEventListener('pointerup', (event) => {
+        setMovementState('RIGHT', false);
+    });
+
+    rightBtn.addEventListener('pointercancel', (event) => {
+        setMovementState('RIGHT', false);
+    });
+
+    jumpBtn.addEventListener('pointerdown', (event) => {
+        event.preventDefault();
+        setMovementState('SPACE', true);
+    });
+
+    jumpBtn.addEventListener('pointerup', (event) => {
+        setMovementState('SPACE', false);
+    });
+
+    jumpBtn.addEventListener('pointercancel', (event) => {
+        setMovementState('SPACE', false);
+    });
+
+    throwBtn.addEventListener('pointerdown', (event) => {
+        event.preventDefault();
+        setMovementState('D', true);
         world.throwBottle();
     });
-    throwBtn.addEventListener('touchend', (event) => {
-        keyboard.D = false;
+
+    throwBtn.addEventListener('pointerup', (event) => {
+        setMovementState('D', false);
+    });
+
+    throwBtn.addEventListener('pointercancel', (event) => {
+        setMovementState('D', false);
     });
 });
 
