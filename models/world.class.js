@@ -180,6 +180,9 @@ hideBottomButtons() {
         }
     }
     
+        /**
+     * Resets the bottomButtons state.
+     */
     resetBottomButtonsState() {
         this.bottomButtonsHidden = false; // Reset the flag to allow hiding again
     }
