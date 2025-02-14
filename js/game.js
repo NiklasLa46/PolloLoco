@@ -129,6 +129,10 @@ function resetAndMainMenu() {
 function restartGame() {
     stopGame();
     hideRestartButton()
+  
+    setTimeout(() => {
+        this.world.resetBottomButtonsState();
+    }, 500);
     document.getElementById('game-buttons-div').style.display = 'flex';
     init();
 }

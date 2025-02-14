@@ -42,6 +42,7 @@ class World {
         this.canvas = canvas;
         this.keyboard = keyboard;
         this.restartButtonVisible = false; 
+        this.bottomButtonsHidden = false;
         this.draw();
         this.setWorld();
         this.soundManager.background_music.volume = 0.4;
@@ -169,10 +170,18 @@ class World {
     /**
      * Hides the bottom buttons on smaller screens.
      */
-    hideBottomButtons() {
-        if (window.innerWidth <= 1200) {
+hideBottomButtons() {
+    console.log(this.bottomButtonsHidden)
+        // Only hide the buttons if they haven't been hidden already
+        if (window.innerWidth <= 1200 && !this.bottomButtonsHidden) {
+            console.log('hiding')
             document.querySelector('.bottom-buttons').style.display = 'none';
+            this.bottomButtonsHidden = true; // Mark the buttons as hidden
         }
+    }
+    
+    resetBottomButtonsState() {
+        this.bottomButtonsHidden = false; // Reset the flag to allow hiding again
     }
 
     /**
@@ -185,6 +194,7 @@ class World {
         this.muteCharacterSleepingSound(); // Mute before playing the win sound
         this.soundManager.playSound(8); // Play the win sound
         this.displayEndScreenImage(this.IMAGE_WIN[0]);
+        this.hideBottomButtons();
         setTimeout(() => {
             this.showRestartButton();
         }, 200);
