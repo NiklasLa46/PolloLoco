@@ -142,3 +142,17 @@
         justify-content: center;
     }
 }
+
+.movement-button {
+    -webkit-touch-callout: none; /* Disable callout for touch devices */
+    -webkit-user-select: none;  /* Disable text selection */
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+body, .movement-button {
+    touch-action: manipulation; /* Prevent zoom and pan gestures */
+}
+
+
