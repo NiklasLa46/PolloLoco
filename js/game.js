@@ -22,73 +22,7 @@ allIntervalls = [
 ];
 originalPlay = HTMLMediaElement.prototype.play;
 
-/**
- * Initializes the game, sets up the canvas, and initializes the world object with keyboard input.
- * Also shows bottom buttons if the screen width is below 1200px.
- */
-document.addEventListener("DOMContentLoaded", () => {
-    let leftBtn = document.getElementById('leftBtn');
-    let rightBtn = document.getElementById('rightBtn');
-    let jumpBtn = document.getElementById('jumpBtn');
-    let throwBtn = document.getElementById('throwBtn');
 
-    const setMovementState = (direction, state) => {
-        keyboard[direction] = state;
-    };
-
-    leftBtn.addEventListener('pointerdown', (event) => {
-        event.preventDefault();
-        setMovementState('LEFT', true);
-    });
-
-    leftBtn.addEventListener('pointerup', (event) => {
-        setMovementState('LEFT', false);
-    });
-
-    leftBtn.addEventListener('pointercancel', (event) => {
-        setMovementState('LEFT', false);
-    });
-
-    rightBtn.addEventListener('pointerdown', (event) => {
-        event.preventDefault();
-        setMovementState('RIGHT', true);
-    });
-
-    rightBtn.addEventListener('pointerup', (event) => {
-        setMovementState('RIGHT', false);
-    });
-
-    rightBtn.addEventListener('pointercancel', (event) => {
-        setMovementState('RIGHT', false);
-    });
-
-    jumpBtn.addEventListener('pointerdown', (event) => {
-        event.preventDefault();
-        setMovementState('SPACE', true);
-    });
-
-    jumpBtn.addEventListener('pointerup', (event) => {
-        setMovementState('SPACE', false);
-    });
-
-    jumpBtn.addEventListener('pointercancel', (event) => {
-        setMovementState('SPACE', false);
-    });
-
-    throwBtn.addEventListener('pointerdown', (event) => {
-        event.preventDefault();
-        setMovementState('D', true);
-        world.throwBottle();
-    });
-
-    throwBtn.addEventListener('pointerup', (event) => {
-        setMovementState('D', false);
-    });
-
-    throwBtn.addEventListener('pointercancel', (event) => {
-        setMovementState('D', false);
-    });
-});
 
 /**
  * Initializes the game level, creates a canvas, and starts the world with keyboard input.
@@ -174,9 +108,8 @@ function stopSounds() {
         world.soundManager.sleeping_sound.currentTime = 0;
     }
 
-    // Override the play method to prevent audio or video from playing
     HTMLMediaElement.prototype.play = function () {
-        return Promise.resolve();  // Just return a resolved promise, so it doesn't play
+        return Promise.resolve();  
     };
 
     if (world.soundManager.background_music) {
@@ -185,27 +118,61 @@ function stopSounds() {
 }
 
 /**
- * Resets the game state, including clearing the canvas, removing all objects, and resetting the UI elements.
+ * Resets the game state by stopping character animations, pausing the game, 
+ * clearing the canvas, and resetting all objects and UI elements.
  */
 function resetGameState() {
+    stopCharacterAnimations();
+    pauseGame();
+    resetCanvas();
+    resetUIElements();
+    resetGameObjects();
+}
+
+/**
+ * Stops the character's idle animations.
+ */
+function stopCharacterAnimations() {
     if (world.character) {
         world.character.stopIdleAnimations();
     }
+}
 
+/**
+ * Pauses the game and clears important game state variables.
+ */
+function pauseGame() {
     world.gamePaused = true;
     world.character = null;
     world.level = null;
+}
 
-    canvas = document.getElementById('canvas');
-    ctx = canvas.getContext('2d');
+/**
+ * Clears the game canvas.
+ */
+function resetCanvas() {
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+}
 
+/**
+ * Resets game objects like throwable objects, health, bottle, and coin bars.
+ */
+function resetGameObjects() {
     allObjects = [];
     this.throwableObjects = [];
     this.healthBar = null;
     this.bottleBar = null;
     this.coinBar = null;
 }
+
+/**
+ * Resets UI elements like the health bar, bottle bar, and coin bar.
+ */
+function resetUIElements() {
+}
+
 
 /**
  * Stops the game, clears all timers, stops sounds, and resets the game state.
@@ -215,53 +182,6 @@ function stopGame() {
     clearTimers();
     stopSounds();
     resetGameState();
-}
-
-/**
- * Checks the screen orientation and displays a message if the screen is in portrait mode.
- */
-function checkOrientation() {
-    const isTouchDevice = window.matchMedia("(pointer: coarse)").matches;
-    const isLandscape = window.matchMedia("(orientation: landscape)").matches;
-    const turnMessage = document.getElementById("turnMessage");
-
-    if (isTouchDevice && !isLandscape) {
-        turnMessage.style.display = "block";
-    } else {
-        turnMessage.style.display = "none";
-    }
-}
-
-window.addEventListener("load", checkOrientation);
-window.addEventListener("resize", checkOrientation);
-
-/**
- * Toggles fullscreen mode for the game canvas, either entering or exiting fullscreen.
- */
-function toggleFullscreen() {
-    const canvas = document.getElementById('canvas');
-
-    if (!document.fullscreenElement && !document.mozFullScreenElement && !document.webkitFullscreenElement) {
-        if (canvas.requestFullscreen) {
-            canvas.requestFullscreen();
-        } else if (canvas.mozRequestFullScreen) {
-            canvas.mozRequestFullScreen();
-        } else if (canvas.webkitRequestFullscreen) {
-            canvas.webkitRequestFullscreen();
-        } else if (canvas.msRequestFullscreen) {
-            canvas.msRequestFullscreen();
-        }
-    } else {
-        if (document.exitFullscreen) {
-            document.exitFullscreen();
-        } else if (document.mozCancelFullScreen) {
-            document.mozCancelFullScreen();
-        } else if (document.webkitExitFullscreen) {
-            document.webkitExitFullscreen();
-        } else if (document.msExitFullscreen) {
-            document.msExitFullscreen();
-        }
-    }
 }
 
 /**
