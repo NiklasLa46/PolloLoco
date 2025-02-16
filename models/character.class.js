@@ -270,18 +270,20 @@ class Character extends MovableObject {
      * @param {Object} enemy - The enemy to check collision with.
      */
     checkJumpOnEnemy(enemy) {
-        if (this.isJumping && this.y < enemy.y && this.isColliding(enemy) && !(enemy instanceof Endboss)) {
+        if (
+            this.isJumping && this.speedY < 0 && this.isColliding(enemy) && this.y + this.height <= enemy.y + enemy.height &&!(enemy instanceof Endboss)) {
             enemy.hit();
             this.isJumping = false;
             this.jump(true);
-            this.handleEnemyDeath(enemy)
+            this.handleEnemyDeath(enemy);
             setTimeout(() => {
                 this.y = 130;
             }, 600);
         }
     }
 
-    
+
+
     /**
      * Handles the death animation and sound for an enemy.
      * @param {Enemy} enemy - The enemy to handle the death for.
@@ -289,7 +291,7 @@ class Character extends MovableObject {
     handleEnemyDeath(enemy) {
         if (enemy.isDead() && !enemy.isDying && !(enemy instanceof Endboss)) {
             enemy.playDeathImage();
-           
+
 
             if (enemy instanceof SmallChicken) {
                 this.smallchicken_sound.play();
