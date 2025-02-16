@@ -116,7 +116,7 @@ class CollisionManager {
      * @param {Endboss} enemy - The Endboss to update the health for.
      */
     updateBossHealth(enemy) {
-        if (enemy.isHurt()) {
+        if (enemy.isHurt() || enemy.isDead()) {
             this.bossBar.setPercentage(enemy.energy);
             this.soundManager.playSound(6);
         }
@@ -128,6 +128,7 @@ class CollisionManager {
      */
     checkAndTriggerBossDeath(enemy) {
         if (enemy.isDead() && !enemy.deathAnimationPlaying) {
+            this.updateBossHealth(enemy)
             this.soundManager.playSound(10);
             enemy.playDeathAnimation(enemy.IMAGES_DEATH);
             enemy.deathAnimationPlaying = true;
