@@ -45,7 +45,7 @@ class World {
         this.bottomButtonsHidden = false;
         this.draw();
         this.setWorld();
-        this.soundManager.background_music.volume = 0.4;
+        this.soundManager.background_music.volume = 0.3;
         this.soundManager.background_music.loop = true;
         this.soundManager.playBackgroundMusicIfNeeded(); // Make sure background music is playing
         this.initializeMuteButton();
@@ -171,15 +171,13 @@ class World {
      * Hides the bottom buttons on smaller screens.
      */
 hideBottomButtons() {
-    console.log(this.bottomButtonsHidden)
         // Only hide the buttons if they haven't been hidden already
         if (window.innerWidth <= 1200 && !this.bottomButtonsHidden) {
-            console.log('hiding')
             document.querySelector('.bottom-buttons').style.display = 'none';
             this.bottomButtonsHidden = true; // Mark the buttons as hidden
         }
     }
-    
+
         /**
      * Resets the bottomButtons state.
      */

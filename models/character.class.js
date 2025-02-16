@@ -93,6 +93,9 @@ class Character extends MovableObject {
         this.applyGravity();
         this.jumping_sound.volume = 0.3;
         this.sleeping_sound.volume = 0.7;
+        this.smallchicken_sound.volume = 0.5;
+        this.chicken_sound.volume = 0.5;
+        this.gameover_sound.volume = 0.7;
         this.animate();
         this.collisionManager = collisionManager;
     }

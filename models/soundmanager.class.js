@@ -42,6 +42,9 @@ class SoundManager {
      */
     constructor(character) {
         this.character = character;
+        this.allSounds.forEach(sound => {
+            sound.volume = 0.8; // Set volume to 0.8
+        });
 
         const savedMuteState = localStorage.getItem('muteState');
         const isMuted = savedMuteState === 'true'; 
