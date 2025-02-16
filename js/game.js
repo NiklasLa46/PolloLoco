@@ -302,6 +302,7 @@ function startGame() {
 function showInstructions() {
     document.getElementById('start-page').style.display = 'none';
     document.getElementById('instructions-page').style.display = 'flex';
+    document.getElementById('link-div').style.display = 'none'
 }
 
 /**
