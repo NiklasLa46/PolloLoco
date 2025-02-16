@@ -2,13 +2,13 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    position: relative; /* Required for pseudo-element positioning */
-
+    position: relative;
     font-family: Arial, sans-serif;
     padding: 0px;
     margin: 0px;
     height: 100vh;
-    overflow: hidden; /* To prevent scrolling issues if necessary */
+    overflow: hidden;
+    text-align: center;
 }
 
 body::before {
@@ -22,11 +22,11 @@ body::before {
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
-    opacity: 0.5; /* Adjust this value to control the opacity */
-    z-index: -1; /* Ensures it stays behind the content */
+    opacity: 0.5;
+    z-index: -1;
 }
 
-h1{
+h1 {
     font-family: Smokum;
     justify-content: center;
     margin-top: 10px;
@@ -35,24 +35,27 @@ h1{
     text-shadow: 0 -1px 0 #fff, 0 1px 0 #2e2e2e, 0 2px 0 #2c2c2c, 0 3px 0 #2a2a2a, 0 4px 0 #282828, 0 5px 0 #262626, 0 6px 0 #242424, 0 7px 0 #222, 0 8px 0 #202020, 0 9px 0 #1e1e1e, 0 10px 0 #1c1c1c, 0 11px 0 #1a1a1a, 0 12px 0 #181818, 0 13px 0 #161616, 0 14px 0 #141414, 0 15px 0 #121212, 0 22px 30px rgba(0, 0, 0, 0.9), 2px 2px 2px rgba(37, 16, 10, 0);
 }
 
+h2{
+    font-family: Smokum;
+    justify-content: center;
+    margin-top: 10px;
+    font-size: 50px;
+    color: #FFC521;
+    text-shadow: 0 -1px 0 #fff, 0 1px 0 #2e2e2e, 0 2px 0 #2c2c2c, 0 3px 0 #2a2a2a, 0 4px 0 #282828, 0 5px 0 #262626, 0 6px 0 #242424, 0 7px 0 #222, 0 8px 0 #202020, 0 9px 0 #1e1e1e, 0 10px 0 #1c1c1c, 0 11px 0 #1a1a1a, 0 12px 0 #181818, 0 13px 0 #161616, 0 14px 0 #141414, 0 15px 0 #121212, 0 22px 30px rgba(0, 0, 0, 0.9), 2px 2px 2px rgba(37, 16, 10, 0);
+}
+
 .main-div {
     background-color: rgba(255, 255, 255, 0);
-    /* Slightly transparent background for readability */
     margin: 20px auto;
     padding: 20px;
     max-width: 800px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     border-radius: 10px;
     overflow: auto;
     overflow-y: scroll;
-    /* Enable scrolling within the container */
     height: 100vh;
-    /* Make it fill the viewport height */
     -ms-overflow-style: none;
-    /* Hide scrollbar in IE and Edge */
     scrollbar-width: none;
     max-height: 90vh;
-    /* Allow scrolling within the container */
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -60,7 +63,6 @@ h1{
 
 .container::-webkit-scrollbar {
     display: none;
-    /* Hide scrollbar in Chrome, Safari, and Edge */
 }
 
 h1,
@@ -74,10 +76,15 @@ li {
 }
 
 a {
-    color: blue;
-    text-decoration: none;
+    color: rgb(0, 0, 0);
+    text-decoration: underline;
 }
 
 a:hover {
-    text-decoration: underline;
+    color: #c4930e;
+}
+
+.imp-main{
+    display: flex;
+    text-align: center;
 }

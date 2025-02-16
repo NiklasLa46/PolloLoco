@@ -314,6 +314,7 @@ function mainMenu() {
     document.getElementById('canvas').style.display = 'none';
     document.getElementById('game-title').style.display = 'none';
     document.getElementById('game-buttons-div').style.display = 'none';
+    document.getElementById('all-canvas-buttons').style.display = 'none';
     document.getElementById('link-div').style.display = 'flex';
 }
 
