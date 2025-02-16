@@ -5,6 +5,15 @@
         margin-top: 0px !important;
     }
 
+    h1{
+        font-size: 80px;
+    }
+
+    button{
+        display: flex;
+        justify-content: center;
+    }
+
     .all-canvas-buttons {
         position: absolute;
         top: 50%;

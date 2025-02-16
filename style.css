@@ -2,12 +2,12 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    position: relative; /* Required for pseudo-element positioning */
+    position: relative; 
     font-family: Smokum;
     padding: 0px;
     margin: 0px;
     height: 100vh;
-    overflow: hidden; /* To prevent scrolling issues if necessary */
+    overflow: hidden; 
 }
 
 body::before {
@@ -21,8 +21,8 @@ body::before {
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
-    opacity: 0.6; /* Adjust this value to control the opacity */
-    z-index: -1; /* Ensures it stays behind the content */
+    opacity: 0.6; 
+    z-index: -1; 
 }
 
 
@@ -133,23 +133,22 @@ table.table thead th {
 
 .bottom-buttons {
     display: none;
-    justify-content: space-between; /* This will position the two groups of buttons on the left and right */
-    position: fixed; /* Keep it fixed at the bottom of the screen */
+    justify-content: space-between; 
+    position: fixed; 
     left: 0;
     right: 0;
     bottom: 0;
     padding: 10px;
-    z-index: 1000; /* Ensure it sits on top of other content */
+    z-index: 1000; 
 }
 
-/* Style the left and right button containers */
 .left-buttons, .right-buttons {
     display: flex;
     justify-content: space-between;
 }
 
 .left-buttons button, .right-buttons button {
-    margin: 20px 20px; /* Space between buttons */
+    margin: 20px 20px; 
     padding: 10px;
     width: 60px;
     height: 60px;
@@ -161,30 +160,30 @@ table.table thead th {
 
 .movement-button {
     box-shadow: none;
-    width: 50px; /* Set a fixed width */
-    height: 50px; /* Set a fixed height */
-    background-color: transparent; /* Make the background transparent */
-    border: 2px solid #FFC521; /* Gray border */
-    border-radius: 50%; /* Make the button round */
-    display: flex; /* Flexbox to center the icon */
-    justify-content: center; /* Center the icon horizontally */
-    align-items: center; /* Center the icon vertically */
-    cursor: pointer; /* Show a pointer when hovering */
-    transition: all 0.3s ease; /* Smooth transition for hover effect */
-    padding: 0; /* Remove padding */
+    width: 50px; 
+    height: 50px;
+    background-color: transparent; 
+    border: 2px solid #FFC521; 
+    border-radius: 50%; 
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    cursor: pointer; 
+    transition: all 0.3s ease; 
+    padding: 0; 
     margin: 0px;
 }
 
 .mute-responsive {
-    display: none; /* Hidden on larger screens */
+    display: none; 
     position: fixed;
     top: 10px;
     right: 10px;
-    z-index: 1000; /* Ensures it appears above other elements */
-    background-color: transparent !important; /* Make the background transparent */
-    border: 2px solid #FFC521; /* Gray border */
-    cursor: pointer; /* Show a pointer when hovering */
-    transition: all 0.3s ease; /* Smooth transition for hover effect */
+    z-index: 1000;
+    background-color: transparent !important; 
+    border: 2px solid #FFC521;
+    cursor: pointer; 
+    transition: all 0.3s ease;
     margin: 0px;
     padding: 0px;
     width: auto;
@@ -213,9 +212,9 @@ table.table thead th {
     color: rgb(255, 255, 255);
     text-align: center;
     border-radius: 10px;
-    display: none; /* Initially hidden */
+    display: none;
     z-index: 1000;
-    font-size: 100px; /* Increased font size */
+    font-size: 80px; 
 }
 
 .turn-message{
@@ -231,17 +230,17 @@ table.table thead th {
     left: 50%;
     transform: translateX(-50%);
     text-align: center;
-    background-color: transparent; /* Optional: Add background color if needed */
-    padding: 10px; /* Optional: Add some padding for spacing */
+    background-color: transparent;
+    padding: 10px;
 }
 
 .link-div a {
     font-size: 30px;
     color: #000000;
     text-decoration: none;
-    margin: 0 10px; /* Add spacing between links */
+    margin: 0 10px; 
 }
 
 .link-div a:hover {
-    text-decoration: underline; /* Optional: Add an underline on hover */
+    text-decoration: underline; 
 }
