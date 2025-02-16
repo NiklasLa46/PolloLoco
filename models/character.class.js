@@ -185,7 +185,7 @@ class Character extends MovableObject {
 
     checkAndMoveRight() {
         const boss = this.world.boss; // Access the boss from the world
-        if (this.world.keyboard.RIGHT && this.x < boss.x) {
+        if (this.world.keyboard.RIGHT && this.x < boss.x + 100) {
             this.moveRight();
             this.otherDirection = false;
             this.playWalkingSound();
@@ -270,7 +270,7 @@ class Character extends MovableObject {
      * @param {Object} enemy - The enemy to check collision with.
      */
     checkJumpOnEnemy(enemy) {
-        if (this.isJumping && this.y < enemy.y && this.isColliding(enemy)) {
+        if (this.isJumping && this.y < enemy.y && this.isColliding(enemy) && !(enemy instanceof Endboss)) {
             enemy.hit();
             this.isJumping = false;
             this.jump(true);
