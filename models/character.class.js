@@ -339,7 +339,6 @@ class Character extends MovableObject {
         this.smallchicken_sound.muted = true;
     }
 
-    // Add a method to unmute all character sounds
     unmuteSounds() {
         this.walking_sound.muted = false;
         this.sleeping_sound.muted = false;

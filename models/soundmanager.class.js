@@ -62,12 +62,15 @@ class SoundManager {
      * The button toggles mute/unmute for all sounds and saves the state in localStorage.
      */
     initializeMuteButton() {
-        const muteButton = document.getElementById('muteButton');
+        const muteButton = document.getElementById('mute-responsive');
+        const muteImg = muteButton.querySelector('img');
         const isMuted = this.allSounds.every(sound => sound.muted);
-        muteButton.textContent = isMuted ? 'Unmute' : 'Mute'; 
-
+    
+        muteImg.src = isMuted ? './img/unmuted.png' : './img/mute.png'; 
+    
         muteButton.addEventListener('click', () => this.toggleMute());
     }
+    
 
     /**
      * Toggles the mute state for all sounds.
@@ -77,18 +80,20 @@ class SoundManager {
     toggleMute() {
         const isMuted = this.allSounds.every(sound => sound.muted);
         this.allSounds.forEach(sound => sound.muted = !isMuted);
-
+    
         if (isMuted) {
             this.character.unmuteSounds();
         } else {
             this.character.muteSounds();
         }
-        
+    
         localStorage.setItem('muteState', !isMuted);
-
-        const muteButton = document.getElementById('muteButton');
-        muteButton.textContent = isMuted ? 'Mute' : 'Unmute';
+    
+        const muteButton = document.getElementById('mute-responsive');
+        const muteImg = muteButton.querySelector('img');
+        muteImg.src = isMuted ? './img/mute.png' : './img/unmuted.png'; // Update image source
     }
+    
 
     /**
      * Plays the background music if it is not already playing.

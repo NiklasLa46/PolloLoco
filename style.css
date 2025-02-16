@@ -176,6 +176,7 @@ table.table thead th {
 
 .mute-responsive {
     display: none; 
+    align-items: center;
     position: fixed;
     top: 10px;
     right: 10px;
@@ -188,6 +189,8 @@ table.table thead th {
     padding: 0px;
     width: auto;
     filter: brightness(0) saturate(100%) invert(89%) sepia(12%) saturate(6972%) hue-rotate(339deg) brightness(106%) contrast(101%);
+    width: 70px;
+    height: 70px;
 }
 
 .mute-responsive-div{
