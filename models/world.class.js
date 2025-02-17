@@ -227,17 +227,32 @@ class World {
         if (this.gamePaused) return
         this.clearCanvas();
         this.applyCanvasTranslation();
-        this.drawBackgroundObjects();
-        this.drawLevelObjects();
-        this.drawEnemies();
-        this.drawThrowableObjects();
-        this.resetCanvasTranslation();
-        this.drawUI();
-        this.applyCanvasTranslation();
+        this.drawLevelHelper();
+        this.uiHelper();
         this.drawCharacter();
         this.resetCanvasTranslation();
         requestAnimationFrame(() => this.draw());
         this.soundManager.playBackgroundMusicIfNeeded();
+    }
+
+ /**
+ * Handles the drawing of all level-related objects.
+ * This includes background objects, static level elements, enemies, and throwable objects.
+ */
+    drawLevelHelper(){
+        this.drawBackgroundObjects();
+        this.drawLevelObjects();
+        this.drawEnemies();
+        this.drawThrowableObjects();
+    }
+
+        /**
+     * Resets the Canvas Translation, then draws UI and applys Translation again. This way the UI is drawn befor the character making sure to not be in the foreground.
+     */
+    uiHelper(){
+        this.resetCanvasTranslation();
+        this.drawUI();
+        this.applyCanvasTranslation();
     }
 
     /**
