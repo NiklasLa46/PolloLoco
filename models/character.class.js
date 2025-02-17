@@ -184,7 +184,7 @@ class Character extends MovableObject {
     }
 
     checkAndMoveRight() {
-        const boss = this.world.boss; // Access the boss from the world
+        const boss = this.world.boss; 
         if (this.world.keyboard.RIGHT && this.x < boss.x + 100) {
             this.moveRight();
             this.otherDirection = false;
@@ -282,8 +282,6 @@ class Character extends MovableObject {
         }
     }
 
-
-
     /**
      * Handles the death animation and sound for an enemy.
      * @param {Enemy} enemy - The enemy to handle the death for.
@@ -332,6 +330,9 @@ class Character extends MovableObject {
         if (timer) clearTimeout(timer) || clearInterval(timer);
     }
 
+        /**
+     * Mutes all sounds called in the character class.
+     */
     muteSounds() {
         this.walking_sound.muted = true;
         this.sleeping_sound.muted = true;
@@ -341,6 +342,9 @@ class Character extends MovableObject {
         this.smallchicken_sound.muted = true;
     }
 
+            /**
+     * Unmutes all sounds called in the character class.
+     */
     unmuteSounds() {
         this.walking_sound.muted = false;
         this.sleeping_sound.muted = false;

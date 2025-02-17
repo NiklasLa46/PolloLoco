@@ -80,7 +80,6 @@ class SoundManager {
     toggleMute() {
         const isMuted = this.allSounds.every(sound => sound.muted);
         this.allSounds.forEach(sound => sound.muted = !isMuted);
-    
         if (isMuted) {
             this.character.unmuteSounds();
         } else {
@@ -88,10 +87,9 @@ class SoundManager {
         }
     
         localStorage.setItem('muteState', !isMuted);
-    
         const muteButton = document.getElementById('mute-responsive');
         const muteImg = muteButton.querySelector('img');
-        muteImg.src = isMuted ? './img/mute.png' : './img/unmuted.png'; // Update image source
+        muteImg.src = isMuted ? './img/mute.png' : './img/unmuted.png'; 
     }
     
 
@@ -117,7 +115,7 @@ class SoundManager {
      * @param {number} index - The index of the sound in the `allSounds` array.
      */
     playSound(index) {
-        this.allSounds[index].currentTime = 0; // Reset the sound to the beginning.
+        this.allSounds[index].currentTime = 0; 
         this.allSounds[index].play();
     }
 }

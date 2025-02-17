@@ -40,13 +40,12 @@ class MovableObject extends DrawableObject {
         if (this.isDead() && !this.deathAnimationPlaying) {
             this.deathAnimationPlaying = true;
             this.currentImage = 0;
-
             this.movableDeathInterval = setInterval(() => {
                 if (this.currentImage < images.length) {
                     this.playAnimation(images);
                 } else {
-                    clearInterval(this.movableDeathInterval); // Stop animation
-                    this.isRemoved = true; // Mark object for removal
+                    clearInterval(this.movableDeathInterval); 
+                    this.isRemoved = true; 
                     this.deathAnimationPlaying = false;
                 }
             }, 200);
@@ -89,10 +88,10 @@ class MovableObject extends DrawableObject {
      */
     jump(weak = false) {
         if (this.jumping_sound) {
-            this.jumping_sound.currentTime = 0; // Reset sound to the start
+            this.jumping_sound.currentTime = 0; 
             this.jumping_sound.play();
         }
-        this.speedY = weak ? 20 : 30; // Set jump strength
+        this.speedY = weak ? 20 : 30; 
         this.isJumping = true;
     }
 
@@ -102,8 +101,8 @@ class MovableObject extends DrawableObject {
      */
     playAnimation(images) {
         if (images.length > 0) {
-            let i = this.currentImage % images.length; // Loop through images
-            this.img = this.imageCache[images[i]]; // Load the current frame
+            let i = this.currentImage % images.length; 
+            this.img = this.imageCache[images[i]]; 
             this.currentImage++;
         }
     }

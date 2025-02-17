@@ -43,7 +43,7 @@ class ThrowableObject extends DrawableObject {
         this.width = 60;
         this.loadImages(this.THROW_IMAGES);
         this.loadImages(this.SPLASH_IMAGES);
-        this.img = this.imageCache[this.THROW_IMAGES[0]]; // Initialize with the first image
+        this.img = this.imageCache[this.THROW_IMAGES[0]]; 
     }
 
 /**
@@ -54,11 +54,11 @@ throw() {
     this.timer = setInterval(() => {
         if (this.hasCollided) return;
 
-        this.updatePosition(); // Update the object's position based on speed and gravity
-        this.updateAnimation(); // Cycle through throw animation images
+        this.updatePosition(); 
+        this.updateAnimation(); 
 
         if (this.isGrounded()) {
-            this.handleSplash(); // Handle splash when the object reaches the ground
+            this.handleSplash(); 
         }
     }, 50);
 }
@@ -86,7 +86,7 @@ updateAnimation() {
  * @returns {boolean} - True if the object has reached the ground.
  */
 isGrounded() {
-    return this.y >= 378; // Ground level (adjust as needed)
+    return this.y >= 378; 
 }
 
 /**

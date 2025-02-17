@@ -153,15 +153,13 @@ class World {
      * Displays the restart button and makes it visible on the screen.
      */
     showRestartButton() {
-        // Check if it's a small screen (e.g., screen width <= 1200px)
         if (window.innerWidth <= 1200) {
             const allCanvasButtons = document.getElementById('all-canvas-buttons');
             if (!this.restartButtonVisible) {
-                allCanvasButtons.style.display = 'flex';  // Show buttons on small screens
+                allCanvasButtons.style.display = 'flex';  
                 this.restartButtonVisible = true;
             }
         } else {
-            // Handle larger screens by showing normal restart button logic
             document.getElementById('restartButton').style.display = 'flex';
         }
     }
@@ -170,11 +168,10 @@ class World {
     /**
      * Hides the bottom buttons on smaller screens.
      */
-hideBottomButtons() {
-        // Only hide the buttons if they haven't been hidden already
+    hideBottomButtons() {
         if (window.innerWidth <= 1200 && !this.bottomButtonsHidden) {
             document.querySelector('.bottom-buttons').style.display = 'none';
-            this.bottomButtonsHidden = true; // Mark the buttons as hidden
+            this.bottomButtonsHidden = true; 
         }
     }
 
@@ -182,7 +179,7 @@ hideBottomButtons() {
      * Resets the bottomButtons state.
      */
     resetBottomButtonsState() {
-        this.bottomButtonsHidden = false; // Reset the flag to allow hiding again
+        this.bottomButtonsHidden = false; 
     }
 
     /**
@@ -190,10 +187,9 @@ hideBottomButtons() {
      * and shows the end screen image.
      */
     showWinScreen() {
-
         this.soundManager.stopBackgroundMusic();
-        this.muteCharacterSleepingSound(); // Mute before playing the win sound
-        this.soundManager.playSound(8); // Play the win sound
+        this.muteCharacterSleepingSound(); 
+        this.soundManager.playSound(8); 
         this.displayEndScreenImage(this.IMAGE_WIN[0]);
         this.hideBottomButtons();
         setTimeout(() => {
@@ -228,11 +224,9 @@ hideBottomButtons() {
      * It will stop drawing if the game is paused.
      */
     draw() {
-        if (this.gamePaused) return;
-
+        if (this.gamePaused) return
         this.clearCanvas();
         this.applyCanvasTranslation();
-
         this.drawBackgroundObjects();
         this.drawLevelObjects();
         this.drawEnemies();
@@ -242,10 +236,7 @@ hideBottomButtons() {
         this.applyCanvasTranslation();
         this.drawCharacter();
         this.resetCanvasTranslation();
-
-
         requestAnimationFrame(() => this.draw());
-
         this.soundManager.playBackgroundMusicIfNeeded();
     }
 

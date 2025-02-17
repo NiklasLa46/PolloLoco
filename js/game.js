@@ -77,9 +77,9 @@ function restartGame() {
 function hideRestartButton() {
     const allCanvasButtons = document.getElementById('all-canvas-buttons');
     if (window.innerWidth <= 1200) {
-        allCanvasButtons.style.display = 'none';  // Hide buttons on small screens
+        allCanvasButtons.style.display = 'none';  
     }
-    document.getElementById('restartButton').style.display = 'none'; // Hide main restart button
+    document.getElementById('restartButton').style.display = 'none'; 
 }
 /**
  * Clears all active intervals and timeouts, including those related to character idle animations.
