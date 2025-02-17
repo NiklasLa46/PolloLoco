@@ -62,8 +62,10 @@ function checkOrientation() {
 
     if (isTouchDevice && !isLandscape) {
         turnMessage.style.display = "block";
+        document.getElementById('buttonDivInstructions').style.display = 'block';
     } else {
         turnMessage.style.display = "none";
+        document.getElementById('buttonDivInstructions').style.display = 'flex';
     }
 }
 
